@@ -196,6 +196,8 @@ void set_adc(uint8_t MD, uint8_t DCP, uint8_t CH, uint8_t CHG);
 
 void LTC6804_adcv(); 
 
+void LTC6804_wrcfga();
+
 void LTC6804_adow(uint8_t pup);
 
 void LTC6804_adax();

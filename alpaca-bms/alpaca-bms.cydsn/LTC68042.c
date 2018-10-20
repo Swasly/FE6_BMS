@@ -161,6 +161,46 @@ void LTC6804_adcv()
 
 }
 
+void LTC6804_wrcfga()
+{
+    uint8_t cmd[12];
+    uint8_t WRCFGA[2];
+    uint8_t DATA[6];
+    uint16_t temp_pec;
+    
+    //1
+    cmd[0] = 128;
+    cmd[1] = 1;
+    WRCFGA[0] = cmd[0];
+    WRCFGA[1] = cmd[1];
+    
+    //2
+    temp_pec = pec15_calc(2, WRCFGA);
+    cmd[2] = (uint8_t)(temp_pec >> 8);
+    cmd[3] = (uint8_t)(temp_pec);
+    
+    cmd[4] = 0;
+    cmd[5] = 0;
+    cmd[6] = 0;
+    cmd[7] = 0;
+    cmd[8] = 0;
+    cmd[9] = 0;
+    
+    for(int i = 0; i < 6; i++){
+        DATA[i] = cmd[i + 4];
+    }
+    temp_pec = pec15_calc(6, DATA);
+                
+    cmd[10] = (uint8_t)(temp_pec >> 8);
+    cmd[11] = (uint8_t)(temp_pec);
+    
+    //3
+    wakeup_idle();
+    
+    //4
+    spi_write_array(4, cmd);
+}
+
 void LTC6804_adow(uint8_t pup)
 {
 
@@ -294,9 +334,11 @@ uint8_t LTC6804_rdcv(uint8_t reg,
 					 uint16_t cell_codes[][12]
 					 )
 {
-  
+  //bytes to recieve
   const uint8_t NUM_RX_BYT = 8;
+  // bytes in a 6811 reg
   const uint8_t BYT_IN_REG = 6;
+  // each cell gets 2 bytes in a reg
   const uint8_t CELL_IN_REG = 3;
   
   int8_t pec_error = 0;

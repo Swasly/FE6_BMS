@@ -175,7 +175,7 @@ void process_failure(){
 	}
 }
 
-void debugMain() {
+/*void debugMain() {
     //while(1) { wakeup_sleep(); };
     uint8_t txData[2] = {0x1E, 0xEE};
     uint8_t rxData[23];
@@ -200,7 +200,7 @@ void debugMain() {
         // DO nothing
     }
         
-}
+}*/
 bool BALANCE_FLAG = true;
 int main(void)
 {
@@ -259,8 +259,12 @@ int main(void)
 				
                 
 		        get_cell_volt();// TODO test voltage
+                get_cell_volt();
 				//TESTDAY_2_TODO. check_stack_fuse(); // TODO: check if stacks are disconnected
-				get_cell_temp();// TODO test temperature
+                
+				//get_cell_temp(); TODO test temperature
+                test_get_cell_temp();
+                
                 
                 // TODO: Calculate SOC
                 //get_current(); // TODO get current reading from sensor
