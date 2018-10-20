@@ -1,0 +1,18 @@
+GPIO Pins:
+If written 0 in configuration register group, pulled low internally by the device.
+If being used for I2C/SPI, write 1. 
+
+ISOMD pin determines if 4 wire (SPI) or 2 wire (isoSPI) interface.
+
+SDO is open drain output and requires a pull-up resistor tied to appropriate supply voltage. 
+REFON - Off consumes less power, on allows quicker ADC.
+
+DTEN - Discharge enable. Hardware & configuration register. (page 34)
+
+ADCOPT - Helps determine the mode of the ADC along with the MD bits in the command.
+
+VOV and VUV - overvoltage and undervoltage values (used in formula on page 62)
+
+DCC - discharge cell X. Used in cell balancing and PWM, page 35.
+
+DCTO - determines time until timeout, page 34.

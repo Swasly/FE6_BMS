@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectConfig formatVersion="1.3.0.0">
+  <Chip addr7bit="0x30" modelnum="LTC3880" moduleIndex="0" subModuleIndex="0" siliconrev="2.0" crc="0x56D4AD9E" customerPartNumber="" customerComment="" customerReferenceDesignator="">
+    <Global>
+      <Reg cmd="0x10" hex="0x00" len="1" />
+      <Reg cmd="0x33" hex="0xFBE8" len="2" />
+      <Reg cmd="0x35" hex="0xCA40" len="2" />
+      <Reg cmd="0x36" hex="0xCA00" len="2" />
+      <Reg cmd="0x55" hex="0xCB00" len="2" />
+      <Reg cmd="0x58" hex="0xCA00" len="2" />
+      <Reg cmd="0x5D" hex="0xC200" len="2" />
+      <Reg cmd="0xB0" hex="0x0000" len="2" />
+      <Reg cmd="0xB2" hex="0x0000" len="2" />
+      <Reg cmd="0xB4" hex="0x0000" len="2" />
+      <Reg cmd="0xD1" hex="0xC9" len="1" />
+      <Reg cmd="0xE6" hex="0x30" len="1" />
+      <Reg cmd="0xF5" hex="0x10" len="1" />
+    </Global>
+    <Page name="Rail A" num="0" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x4000" len="2" />
+      <Reg cmd="0x24" hex="0x4185" len="2" />
+      <Reg cmd="0x25" hex="0x0BC7" len="2" />
+      <Reg cmd="0x26" hex="0x0AA0" len="2" />
+      <Reg cmd="0x27" hex="0x828F" len="2" />
+      <Reg cmd="0x38" hex="0xE28C" len="2" />
+      <Reg cmd="0x40" hex="0x4189" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x4189" len="2" />
+      <Reg cmd="0x43" hex="0x0000" len="2" />
+      <Reg cmd="0x44" hex="0x0000" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x46" hex="0xB328" len="2" />
+      <Reg cmd="0x47" hex="0xB8" len="1" />
+      <Reg cmd="0x4A" hex="0xB266" len="2" />
+      <Reg cmd="0x4F" hex="0xEA08" len="2" />
+      <Reg cmd="0x50" hex="0xB8" len="1" />
+      <Reg cmd="0x51" hex="0xE3C0" len="2" />
+      <Reg cmd="0x53" hex="0xCD80" len="2" />
+      <Reg cmd="0x54" hex="0xB8" len="1" />
+      <Reg cmd="0x56" hex="0xB8" len="1" />
+      <Reg cmd="0x5E" hex="0x0A6F" len="2" />
+      <Reg cmd="0x5F" hex="0x0A2D" len="2" />
+      <Reg cmd="0x60" hex="0x0260" len="2" />
+      <Reg cmd="0x61" hex="0xEB20" len="2" />
+      <Reg cmd="0x62" hex="0xEBC0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0xE2ED" len="2" />
+      <Reg cmd="0x65" hex="0xD280" len="2" />
+      <Reg cmd="0x66" hex="0xF258" len="2" />
+      <Reg cmd="0xB1" hex="0x59F9" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xB9" hex="0x0000" len="2" />
+      <Reg cmd="0xBA" hex="0x0000" len="2" />
+      <Reg cmd="0xD0" hex="0x17" len="1" />
+      <Reg cmd="0xD2" hex="0x0000" len="2" />
+      <Reg cmd="0xD4" hex="0x42" len="1" />
+      <Reg cmd="0xD5" hex="0xC0" len="1" />
+      <Reg cmd="0xD8" hex="0x80" len="1" />
+      <Reg cmd="0xDB" hex="0x12EE" len="2" />
+      <Reg cmd="0xDC" hex="0x03E8" len="2" />
+      <Reg cmd="0xE9" hex="0x9333" len="2" />
+      <Reg cmd="0xF6" hex="0x0F3C" len="2" />
+      <Reg cmd="0xF8" hex="0x4000" len="2" />
+      <Reg cmd="0xF9" hex="0x8000" len="2" />
+      <Reg cmd="0xFA" hex="0x40" len="1" />
+    </Page>
+    <Page name="Rail B" num="1" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x3B95" len="2" />
+      <Reg cmd="0x24" hex="0x4185" len="2" />
+      <Reg cmd="0x25" hex="0x1278" len="2" />
+      <Reg cmd="0x26" hex="0x10BE" len="2" />
+      <Reg cmd="0x27" hex="0x828F" len="2" />
+      <Reg cmd="0x38" hex="0xE26D" len="2" />
+      <Reg cmd="0x40" hex="0x416C" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x418A" len="2" />
+      <Reg cmd="0x43" hex="0x0000" len="2" />
+      <Reg cmd="0x44" hex="0x0000" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x46" hex="0xB350" len="2" />
+      <Reg cmd="0x47" hex="0xB8" len="1" />
+      <Reg cmd="0x4A" hex="0xB266" len="2" />
+      <Reg cmd="0x4F" hex="0xEA08" len="2" />
+      <Reg cmd="0x50" hex="0xB8" len="1" />
+      <Reg cmd="0x51" hex="0xE3C0" len="2" />
+      <Reg cmd="0x53" hex="0xCD80" len="2" />
+      <Reg cmd="0x54" hex="0xB8" len="1" />
+      <Reg cmd="0x56" hex="0xB8" len="1" />
+      <Reg cmd="0x5E" hex="0x1063" len="2" />
+      <Reg cmd="0x5F" hex="0x1007" len="2" />
+      <Reg cmd="0x60" hex="0xFB4A" len="2" />
+      <Reg cmd="0x61" hex="0xEB20" len="2" />
+      <Reg cmd="0x62" hex="0xEBC0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0xF3A8" len="2" />
+      <Reg cmd="0x65" hex="0xD280" len="2" />
+      <Reg cmd="0x66" hex="0xF258" len="2" />
+      <Reg cmd="0xB1" hex="0x70CF" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xB9" hex="0x0000" len="2" />
+      <Reg cmd="0xBA" hex="0x0000" len="2" />
+      <Reg cmd="0xD0" hex="0x17" len="1" />
+      <Reg cmd="0xD2" hex="0x0000" len="2" />
+      <Reg cmd="0xD4" hex="0x42" len="1" />
+      <Reg cmd="0xD5" hex="0xC0" len="1" />
+      <Reg cmd="0xD8" hex="0x80" len="1" />
+      <Reg cmd="0xDB" hex="0x12EE" len="2" />
+      <Reg cmd="0xDC" hex="0x03E8" len="2" />
+      <Reg cmd="0xE9" hex="0x9333" len="2" />
+      <Reg cmd="0xF6" hex="0x0F3C" len="2" />
+      <Reg cmd="0xF8" hex="0x4000" len="2" />
+      <Reg cmd="0xF9" hex="0x8000" len="2" />
+      <Reg cmd="0xFA" hex="0x41" len="1" />
+    </Page>
+  </Chip>
+  <Chip addr7bit="0x32" modelnum="LTC2974" moduleIndex="0" subModuleIndex="0" siliconrev="1.0" crc="0x3D61786E" customerPartNumber="" customerComment="" customerReferenceDesignator="">
+    <Global>
+      <Reg cmd="0x10" hex="0x00" len="1" />
+      <Reg cmd="0x35" hex="0xCA40" len="2" />
+      <Reg cmd="0x36" hex="0xCA00" len="2" />
+      <Reg cmd="0x55" hex="0xCB00" len="2" />
+      <Reg cmd="0x56" hex="0xB8" len="1" />
+      <Reg cmd="0x57" hex="0xCAC0" len="2" />
+      <Reg cmd="0x58" hex="0xCA00" len="2" />
+      <Reg cmd="0x59" hex="0xC380" len="2" />
+      <Reg cmd="0x5A" hex="0xB8" len="1" />
+      <Reg cmd="0xB0" hex="0x0000" len="2" />
+      <Reg cmd="0xB2" hex="0x0000" len="2" />
+      <Reg cmd="0xB4" hex="0x0000" len="2" />
+      <Reg cmd="0xD1" hex="0x0FFB" len="2" />
+      <Reg cmd="0xD4" hex="0x0000" len="2" />
+      <Reg cmd="0xD5" hex="0x0F" len="1" />
+      <Reg cmd="0xD6" hex="0x0F" len="1" />
+      <Reg cmd="0xD9" hex="0x00" len="1" />
+      <Reg cmd="0xDA" hex="0x00" len="1" />
+      <Reg cmd="0xDB" hex="0x12EE" len="2" />
+      <Reg cmd="0xDC" hex="0x8000" len="2" />
+      <Reg cmd="0xE1" hex="0xEB20" len="2" />
+      <Reg cmd="0xE2" hex="0x8000" len="2" />
+      <Reg cmd="0xE3" hex="0x8000" len="2" />
+      <Reg cmd="0xE4" hex="0x0F" len="1" />
+      <Reg cmd="0xE6" hex="0x30" len="1" />
+      <Reg cmd="0xF7" hex="0x07" len="1" />
+    </Global>
+    <Page name="U1:0" num="0" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x319A" len="2" />
+      <Reg cmd="0x24" hex="0x8000" len="2" />
+      <Reg cmd="0x25" hex="0x3415" len="2" />
+      <Reg cmd="0x26" hex="0x2F1F" len="2" />
+      <Reg cmd="0x38" hex="0xEA48" len="2" />
+      <Reg cmd="0x40" hex="0x390B" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x3690" len="2" />
+      <Reg cmd="0x43" hex="0x2CA4" len="2" />
+      <Reg cmd="0x44" hex="0x2A29" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x46" hex="0xB39A" len="2" />
+      <Reg cmd="0x47" hex="0xBF" len="1" />
+      <Reg cmd="0x4A" hex="0xB266" len="2" />
+      <Reg cmd="0x4B" hex="0xB466" len="2" />
+      <Reg cmd="0x4C" hex="0x78" len="1" />
+      <Reg cmd="0x4F" hex="0xEA08" len="2" />
+      <Reg cmd="0x50" hex="0xB8" len="1" />
+      <Reg cmd="0x51" hex="0xE3C0" len="2" />
+      <Reg cmd="0x52" hex="0x8000" len="2" />
+      <Reg cmd="0x53" hex="0xCD80" len="2" />
+      <Reg cmd="0x54" hex="0xB8" len="1" />
+      <Reg cmd="0x5E" hex="0x2E21" len="2" />
+      <Reg cmd="0x5F" hex="0x2D23" len="2" />
+      <Reg cmd="0x60" hex="0xFA8F" len="2" />
+      <Reg cmd="0x61" hex="0xD280" len="2" />
+      <Reg cmd="0x62" hex="0xD3C0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0xFA8F" len="2" />
+      <Reg cmd="0xB1" hex="0x0000" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xB9" hex="0x8000" len="2" />
+      <Reg cmd="0xBA" hex="0x8000" len="2" />
+      <Reg cmd="0xD0" hex="0x0080" len="2" />
+      <Reg cmd="0xD2" hex="0x00" len="1" />
+      <Reg cmd="0xD3" hex="0x00" len="1" />
+      <Reg cmd="0xE0" hex="0x0236" len="2" />
+      <Reg cmd="0xE9" hex="0xC200" len="2" />
+      <Reg cmd="0xF6" hex="0x0F3C" len="2" />
+      <Reg cmd="0xF8" hex="0x4000" len="2" />
+      <Reg cmd="0xF9" hex="0x8000" len="2" />
+    </Page>
+    <Page name="U1:1" num="1" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x399A" len="2" />
+      <Reg cmd="0x24" hex="0x8000" len="2" />
+      <Reg cmd="0x25" hex="0x3C7B" len="2" />
+      <Reg cmd="0x26" hex="0x36B9" len="2" />
+      <Reg cmd="0x38" hex="0xEA74" len="2" />
+      <Reg cmd="0x40" hex="0x423E" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x3F5D" len="2" />
+      <Reg cmd="0x43" hex="0x33D7" len="2" />
+      <Reg cmd="0x44" hex="0x30F6" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x46" hex="0xB39A" len="2" />
+      <Reg cmd="0x47" hex="0xBF" len="1" />
+      <Reg cmd="0x4A" hex="0xB266" len="2" />
+      <Reg cmd="0x4B" hex="0xB466" len="2" />
+      <Reg cmd="0x4C" hex="0x78" len="1" />
+      <Reg cmd="0x4F" hex="0xEA08" len="2" />
+      <Reg cmd="0x50" hex="0xB8" len="1" />
+      <Reg cmd="0x51" hex="0xE3C0" len="2" />
+      <Reg cmd="0x52" hex="0x8000" len="2" />
+      <Reg cmd="0x53" hex="0xCD80" len="2" />
+      <Reg cmd="0x54" hex="0xB8" len="1" />
+      <Reg cmd="0x5E" hex="0x3592" len="2" />
+      <Reg cmd="0x5F" hex="0x346B" len="2" />
+      <Reg cmd="0x60" hex="0xFA31" len="2" />
+      <Reg cmd="0x61" hex="0xD280" len="2" />
+      <Reg cmd="0x62" hex="0xD3C0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0xFAED" len="2" />
+      <Reg cmd="0xB1" hex="0x0000" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xB9" hex="0x8000" len="2" />
+      <Reg cmd="0xBA" hex="0x8000" len="2" />
+      <Reg cmd="0xD0" hex="0x0080" len="2" />
+      <Reg cmd="0xD2" hex="0x00" len="1" />
+      <Reg cmd="0xD3" hex="0x00" len="1" />
+      <Reg cmd="0xE0" hex="0x018D" len="2" />
+      <Reg cmd="0xE9" hex="0xC200" len="2" />
+      <Reg cmd="0xF6" hex="0x0F3C" len="2" />
+      <Reg cmd="0xF8" hex="0x4000" len="2" />
+      <Reg cmd="0xF9" hex="0x8000" len="2" />
+    </Page>
+    <Page name="U1:2" num="2" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x4000" len="2" />
+      <Reg cmd="0x24" hex="0x8000" len="2" />
+      <Reg cmd="0x25" hex="0x4333" len="2" />
+      <Reg cmd="0x26" hex="0x3CCD" len="2" />
+      <Reg cmd="0x38" hex="0xEA66" len="2" />
+      <Reg cmd="0x40" hex="0x499A" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x4666" len="2" />
+      <Reg cmd="0x43" hex="0x399A" len="2" />
+      <Reg cmd="0x44" hex="0x3666" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x46" hex="0xB39A" len="2" />
+      <Reg cmd="0x47" hex="0xBF" len="1" />
+      <Reg cmd="0x4A" hex="0xB266" len="2" />
+      <Reg cmd="0x4B" hex="0xB466" len="2" />
+      <Reg cmd="0x4C" hex="0x78" len="1" />
+      <Reg cmd="0x4F" hex="0xEA08" len="2" />
+      <Reg cmd="0x50" hex="0xB8" len="1" />
+      <Reg cmd="0x51" hex="0xE3C0" len="2" />
+      <Reg cmd="0x52" hex="0x8000" len="2" />
+      <Reg cmd="0x53" hex="0xCD80" len="2" />
+      <Reg cmd="0x54" hex="0xB8" len="1" />
+      <Reg cmd="0x5E" hex="0x3B85" len="2" />
+      <Reg cmd="0x5F" hex="0x3A3D" len="2" />
+      <Reg cmd="0x60" hex="0xF3A8" len="2" />
+      <Reg cmd="0x61" hex="0xD280" len="2" />
+      <Reg cmd="0x62" hex="0xD3C0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0xFB4A" len="2" />
+      <Reg cmd="0xB1" hex="0xCBF3" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xB9" hex="0x8000" len="2" />
+      <Reg cmd="0xBA" hex="0x8000" len="2" />
+      <Reg cmd="0xD0" hex="0x0080" len="2" />
+      <Reg cmd="0xD2" hex="0x00" len="1" />
+      <Reg cmd="0xD3" hex="0x00" len="1" />
+      <Reg cmd="0xE0" hex="0x01A5" len="2" />
+      <Reg cmd="0xE9" hex="0xC200" len="2" />
+      <Reg cmd="0xF6" hex="0x0F3C" len="2" />
+      <Reg cmd="0xF8" hex="0x4000" len="2" />
+      <Reg cmd="0xF9" hex="0x8000" len="2" />
+    </Page>
+    <Page name="U1:3" num="3" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x4666" len="2" />
+      <Reg cmd="0x24" hex="0x8000" len="2" />
+      <Reg cmd="0x25" hex="0x49EB" len="2" />
+      <Reg cmd="0x26" hex="0x42E1" len="2" />
+      <Reg cmd="0x38" hex="0xEAA2" len="2" />
+      <Reg cmd="0x40" hex="0x50F5" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x4D70" len="2" />
+      <Reg cmd="0x43" hex="0x3F5C" len="2" />
+      <Reg cmd="0x44" hex="0x3BD7" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x46" hex="0xB39A" len="2" />
+      <Reg cmd="0x47" hex="0xBF" len="1" />
+      <Reg cmd="0x4A" hex="0xB266" len="2" />
+      <Reg cmd="0x4B" hex="0xB466" len="2" />
+      <Reg cmd="0x4C" hex="0x78" len="1" />
+      <Reg cmd="0x4F" hex="0xEA08" len="2" />
+      <Reg cmd="0x50" hex="0xB8" len="1" />
+      <Reg cmd="0x51" hex="0xE3C0" len="2" />
+      <Reg cmd="0x52" hex="0x8000" len="2" />
+      <Reg cmd="0x53" hex="0xCD80" len="2" />
+      <Reg cmd="0x54" hex="0xB8" len="1" />
+      <Reg cmd="0x5E" hex="0x4178" len="2" />
+      <Reg cmd="0x5F" hex="0x4010" len="2" />
+      <Reg cmd="0x60" hex="0xF2ED" len="2" />
+      <Reg cmd="0x61" hex="0xD280" len="2" />
+      <Reg cmd="0x62" hex="0xD3C0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0xFBA8" len="2" />
+      <Reg cmd="0xB1" hex="0x7F4B" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xB9" hex="0x8000" len="2" />
+      <Reg cmd="0xBA" hex="0x8000" len="2" />
+      <Reg cmd="0xD0" hex="0x0080" len="2" />
+      <Reg cmd="0xD2" hex="0x00" len="1" />
+      <Reg cmd="0xD3" hex="0x00" len="1" />
+      <Reg cmd="0xE0" hex="0x01AD" len="2" />
+      <Reg cmd="0xE9" hex="0xC200" len="2" />
+      <Reg cmd="0xF6" hex="0x0F3C" len="2" />
+      <Reg cmd="0xF8" hex="0x4000" len="2" />
+      <Reg cmd="0xF9" hex="0x8000" len="2" />
+    </Page>
+  </Chip>
+  <Chip addr7bit="0x33" modelnum="LTC2977" moduleIndex="0" subModuleIndex="0" siliconrev="1.0" crc="0x6F9AA8FF" customerPartNumber="" customerComment="" customerReferenceDesignator="">
+    <Global>
+      <Reg cmd="0x10" hex="0x00" len="1" />
+      <Reg cmd="0x35" hex="0xCA40" len="2" />
+      <Reg cmd="0x36" hex="0xCA00" len="2" />
+      <Reg cmd="0x4F" hex="0xEA08" len="2" />
+      <Reg cmd="0x50" hex="0xB8" len="1" />
+      <Reg cmd="0x51" hex="0xE3C0" len="2" />
+      <Reg cmd="0x52" hex="0x8000" len="2" />
+      <Reg cmd="0x53" hex="0xCD80" len="2" />
+      <Reg cmd="0x54" hex="0xB8" len="1" />
+      <Reg cmd="0x55" hex="0xCB00" len="2" />
+      <Reg cmd="0x56" hex="0xB8" len="1" />
+      <Reg cmd="0x57" hex="0xCAC0" len="2" />
+      <Reg cmd="0x58" hex="0xCA00" len="2" />
+      <Reg cmd="0x59" hex="0xC380" len="2" />
+      <Reg cmd="0x5A" hex="0xB8" len="1" />
+      <Reg cmd="0xB0" hex="0x0000" len="2" />
+      <Reg cmd="0xB2" hex="0x0000" len="2" />
+      <Reg cmd="0xB4" hex="0x0000" len="2" />
+      <Reg cmd="0xD1" hex="0x00FB" len="2" />
+      <Reg cmd="0xD4" hex="0x0000" len="2" />
+      <Reg cmd="0xD5" hex="0x0F" len="1" />
+      <Reg cmd="0xD6" hex="0x0F" len="1" />
+      <Reg cmd="0xD7" hex="0x0F" len="1" />
+      <Reg cmd="0xD8" hex="0x0F" len="1" />
+      <Reg cmd="0xD9" hex="0x00" len="1" />
+      <Reg cmd="0xDA" hex="0x00" len="1" />
+      <Reg cmd="0xDB" hex="0x12EE" len="2" />
+      <Reg cmd="0xDC" hex="0x8000" len="2" />
+      <Reg cmd="0xE1" hex="0xEB20" len="2" />
+      <Reg cmd="0xE2" hex="0x8000" len="2" />
+      <Reg cmd="0xE3" hex="0x8000" len="2" />
+      <Reg cmd="0xE4" hex="0xFF" len="1" />
+      <Reg cmd="0xE6" hex="0x30" len="1" />
+      <Reg cmd="0xF7" hex="0x07" len="1" />
+    </Global>
+    <Page name="U2:0" num="0" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x1CCD" len="2" />
+      <Reg cmd="0x24" hex="0x8000" len="2" />
+      <Reg cmd="0x25" hex="0x1E3E" len="2" />
+      <Reg cmd="0x26" hex="0x1B5C" len="2" />
+      <Reg cmd="0x40" hex="0x211F" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x1FAE" len="2" />
+      <Reg cmd="0x43" hex="0x19EC" len="2" />
+      <Reg cmd="0x44" hex="0x187B" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x5E" hex="0x1AC9" len="2" />
+      <Reg cmd="0x5F" hex="0x1A35" len="2" />
+      <Reg cmd="0x60" hex="0x0231" len="2" />
+      <Reg cmd="0x61" hex="0xD280" len="2" />
+      <Reg cmd="0x62" hex="0xD3C0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0xEAED" len="2" />
+      <Reg cmd="0xB1" hex="0x0000" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xD0" hex="0x0080" len="2" />
+      <Reg cmd="0xD2" hex="0x00" len="1" />
+      <Reg cmd="0xD3" hex="0x00" len="1" />
+      <Reg cmd="0xE0" hex="0x01AC" len="2" />
+      <Reg cmd="0xE9" hex="0xC200" len="2" />
+    </Page>
+    <Page name="U2:1" num="1" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x2000" len="2" />
+      <Reg cmd="0x24" hex="0x8000" len="2" />
+      <Reg cmd="0x25" hex="0x219A" len="2" />
+      <Reg cmd="0x26" hex="0x1E66" len="2" />
+      <Reg cmd="0x40" hex="0x24CD" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x2333" len="2" />
+      <Reg cmd="0x43" hex="0x1CCD" len="2" />
+      <Reg cmd="0x44" hex="0x1B33" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x5E" hex="0x1DC3" len="2" />
+      <Reg cmd="0x5F" hex="0x1D1F" len="2" />
+      <Reg cmd="0x60" hex="0x0203" len="2" />
+      <Reg cmd="0x61" hex="0xD280" len="2" />
+      <Reg cmd="0x62" hex="0xD3C0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0xF231" len="2" />
+      <Reg cmd="0xB1" hex="0x0000" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xD0" hex="0x0080" len="2" />
+      <Reg cmd="0xD2" hex="0x00" len="1" />
+      <Reg cmd="0xD3" hex="0x00" len="1" />
+      <Reg cmd="0xE0" hex="0x0198" len="2" />
+      <Reg cmd="0xE9" hex="0xC200" len="2" />
+    </Page>
+    <Page name="U2:2" num="2" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x2333" len="2" />
+      <Reg cmd="0x24" hex="0x8000" len="2" />
+      <Reg cmd="0x25" hex="0x24F6" len="2" />
+      <Reg cmd="0x26" hex="0x2170" len="2" />
+      <Reg cmd="0x40" hex="0x287B" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x26B8" len="2" />
+      <Reg cmd="0x43" hex="0x1FAE" len="2" />
+      <Reg cmd="0x44" hex="0x1DEB" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x5E" hex="0x20BC" len="2" />
+      <Reg cmd="0x5F" hex="0x2008" len="2" />
+      <Reg cmd="0x60" hex="0xFBA8" len="2" />
+      <Reg cmd="0x61" hex="0xD280" len="2" />
+      <Reg cmd="0x62" hex="0xD3C0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0xF2ED" len="2" />
+      <Reg cmd="0xB1" hex="0x0000" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xD0" hex="0x0080" len="2" />
+      <Reg cmd="0xD2" hex="0x00" len="1" />
+      <Reg cmd="0xD3" hex="0x00" len="1" />
+      <Reg cmd="0xE0" hex="0x01BD" len="2" />
+      <Reg cmd="0xE9" hex="0xC200" len="2" />
+    </Page>
+    <Page name="U2:3" num="3" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x2666" len="2" />
+      <Reg cmd="0x24" hex="0x8000" len="2" />
+      <Reg cmd="0x25" hex="0x2852" len="2" />
+      <Reg cmd="0x26" hex="0x247A" len="2" />
+      <Reg cmd="0x40" hex="0x2C28" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x2A3D" len="2" />
+      <Reg cmd="0x43" hex="0x228F" len="2" />
+      <Reg cmd="0x44" hex="0x20A4" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x5E" hex="0x23B6" len="2" />
+      <Reg cmd="0x5F" hex="0x22F1" len="2" />
+      <Reg cmd="0x60" hex="0xFAED" len="2" />
+      <Reg cmd="0x61" hex="0xD280" len="2" />
+      <Reg cmd="0x62" hex="0xD3C0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0xFA31" len="2" />
+      <Reg cmd="0xB1" hex="0x0000" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xD0" hex="0x0080" len="2" />
+      <Reg cmd="0xD2" hex="0x00" len="1" />
+      <Reg cmd="0xD3" hex="0x00" len="1" />
+      <Reg cmd="0xE0" hex="0x019E" len="2" />
+      <Reg cmd="0xE9" hex="0xC200" len="2" />
+    </Page>
+    <Page name="U2:4" num="4" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x5000" len="2" />
+      <Reg cmd="0x24" hex="0x8000" len="2" />
+      <Reg cmd="0x25" hex="0x5400" len="2" />
+      <Reg cmd="0x26" hex="0x4C00" len="2" />
+      <Reg cmd="0x40" hex="0x5C00" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x5800" len="2" />
+      <Reg cmd="0x43" hex="0x4800" len="2" />
+      <Reg cmd="0x44" hex="0x4400" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x5E" hex="0x4A66" len="2" />
+      <Reg cmd="0x5F" hex="0x48CD" len="2" />
+      <Reg cmd="0x60" hex="0xF231" len="2" />
+      <Reg cmd="0x61" hex="0xD280" len="2" />
+      <Reg cmd="0x62" hex="0xD3C0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0x0203" len="2" />
+      <Reg cmd="0xB1" hex="0x0000" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xD0" hex="0x0080" len="2" />
+      <Reg cmd="0xD2" hex="0x00" len="1" />
+      <Reg cmd="0xD3" hex="0x00" len="1" />
+      <Reg cmd="0xE0" hex="0x0198" len="2" />
+      <Reg cmd="0xE9" hex="0xC200" len="2" />
+    </Page>
+    <Page name="U2:5" num="5" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x5666" len="2" />
+      <Reg cmd="0x24" hex="0x8000" len="2" />
+      <Reg cmd="0x25" hex="0x5AB8" len="2" />
+      <Reg cmd="0x26" hex="0x5214" len="2" />
+      <Reg cmd="0x40" hex="0x635C" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x5F0A" len="2" />
+      <Reg cmd="0x43" hex="0x4DC2" len="2" />
+      <Reg cmd="0x44" hex="0x4970" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x5E" hex="0x505A" len="2" />
+      <Reg cmd="0x5F" hex="0x4E9F" len="2" />
+      <Reg cmd="0x60" hex="0xEAED" len="2" />
+      <Reg cmd="0x61" hex="0xD280" len="2" />
+      <Reg cmd="0x62" hex="0xD3C0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0x0231" len="2" />
+      <Reg cmd="0xB1" hex="0x0000" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xD0" hex="0x0080" len="2" />
+      <Reg cmd="0xD2" hex="0x00" len="1" />
+      <Reg cmd="0xD3" hex="0x00" len="1" />
+      <Reg cmd="0xE0" hex="0x01A6" len="2" />
+      <Reg cmd="0xE9" hex="0xC200" len="2" />
+    </Page>
+    <Page name="U2:6" num="6" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x6000" len="2" />
+      <Reg cmd="0x24" hex="0x8000" len="2" />
+      <Reg cmd="0x25" hex="0x64CD" len="2" />
+      <Reg cmd="0x26" hex="0x5B33" len="2" />
+      <Reg cmd="0x40" hex="0x6E66" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x699A" len="2" />
+      <Reg cmd="0x43" hex="0x5666" len="2" />
+      <Reg cmd="0x44" hex="0x519A" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x5E" hex="0x5948" len="2" />
+      <Reg cmd="0x5F" hex="0x575C" len="2" />
+      <Reg cmd="0x60" hex="0xE2ED" len="2" />
+      <Reg cmd="0x61" hex="0xD280" len="2" />
+      <Reg cmd="0x62" hex="0xD3C0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0x0260" len="2" />
+      <Reg cmd="0xB1" hex="0x1EF3" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xD0" hex="0x0080" len="2" />
+      <Reg cmd="0xD2" hex="0x00" len="1" />
+      <Reg cmd="0xD3" hex="0x00" len="1" />
+      <Reg cmd="0xE0" hex="0x01AF" len="2" />
+      <Reg cmd="0xE9" hex="0xC200" len="2" />
+    </Page>
+    <Page name="U2:7" num="7" customerComment="" vout_scale="1" calculateTotalIOut="False" numSlavePhases="0" slaveToMasterSharingRatio="1">
+      <Reg cmd="0x01" hex="0x80" len="1" />
+      <Reg cmd="0x02" hex="0x1E" len="1" />
+      <Reg cmd="0x21" hex="0x699A" len="2" />
+      <Reg cmd="0x24" hex="0x8000" len="2" />
+      <Reg cmd="0x25" hex="0x6EE2" len="2" />
+      <Reg cmd="0x26" hex="0x6452" len="2" />
+      <Reg cmd="0x40" hex="0x7971" len="2" />
+      <Reg cmd="0x41" hex="0x7F" len="1" />
+      <Reg cmd="0x42" hex="0x7429" len="2" />
+      <Reg cmd="0x43" hex="0x5F0B" len="2" />
+      <Reg cmd="0x44" hex="0x59C3" len="2" />
+      <Reg cmd="0x45" hex="0x7F" len="1" />
+      <Reg cmd="0x5E" hex="0x6236" len="2" />
+      <Reg cmd="0x5F" hex="0x6019" len="2" />
+      <Reg cmd="0x60" hex="0x8000" len="2" />
+      <Reg cmd="0x61" hex="0xD280" len="2" />
+      <Reg cmd="0x62" hex="0xD3C0" len="2" />
+      <Reg cmd="0x63" hex="0xB8" len="1" />
+      <Reg cmd="0x64" hex="0x028F" len="2" />
+      <Reg cmd="0xB1" hex="0xB8CE" len="2" />
+      <Reg cmd="0xB3" hex="0x0000" len="2" />
+      <Reg cmd="0xD0" hex="0x0080" len="2" />
+      <Reg cmd="0xD2" hex="0x00" len="1" />
+      <Reg cmd="0xD3" hex="0x00" len="1" />
+      <Reg cmd="0xE0" hex="0x0195" len="2" />
+      <Reg cmd="0xE9" hex="0xC200" len="2" />
+    </Page>
+  </Chip>
+  <multiPhaseConfig>
+    <railGroups>
+      <railGroup>
+        <railName>Rail A</railName>
+        <memberChannels>U0:0</memberChannels>
+        <numberOfPhases>1</numberOfPhases>
+        <railAddress>0x40</railAddress>
+      </railGroup>
+      <railGroup>
+        <railName>Rail B</railName>
+        <memberChannels>U0:1</memberChannels>
+        <numberOfPhases>1</numberOfPhases>
+        <railAddress>0x41</railAddress>
+      </railGroup>
+    </railGroups>
+    <chipConfigs>
+      <chipConfig>
+        <chipId>U0</chipId>
+        <chipAddress>0x30</chipAddress>
+        <frequencyInkHz>500</frequencyInkHz>
+        <phases>0,180</phases>
+        <max_duty />
+      </chipConfig>
+    </chipConfigs>
+  </multiPhaseConfig>
+</ProjectConfig>

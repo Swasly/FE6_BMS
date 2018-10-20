@@ -1,0 +1,51 @@
+Last Modified Date & Time: 04/09/2015 20:36:36
+
+alpaca-bms: TopDesign
+	LTC68 [v2.40] to [v2.50]
+	EEPROM_1 [v2.10] to [v3.0]
+	ADC_current [v3.10] to [v3.20]
+
+
+Last Modified Date & Time: 04/09/2015 21:17:59
+
+alpaca-bms: TopDesign
+	LTC68 [v2.40] to [v2.50]
+	EEPROM_1 [v2.10] to [v3.0]
+	ADC_current [v3.10] to [v3.20]
+	DEBUG_UART [v2.30] to [v2.40]
+
+
+Last Modified Date & Time: 04/09/2015 22:34:48
+
+alpaca-bms: TopDesign
+	LTC68 [v2.40] to [v2.50]
+	EEPROM_1 [v2.10] to [v3.0]
+	ADC_current [v3.10] to [v3.20]
+
+
+Last Modified Date & Time: 05/08/2015 00:56:52
+
+alpaca-bms: TopDesign
+	DEBUG_UART [v2.40] to [v2.50]
+
+
+Last Modified Date & Time: 11/05/2016 12:19:30
+
+alpaca-bms: TopDesign.cysch
+	Rx_1 [v2.10] to [v2.20]
+	Tx_1 [v2.10] to [v2.20]
+	MOSI [v2.10] to [v2.20]
+	SCLK [v2.10] to [v2.20]
+	MISO [v2.10] to [v2.20]
+	SS [v2.10] to [v2.20]
+	current [v2.10] to [v2.20]
+	OK_SIG [v2.10] to [v2.20]
+	current_supply [v2.10] to [v2.20]
+	CAN_1 [v2.30] to [v3.0]
+	USBUART [v2.80] to [v3.10]
+
+alpaca-bms: alpaca-bms.cydwr
+	cy_boot [v4.20] to [v5.50]
+	LIN_Dynamic [v3.20] to [v3.40]
+
+

@@ -1,0 +1,16 @@
+TODO:
+In the FE3, the major modification is refine the whole code, make it strong, and add some features:
+
+Use new cell data structure.
+the minimum structure is cell, which is atomic data structure, then use different header structure to index the cells
+
+Need to find way to estimate the SOC. One possible solution is when car is running, grately increase the update rate of current sensor, for example, read current sensor 100 times one second, then integral by time.
+
+
+Wait...what is voltage compensation?
+
+
+Oct.30
+needs to finish bat_err_stack
+needs to update can msg methods
+needs to test connectivity

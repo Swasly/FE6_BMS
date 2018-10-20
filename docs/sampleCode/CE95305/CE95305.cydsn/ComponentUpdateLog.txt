@@ -1,0 +1,13 @@
+Last Modified Date & Time: 04/09/2015 16:37:30
+
+CE95305: TopDesign
+	LCD_Char [v2.0] to [v2.10]
+	MOSI_1 [v2.5] to [v2.10]
+	SCLK_1 [v2.5] to [v2.10]
+	MISO_1 [v2.5] to [v2.10]
+	SS_1 [v2.5] to [v2.10]
+
+CE95305: Design Wide APIs
+	cy_boot [v4.11] to [v4.20]
+
+
