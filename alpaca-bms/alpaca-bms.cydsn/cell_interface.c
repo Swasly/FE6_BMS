@@ -328,6 +328,22 @@ uint8_t open_wire_adow(uint8_t pup){
     }
 }// get_cell_volt()
 
+uint8_t test_get_cell_temp(){
+    // Testing new function to get cell temperatures
+    LTC68_ClearFIFO();
+    Select6820_Write(0);
+    wakeup_sleep();
+    CyDelay(100);
+    // 10/20/18: Testing ltc6804_wrfgca() to write to gpio pins for mux select
+    LTC6804_wrcfga();
+    LTC6804_wrcfga();
+    CyDelay(100);
+    
+    
+    // Probe GPIO pins to see if wrfcga works
+    return 0;
+}
+
 uint8_t get_cell_temp(){
     uint8_t command[3];
     uint8_t rawTemp[(N_OF_TEMP + N_OF_TEMP_BOARD) * 2];
@@ -470,8 +486,8 @@ void update_volt(volatile uint16_t cell_codes[IC_PER_BUS * N_OF_BUSSES][12]){
         }
     }
     
-    if (bat_subpack[2].cells[22]->voltage > 4199)
-        bat_subpack[2].cells[22]->voltage = 4199;
+    if (bat_subpack[2].cells[22]->voltage > 4199)                           // fixes a bug
+        bat_subpack[2].cells[22]->voltage = 4199;                           // from hardware
     if (bat_subpack[2].cells[23]->voltage > 4199)
         bat_subpack[2].cells[23]->voltage = 4199;
     // Update subpack and pack voltages

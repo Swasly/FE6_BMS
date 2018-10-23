@@ -1,25 +1,22 @@
---------------- Build Started: 06/15/2018 09:26:37 Project: alpaca-bms, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
+--------------- Build Started: 10/23/2018 09:29:38 Project: alpaca-bms, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
 The code generation step is up to date.
-arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/main.lst -g -D DEBUG -Wall -ffunction-sections -ffat-lto-objects -O0 -c main.c -o .\CortexM3\ARM_GCC_541\Debug\main.o
-main.c: In function 'debugMain':
-main.c:181:13: warning: unused variable 'rxData' [-Wunused-variable]
-     uint8_t rxData[23];
+arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/LTC68042.lst -g -D DEBUG -Wall -ffunction-sections -ffat-lto-objects -O0 -c LTC68042.c -o .\CortexM3\ARM_GCC_541\Debug\LTC68042.o
+LTC68042.c: In function 'spi_write_read':
+LTC68042.c:1026:13: warning: variable 'dummy_read' set but not used [-Wunused-but-set-variable]
+     uint8_t dummy_read;
              ^
-main.c:180:13: warning: unused variable 'txData' [-Wunused-variable]
-     uint8_t txData[2] = {0x1E, 0xEE};
-             ^
-main.c: In function 'main':
-main.c:214:13: warning: unused variable 'led' [-Wunused-variable]
-     uint8_t led = 0;
+LTC68042.c: In function 'my_spi_write_read':
+LTC68042.c:1073:13: warning: variable 'dummy_read' set but not used [-Wunused-but-set-variable]
+     uint8_t dummy_read;
              ^
 arm-none-eabi-ar.exe -rs .\CortexM3\ARM_GCC_541\Debug\alpaca-bms.a .\CortexM3\ARM_GCC_541\Debug\CyDmac.o .\CortexM3\ARM_GCC_541\Debug\CyFlash.o .\CortexM3\ARM_GCC_541\Debug\CyLib.o .\CortexM3\ARM_GCC_541\Debug\cyPm.o .\CortexM3\ARM_GCC_541\Debug\CySpc.o .\CortexM3\ARM_GCC_541\Debug\cyutils.o .\CortexM3\ARM_GCC_541\Debug\Rx_1.o .\CortexM3\ARM_GCC_541\Debug\Tx_1.o .\CortexM3\ARM_GCC_541\Debug\CAN_1.o .\CortexM3\ARM_GCC_541\Debug\CAN_1_INT.o .\CortexM3\ARM_GCC_541\Debug\CAN_1_PM.o .\CortexM3\ARM_GCC_541\Debug\CAN_1_TX_RX_func.o .\CortexM3\ARM_GCC_541\Debug\MOSI.o .\CortexM3\ARM_GCC_541\Debug\SCLK.o .\CortexM3\ARM_GCC_541\Debug\MISO.o .\CortexM3\ARM_GCC_541\Debug\LTC68.o .\CortexM3\ARM_GCC_541\Debug\LTC68_PM.o .\CortexM3\ARM_GCC_541\Debug\LTC68_INT.o .\CortexM3\ARM_GCC_541\Debug\SS.o .\CortexM3\ARM_GCC_541\Debug\LTC68_IntClock.o .\CortexM3\ARM_GCC_541\Debug\timer_clock.o .\CortexM3\ARM_GCC_541\Debug\current.o .\CortexM3\ARM_GCC_541\Debug\ADC_current.o .\CortexM3\ARM_GCC_541\Debug\ADC_current_PM.o .\CortexM3\ARM_GCC_541\Debug\ADC_current_INT.o .\CortexM3\ARM_GCC_541\Debug\ADC_current_AMux.o .\CortexM3\ARM_GCC_541\Debug\ADC_current_Ext_CP_Clk.o .\CortexM3\ARM_GCC_541\Debug\ADC_current_IRQ.o .\CortexM3\ARM_GCC_541\Debug\ADC_current_theACLK.o .\CortexM3\ARM_GCC_541\Debug\current_timer.o .\CortexM3\ARM_GCC_541\Debug\current_timer_PM.o .\CortexM3\ARM_GCC_541\Debug\OK_SIG.o .\CortexM3\ARM_GCC_541\Debug\WDT_timer.o .\CortexM3\ARM_GCC_541\Debug\WDT_timer_PM.o .\CortexM3\ARM_GCC_541\Debug\WDT_timer_clock.o .\CortexM3\ARM_GCC_541\Debug\WDT_ISR.o .\CortexM3\ARM_GCC_541\Debug\timer_clock_1.o .\CortexM3\ARM_GCC_541\Debug\USBUART.o .\CortexM3\ARM_GCC_541\Debug\USBUART_audio.o .\CortexM3\ARM_GCC_541\Debug\USBUART_boot.o .\CortexM3\ARM_GCC_541\Debug\USBUART_cdc.o .\CortexM3\ARM_GCC_541\Debug\USBUART_cls.o .\CortexM3\ARM_GCC_541\Debug\USBUART_descr.o .\CortexM3\ARM_GCC_541\Debug\USBUART_drv.o .\CortexM3\ARM_GCC_541\Debug\USBUART_episr.o .\CortexM3\ARM_GCC_541\Debug\USBUART_hid.o .\CortexM3\ARM_GCC_541\Debug\USBUART_pm.o .\CortexM3\ARM_GCC_541\Debug\USBUART_std.o .\CortexM3\ARM_GCC_541\Debug\USBUART_vnd.o .\CortexM3\ARM_GCC_541\Debug\USBUART_midi.o .\CortexM3\ARM_GCC_541\Debug\USBUART_msc.o .\CortexM3\ARM_GCC_541\Debug\USBUART_Dm.o .\CortexM3\ARM_GCC_541\Debug\USBUART_Dp.o .\CortexM3\ARM_GCC_541\Debug\current_update_ISR.o .\CortexM3\ARM_GCC_541\Debug\current_supply.o .\CortexM3\ARM_GCC_541\Debug\MUX_current.o .\CortexM3\ARM_GCC_541\Debug\SOC_Store.o .\CortexM3\ARM_GCC_541\Debug\SOC_Timer.o .\CortexM3\ARM_GCC_541\Debug\SOC_Timer_PM.o .\CortexM3\ARM_GCC_541\Debug\cy_em_eeprom.o .\CortexM3\ARM_GCC_541\Debug\CS.o .\CortexM3\ARM_GCC_541\Debug\SS_1.o .\CortexM3\ARM_GCC_541\Debug\Select6820.o .\CortexM3\ARM_GCC_541\Debug\Select6820_PM.o .\CortexM3\ARM_GCC_541\Debug\CyBootAsmGnu.o
 arm-none-eabi-ar.exe: creating .\CortexM3\ARM_GCC_541\Debug\alpaca-bms.a
-arm-none-eabi-gcc.exe -Wl,--start-group -o C:\Users\Schuyler\Documents\Formula\FE3_BMS\alpaca-bms\alpaca-bms.cydsn\CortexM3\ARM_GCC_541\Debug\alpaca-bms.elf .\CortexM3\ARM_GCC_541\Debug\WDT.o .\CortexM3\ARM_GCC_541\Debug\main.o .\CortexM3\ARM_GCC_541\Debug\cell_interface.o .\CortexM3\ARM_GCC_541\Debug\current_sense.o .\CortexM3\ARM_GCC_541\Debug\can_manager.o .\CortexM3\ARM_GCC_541\Debug\CAN_toolbox.o .\CortexM3\ARM_GCC_541\Debug\uart-terminal.o .\CortexM3\ARM_GCC_541\Debug\BMS_monitor.o .\CortexM3\ARM_GCC_541\Debug\LTC68042.o .\CortexM3\ARM_GCC_541\Debug\cyfitter_cfg.o .\CortexM3\ARM_GCC_541\Debug\cymetadata.o .\CortexM3\ARM_GCC_541\Debug\Cm3Start.o .\CortexM3\ARM_GCC_541\Debug\alpaca-bms.a "C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CortexM3\ARM_GCC_541\Debug\CyComponentLibrary.a" -mcpu=cortex-m3 -mthumb -l m -L Generated_Source\PSoC5 -Wl,-Map,.\CortexM3\ARM_GCC_541\Debug/alpaca-bms.map -T Generated_Source\PSoC5\cm3gcc.ld -specs=nano.specs -Wl,--gc-sections -g -ffunction-sections -O0 -ffat-lto-objects -Wl,--end-group
-cyelftool.exe -C C:\Users\Schuyler\Documents\Formula\FE3_BMS\alpaca-bms\alpaca-bms.cydsn\CortexM3\ARM_GCC_541\Debug\alpaca-bms.elf --flash_row_size 256 --flash_size 262144 --flash_offset 0x00000000
+arm-none-eabi-gcc.exe -Wl,--start-group -o C:\Users\waton\Dropbox\frucd\FE6_BMS\alpaca-bms\alpaca-bms.cydsn\CortexM3\ARM_GCC_541\Debug\alpaca-bms.elf .\CortexM3\ARM_GCC_541\Debug\WDT.o .\CortexM3\ARM_GCC_541\Debug\main.o .\CortexM3\ARM_GCC_541\Debug\cell_interface.o .\CortexM3\ARM_GCC_541\Debug\current_sense.o .\CortexM3\ARM_GCC_541\Debug\can_manager.o .\CortexM3\ARM_GCC_541\Debug\CAN_toolbox.o .\CortexM3\ARM_GCC_541\Debug\uart-terminal.o .\CortexM3\ARM_GCC_541\Debug\BMS_monitor.o .\CortexM3\ARM_GCC_541\Debug\LTC68042.o .\CortexM3\ARM_GCC_541\Debug\cyfitter_cfg.o .\CortexM3\ARM_GCC_541\Debug\cymetadata.o .\CortexM3\ARM_GCC_541\Debug\Cm3Start.o .\CortexM3\ARM_GCC_541\Debug\alpaca-bms.a "C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CortexM3\ARM_GCC_541\Debug\CyComponentLibrary.a" -mcpu=cortex-m3 -mthumb -l m -L Generated_Source\PSoC5 -Wl,-Map,.\CortexM3\ARM_GCC_541\Debug/alpaca-bms.map -T Generated_Source\PSoC5\cm3gcc.ld -specs=nano.specs -Wl,--gc-sections -g -ffunction-sections -O0 -ffat-lto-objects -Wl,--end-group
+cyelftool.exe -C C:\Users\waton\Dropbox\frucd\FE6_BMS\alpaca-bms\alpaca-bms.cydsn\CortexM3\ARM_GCC_541\Debug\alpaca-bms.elf --flash_row_size 256 --flash_size 262144 --flash_offset 0x00000000
 No ELF section .cychecksum found, creating one
 Application checksum calculated and stored in ELF section .cychecksum
 Checksum calculated and stored in ELF section .cymeta
-cyelftool.exe -S C:\Users\Schuyler\Documents\Formula\FE3_BMS\alpaca-bms\alpaca-bms.cydsn\CortexM3\ARM_GCC_541\Debug\alpaca-bms.elf
-Flash used: 21222 of 262144 bytes (8.1%).
-SRAM used: 10093 of 65536 bytes (15.4%). Stack: 2048 bytes. Heap: 128 bytes.
---------------- Build Succeeded: 06/15/2018 09:26:39 ---------------
+cyelftool.exe -S C:\Users\waton\Dropbox\frucd\FE6_BMS\alpaca-bms\alpaca-bms.cydsn\CortexM3\ARM_GCC_541\Debug\alpaca-bms.elf
+Flash used: 14814 of 262144 bytes (5.7%).
+SRAM used: 10085 of 65536 bytes (15.4%). Stack: 2048 bytes. Heap: 128 bytes.
+--------------- Build Succeeded: 10/23/2018 09:29:39 ---------------
