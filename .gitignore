@@ -3,12 +3,14 @@
 *.cyprj.*
 *.cycdx
 *.cyfit
+*.log
 *.rpt
 *.uvopt
 *.uvproj
 *_timing.html
 *.cydsn/codegentemp
 *.cydsn/CortexM3
+*.xml
 *.zip
 
 # Object files
