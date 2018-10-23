@@ -161,7 +161,7 @@ void LTC6804_adcv()
 
 }
 
-void LTC6804_wrcfga()
+void LTC6804_wrcfga(uint8_t select)
 {
     uint8_t cmd[12];
     uint8_t WRCFGA[2];
@@ -179,8 +179,16 @@ void LTC6804_wrcfga()
     cmd[2] = (uint8_t)(temp_pec >> 8);
     cmd[3] = (uint8_t)(temp_pec);
     
-    cmd[4] = 0;
+    /*
+    crfg0 - gpio select
+    bits -  |7     |6       |5        |4        |3     |2     |1      |0          |
+            |gpio5 |gpio4   |gpio3    |gpio2    |gpio1 |refon | dten  |adcopt (important) |
+            | x    |select2 | select1 | select 0|   x  | x    | x     | x         |
+    */
+    uint8_t cfgr0 = 0x0 | (select << 4);
+    cmd[4] = cfgr0 | 0x1;
     cmd[5] = 0;
+    
     cmd[6] = 0;
     cmd[7] = 0;
     cmd[8] = 0;
