@@ -190,7 +190,7 @@ void LTC6804_wrcfga()
         DATA[i] = cmd[i + 4];
     }
     temp_pec = pec15_calc(6, DATA);
-                
+                    
     cmd[10] = (uint8_t)(temp_pec >> 8);
     cmd[11] = (uint8_t)(temp_pec);
     
@@ -198,7 +198,7 @@ void LTC6804_wrcfga()
     wakeup_idle();
     
     //4
-    spi_write_array(4, cmd);
+    spi_write_array(12, cmd);
 }
 
 void LTC6804_adow(uint8_t pup)

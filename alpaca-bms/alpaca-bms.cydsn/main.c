@@ -259,7 +259,6 @@ int main(void)
 				
                 
 		        get_cell_volt();// TODO test voltage
-                get_cell_volt();
 				//TESTDAY_2_TODO. check_stack_fuse(); // TODO: check if stacks are disconnected
                 
 				//get_cell_temp(); TODO test temperature
