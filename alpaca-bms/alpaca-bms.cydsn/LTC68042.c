@@ -881,17 +881,17 @@ int8_t LTC6804_rdcfg(uint8_t total_ic, uint8_t r_config[][8])
   //1
   cmd[0] = 0x00;
   cmd[1] = 0x02;
-  cmd[2] = 0x2b;
-  cmd[3] = 0x0A;
+  cmd[2] = 0x2b; // PEC
+  cmd[3] = 0x0A; // PEC
  
   //2
   wakeup_idle (); //This will guarantee that the LTC6804 isoSPI port is awake. This command can be removed.
   //3
    for(int current_ic = 0; current_ic<total_ic; current_ic++)
   {
-	cmd[0] = 0x80 + (current_ic<<3); //Setting address
+	cmd[0] = 0x80 + (current_ic<<3); //Setting address bits in cmd
     data_pec = pec15_calc(2, cmd);
-	cmd[2] = (uint8_t)(data_pec >> 8);
+	cmd[2] = (uint8_t)(data_pec >> 8); // PEC changes since address changed
 	cmd[3] = (uint8_t)(data_pec); 
 	spi_write_read(cmd,4,&rx_data[current_ic*8],8);
   }
