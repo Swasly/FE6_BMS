@@ -335,8 +335,12 @@ uint8_t test_get_cell_temp(){
     wakeup_sleep();
     CyDelay(100);
     // 10/20/18: Testing ltc6804_wrfgca() to write to gpio pins for mux select
-    LTC6804_wrcfga(255);
-    LTC6804_wrcfga(255);
+    
+    //dummy data 
+    uint8_t data[6] = {1,2,3,4,5,6};
+    
+    LTC6804_wrcfga(1); //write gpio pin 2 high
+    LTC6804_wrcfga(1);
     CyDelay(100);
     
     

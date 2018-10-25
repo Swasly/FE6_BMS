@@ -161,21 +161,22 @@ void LTC6804_adcv()
 
 }
 
+/*
+ * Address write command -
+ * select - the value that should be selected. -> greatest value = 7
+ */
+
 void LTC6804_wrcfga(uint8_t select)
 {
     uint8_t cmd[12];
-    uint8_t WRCFGA[2];
-    uint8_t DATA[6];
     uint16_t temp_pec;
     
     //1
     cmd[0] = 128;
     cmd[1] = 1;
-    WRCFGA[0] = cmd[0];
-    WRCFGA[1] = cmd[1];
     
     //2
-    temp_pec = pec15_calc(2, WRCFGA);
+    temp_pec = pec15_calc(2, (uint8_t *)cmd);
     cmd[2] = (uint8_t)(temp_pec >> 8);
     cmd[3] = (uint8_t)(temp_pec);
     
@@ -185,20 +186,23 @@ void LTC6804_wrcfga(uint8_t select)
             |gpio5 |gpio4   |gpio3    |gpio2    |gpio1 |refon | dten  |adcopt (important) |
             | x    |select2 | select1 | select 0|   x  | x    | x     | x         |
     */
-    uint8_t cfgr0 = 0x0 | (select << 4);
-    cmd[4] = cfgr0 | 0x1;
+    uint8_t cfgr0 = (select << 5) >> 1; // ensure that only the correct three bits are set.
+    
+    cmd[4] = cfgr0;
     cmd[5] = 0;
     
     cmd[6] = 0;
     cmd[7] = 0;
     cmd[8] = 0;
     cmd[9] = 0;
-    
+    /*
     for(int i = 0; i < 6; i++){
         DATA[i] = cmd[i + 4];
     }
     temp_pec = pec15_calc(6, DATA);
-                    
+    */
+
+    temp_pec = pec15_calc(6, (uint8_t*)(cmd + 4));                    
     cmd[10] = (uint8_t)(temp_pec >> 8);
     cmd[11] = (uint8_t)(temp_pec);
     
