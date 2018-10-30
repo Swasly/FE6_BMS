@@ -45,3 +45,4 @@
 
 # Debug files
 *.dSYM/
+*.log
