@@ -9,6 +9,7 @@
 #include "uart-terminal.h"
 #include "BMS_monitor.h"
 
+
 //#define WDT_ENABLE
 
 //#define DEBUG_MODE
@@ -24,7 +25,7 @@ typedef enum
 	BMS_FAULT
 }BMS_MODE;
 
-
+uint8_t cfga[6], cfga_on_init[6];
 volatile uint8_t CAN_UPDATE_FLAG=0;
 extern volatile BAT_PACK_t bat_pack;
 extern BAT_SUBPACK_t bat_subpack[N_OF_SUBPACK];
@@ -262,7 +263,8 @@ int main(void)
 				//TESTDAY_2_TODO. check_stack_fuse(); // TODO: check if stacks are disconnected
                 
 				//get_cell_temp(); TODO test temperature
-                test_get_cell_temp();
+                get_cfga_on_init(cfga_on_init);
+                test_get_cell_temp(cfga);
                 
                 
                 // TODO: Calculate SOC

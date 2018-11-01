@@ -328,19 +328,55 @@ uint8_t open_wire_adow(uint8_t pup){
     }
 }// get_cell_volt()
 
-uint8_t test_get_cell_temp(){
-    // Testing new function to get cell temperatures
+uint8_t get_cfga_on_init(uint8_t cfga[6]){
+    
+    int8_t pec_error;
+    
     LTC68_ClearFIFO();
     Select6820_Write(0);
     wakeup_sleep();
     CyDelay(100);
+    
+    pec_error = LTC6804_rdcfga(cfga);
+    pec_error = LTC6804_rdcfga(cfga);
+    
+    return 0;
+}
+
+uint8_t test_get_cell_temp(uint8_t cfga[6]){
+    /*
+    1. Prepare 6820s for reading/writing
+    2. Read current cfg register values
+    3. Store read values in array
+    4. for loop
+    4a. write value to cfg reg. to select mux
+    4b. adc on data gpio pin
+    4c. read adc data, store in array
+    5. ???
+    6. Profit
+    */
+    
+    int8_t pec_error;
+    
+    // 1
+    LTC68_ClearFIFO();
+    Select6820_Write(0);
+    wakeup_sleep();
+    CyDelay(100);
+
     // 10/20/18: Testing ltc6804_wrfgca() to write to gpio pins for mux select
-    LTC6804_wrcfga();
-    LTC6804_wrcfga();
+    
+    
+    LTC6804_wrcfga(18); //write gpio pin 2 high
+    LTC6804_wrcfga(18);
+    CyDelay(100);
+
+    
+    pec_error = LTC6804_rdcfga(cfga);
+    pec_error = LTC6804_rdcfga(cfga);
+    
     CyDelay(100);
     
-    
-    // Probe GPIO pins to see if wrfcga works
     return 0;
 }
 

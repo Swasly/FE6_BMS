@@ -161,36 +161,51 @@ void LTC6804_adcv()
 
 }
 
-void LTC6804_wrcfga()
+/*
+ * Address write command -
+ * select - the value that should be selected. -> greatest value = 7
+ */
+
+void LTC6804_wrcfga(uint8_t select)
 {
     uint8_t cmd[12];
-    uint8_t WRCFGA[2];
-    uint8_t DATA[6];
     uint16_t temp_pec;
     
     //1
     cmd[0] = 128;
     cmd[1] = 1;
-    WRCFGA[0] = cmd[0];
-    WRCFGA[1] = cmd[1];
     
     //2
-    temp_pec = pec15_calc(2, WRCFGA);
+    temp_pec = pec15_calc(2, (uint8_t *)cmd);
     cmd[2] = (uint8_t)(temp_pec >> 8);
     cmd[3] = (uint8_t)(temp_pec);
+    cmd[4] = 255;
+
+    /*
+    crfg0 - gpio select
+    bits -  |7     |6       |5        |4        |3     |2     |1      |0          |
+            |gpio5 |gpio4   |gpio3    |gpio2    |gpio1 |refon | dten  |adcopt (important) |
+            | x    |select2 | select1 | select 0|   x  | x    | 1     | x         |
     
-    cmd[4] = 0;
+    !!!!!! dten (bit 1) must always be high !!!!!!
+    */
+    uint8_t cfgr0 = (select << 5) >> 1; // ensure that only the correct three bits are set.
+    
+    cmd[4] = 18;
     cmd[5] = 0;
+    
     cmd[6] = 0;
     cmd[7] = 0;
     cmd[8] = 0;
     cmd[9] = 0;
-    
+    /*
     for(int i = 0; i < 6; i++){
         DATA[i] = cmd[i + 4];
     }
     temp_pec = pec15_calc(6, DATA);
-                    
+    */
+
+    temp_pec = pec15_calc(6, (uint8_t*)(cmd + 4));                    
     cmd[10] = (uint8_t)(temp_pec >> 8);
     cmd[11] = (uint8_t)(temp_pec);
     
@@ -199,6 +214,52 @@ void LTC6804_wrcfga()
     
     //4
     spi_write_array(12, cmd);
+}
+
+int8_t LTC6804_rdcfga(uint8_t cfga[6])
+{
+    uint8_t cmd[4];         // bytes for rdcfga cmd; sent to slaves
+    int8_t pec_error;       // returned, indicates whehter cmd failed or not
+    uint16_t data_pec;      // stores our calculated pec
+    uint16_t recieved_pec;  // stores 6811's calculated pec
+    uint16_t temp_pec;
+    uint8_t ones[6];
+    uint16_t temp_data_pec; // Testing pec calculation for data consisting of all 1's
+    uint8_t rx_data[8];     // stores slave to master data (6 bytes data, 2 bytes pec)
+    uint8_t RDCFGA[2];
+    uint8_t temp_cfga[6];   // Debugging, testing if local array gets correct value
+    
+    for (int j = 0; j < 8; j++){
+        rx_data[j] = 0;
+    }
+    
+    for (int j = 0; j < 6; j++){
+        ones[j] = 255;
+    }
+    
+    cmd[0] = 128;          // See pg. 55-63 of 6811 datasheet for cmd formats
+    cmd[1] = 2;                                              
+    temp_pec = pec15_calc(2, cmd);
+    cmd[2] = (uint8_t)(temp_pec >> 8);
+    cmd[3] = (uint8_t)(temp_pec);
+    
+    wakeup_idle();
+    spi_write_read(cmd, 4, rx_data, 8);
+    
+    recieved_pec = *(uint16_t *)(rx_data + 6);
+    temp_data_pec = pec15_calc(6, ones);
+    data_pec = pec15_calc(6, rx_data);
+    if(recieved_pec != data_pec){
+        pec_error = -1;
+    }
+    
+    for(int i = 0; i < 6; i++){
+        cfga[i] = rx_data[i];
+        temp_cfga[i] = rx_data[i];
+    }
+    
+    return pec_error;
+       
 }
 
 void LTC6804_adow(uint8_t pup)
