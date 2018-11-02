@@ -191,10 +191,10 @@ void LTC6804_wrcfga(uint8_t select)
     */
     uint8_t cfgr0 = (select << 5) >> 1; // ensure that only the correct three bits are set.
     
-    cmd[4] = 18;
+    cmd[4] = 66;
     cmd[5] = 0;
     
-    cmd[6] = 0;
+    cmd[6] = 19;
     cmd[7] = 0;
     cmd[8] = 0;
     cmd[9] = 0;

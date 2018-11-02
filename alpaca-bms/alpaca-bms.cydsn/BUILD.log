@@ -1,28 +1,33 @@
---------------- Build Started: 11/01/2018 15:05:50 Project: alpaca-bms, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
+--------------- Build Started: 11/01/2018 20:49:37 Project: alpaca-bms, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
 The code generation step is up to date.
-arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/LTC68042.lst -g -D DEBUG -Wall -ffunction-sections -ffat-lto-objects -O0 -c LTC68042.c -o .\CortexM3\ARM_GCC_541\Debug\LTC68042.o
-LTC68042.c: In function 'LTC6804_wrcfga':
-LTC68042.c:192:13: warning: unused variable 'cfgr0' [-Wunused-variable]
-     uint8_t cfgr0 = (select << 5) >> 1; // ensure that only the correct three bits are set.
+arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/cell_interface.lst -g -D DEBUG -Wall -ffunction-sections -ffat-lto-objects -O0 -c cell_interface.c -o .\CortexM3\ARM_GCC_541\Debug\cell_interface.o
+cell_interface.c: In function 'mypack_init':
+cell_interface.c:66:13: warning: unused variable 'bus' [-Wunused-variable]
+     uint8_t bus = 0;
              ^
-LTC68042.c: In function 'LTC6804_rdcfga':
-LTC68042.c:230:13: warning: variable 'temp_cfga' set but not used [-Wunused-but-set-variable]
-     uint8_t temp_cfga[6];   // Debugging, testing if local array gets correct value
+cell_interface.c: In function 'check_cfg':
+cell_interface.c:159:9: warning: unused variable 'error2' [-Wunused-variable]
+     int error2 = 0;
+         ^
+cell_interface.c:158:9: warning: unused variable 'error1' [-Wunused-variable]
+     int error1 = 0;
+         ^
+cell_interface.c: In function 'get_cfga_on_init':
+cell_interface.c:339:12: warning: variable 'pec_error' set but not used [-Wunused-but-set-variable]
+     int8_t pec_error;
+            ^
+cell_interface.c: In function 'test_get_cell_temp':
+cell_interface.c:364:12: warning: variable 'pec_error' set but not used [-Wunused-but-set-variable]
+     int8_t pec_error;
+            ^
+cell_interface.c: In function 'update_volt':
+cell_interface.c:520:13: warning: unused variable 'node' [-Wunused-variable]
+     uint8_t node = 0;
              ^
-LTC68042.c:229:13: warning: unused variable 'RDCFGA' [-Wunused-variable]
-     uint8_t RDCFGA[2];
-             ^
-LTC68042.c:227:14: warning: variable 'temp_data_pec' set but not used [-Wunused-but-set-variable]
-     uint16_t temp_data_pec; // Testing pec calculation for data consisting of all 1's
+cell_interface.c: In function 'update_temp':
+cell_interface.c:637:14: warning: unused variable 'temp' [-Wunused-variable]
+     uint32_t temp = 0;
               ^
-LTC68042.c: In function 'spi_write_read':
-LTC68042.c:1087:13: warning: variable 'dummy_read' set but not used [-Wunused-but-set-variable]
-     uint8_t dummy_read;
-             ^
-LTC68042.c: In function 'my_spi_write_read':
-LTC68042.c:1134:13: warning: variable 'dummy_read' set but not used [-Wunused-but-set-variable]
-     uint8_t dummy_read;
-             ^
 arm-none-eabi-ar.exe -rs .\CortexM3\ARM_GCC_541\Debug\alpaca-bms.a .\CortexM3\ARM_GCC_541\Debug\CyDmac.o .\CortexM3\ARM_GCC_541\Debug\CyFlash.o .\CortexM3\ARM_GCC_541\Debug\CyLib.o .\CortexM3\ARM_GCC_541\Debug\cyPm.o .\CortexM3\ARM_GCC_541\Debug\CySpc.o .\CortexM3\ARM_GCC_541\Debug\cyutils.o .\CortexM3\ARM_GCC_541\Debug\Rx_1.o .\CortexM3\ARM_GCC_541\Debug\Tx_1.o .\CortexM3\ARM_GCC_541\Debug\CAN_1.o .\CortexM3\ARM_GCC_541\Debug\CAN_1_INT.o .\CortexM3\ARM_GCC_541\Debug\CAN_1_PM.o .\CortexM3\ARM_GCC_541\Debug\CAN_1_TX_RX_func.o .\CortexM3\ARM_GCC_541\Debug\MOSI.o .\CortexM3\ARM_GCC_541\Debug\SCLK.o .\CortexM3\ARM_GCC_541\Debug\MISO.o .\CortexM3\ARM_GCC_541\Debug\LTC68.o .\CortexM3\ARM_GCC_541\Debug\LTC68_PM.o .\CortexM3\ARM_GCC_541\Debug\LTC68_INT.o .\CortexM3\ARM_GCC_541\Debug\SS.o .\CortexM3\ARM_GCC_541\Debug\LTC68_IntClock.o .\CortexM3\ARM_GCC_541\Debug\timer_clock.o .\CortexM3\ARM_GCC_541\Debug\current.o .\CortexM3\ARM_GCC_541\Debug\ADC_current.o .\CortexM3\ARM_GCC_541\Debug\ADC_current_PM.o .\CortexM3\ARM_GCC_541\Debug\ADC_current_INT.o .\CortexM3\ARM_GCC_541\Debug\ADC_current_AMux.o .\CortexM3\ARM_GCC_541\Debug\ADC_current_Ext_CP_Clk.o .\CortexM3\ARM_GCC_541\Debug\ADC_current_IRQ.o .\CortexM3\ARM_GCC_541\Debug\ADC_current_theACLK.o .\CortexM3\ARM_GCC_541\Debug\current_timer.o .\CortexM3\ARM_GCC_541\Debug\current_timer_PM.o .\CortexM3\ARM_GCC_541\Debug\OK_SIG.o .\CortexM3\ARM_GCC_541\Debug\WDT_timer.o .\CortexM3\ARM_GCC_541\Debug\WDT_timer_PM.o .\CortexM3\ARM_GCC_541\Debug\WDT_timer_clock.o .\CortexM3\ARM_GCC_541\Debug\WDT_ISR.o .\CortexM3\ARM_GCC_541\Debug\timer_clock_1.o .\CortexM3\ARM_GCC_541\Debug\USBUART.o .\CortexM3\ARM_GCC_541\Debug\USBUART_audio.o .\CortexM3\ARM_GCC_541\Debug\USBUART_boot.o .\CortexM3\ARM_GCC_541\Debug\USBUART_cdc.o .\CortexM3\ARM_GCC_541\Debug\USBUART_cls.o .\CortexM3\ARM_GCC_541\Debug\USBUART_descr.o .\CortexM3\ARM_GCC_541\Debug\USBUART_drv.o .\CortexM3\ARM_GCC_541\Debug\USBUART_episr.o .\CortexM3\ARM_GCC_541\Debug\USBUART_hid.o .\CortexM3\ARM_GCC_541\Debug\USBUART_pm.o .\CortexM3\ARM_GCC_541\Debug\USBUART_std.o .\CortexM3\ARM_GCC_541\Debug\USBUART_vnd.o .\CortexM3\ARM_GCC_541\Debug\USBUART_midi.o .\CortexM3\ARM_GCC_541\Debug\USBUART_msc.o .\CortexM3\ARM_GCC_541\Debug\USBUART_Dm.o .\CortexM3\ARM_GCC_541\Debug\USBUART_Dp.o .\CortexM3\ARM_GCC_541\Debug\current_update_ISR.o .\CortexM3\ARM_GCC_541\Debug\current_supply.o .\CortexM3\ARM_GCC_541\Debug\MUX_current.o .\CortexM3\ARM_GCC_541\Debug\SOC_Store.o .\CortexM3\ARM_GCC_541\Debug\SOC_Timer.o .\CortexM3\ARM_GCC_541\Debug\SOC_Timer_PM.o .\CortexM3\ARM_GCC_541\Debug\cy_em_eeprom.o .\CortexM3\ARM_GCC_541\Debug\CS.o .\CortexM3\ARM_GCC_541\Debug\SS_1.o .\CortexM3\ARM_GCC_541\Debug\Select6820.o .\CortexM3\ARM_GCC_541\Debug\Select6820_PM.o .\CortexM3\ARM_GCC_541\Debug\CyBootAsmGnu.o
 arm-none-eabi-ar.exe: creating .\CortexM3\ARM_GCC_541\Debug\alpaca-bms.a
 arm-none-eabi-gcc.exe -Wl,--start-group -o C:\Users\waton\Dropbox\frucd\FE6_BMS\alpaca-bms\alpaca-bms.cydsn\CortexM3\ARM_GCC_541\Debug\alpaca-bms.elf .\CortexM3\ARM_GCC_541\Debug\WDT.o .\CortexM3\ARM_GCC_541\Debug\main.o .\CortexM3\ARM_GCC_541\Debug\cell_interface.o .\CortexM3\ARM_GCC_541\Debug\current_sense.o .\CortexM3\ARM_GCC_541\Debug\can_manager.o .\CortexM3\ARM_GCC_541\Debug\CAN_toolbox.o .\CortexM3\ARM_GCC_541\Debug\uart-terminal.o .\CortexM3\ARM_GCC_541\Debug\BMS_monitor.o .\CortexM3\ARM_GCC_541\Debug\LTC68042.o .\CortexM3\ARM_GCC_541\Debug\cyfitter_cfg.o .\CortexM3\ARM_GCC_541\Debug\cymetadata.o .\CortexM3\ARM_GCC_541\Debug\Cm3Start.o .\CortexM3\ARM_GCC_541\Debug\alpaca-bms.a "C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CortexM3\ARM_GCC_541\Debug\CyComponentLibrary.a" -mcpu=cortex-m3 -mthumb -l m -L Generated_Source\PSoC5 -Wl,-Map,.\CortexM3\ARM_GCC_541\Debug/alpaca-bms.map -T Generated_Source\PSoC5\cm3gcc.ld -specs=nano.specs -Wl,--gc-sections -g -ffunction-sections -O0 -ffat-lto-objects -Wl,--end-group
@@ -31,6 +36,6 @@ No ELF section .cychecksum found, creating one
 Application checksum calculated and stored in ELF section .cychecksum
 Checksum calculated and stored in ELF section .cymeta
 cyelftool.exe -S C:\Users\waton\Dropbox\frucd\FE6_BMS\alpaca-bms\alpaca-bms.cydsn\CortexM3\ARM_GCC_541\Debug\alpaca-bms.elf
-Flash used: 15158 of 262144 bytes (5.8%).
+Flash used: 15246 of 262144 bytes (5.8%).
 SRAM used: 10101 of 65536 bytes (15.4%). Stack: 2048 bytes. Heap: 128 bytes.
---------------- Build Succeeded: 11/01/2018 15:05:52 ---------------
+--------------- Build Succeeded: 11/01/2018 20:49:40 ---------------

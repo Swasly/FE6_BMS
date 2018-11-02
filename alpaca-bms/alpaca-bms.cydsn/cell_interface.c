@@ -328,6 +328,12 @@ uint8_t open_wire_adow(uint8_t pup){
     }
 }// get_cell_volt()
 
+/*
+    Used to get the cfga register values on init,
+    We need these values as we only want to write
+    to 3 bits in the register, and in order to write
+    to 3 bits you must write to them all.
+*/
 uint8_t get_cfga_on_init(uint8_t cfga[6]){
     
     int8_t pec_error;
@@ -346,7 +352,6 @@ uint8_t get_cfga_on_init(uint8_t cfga[6]){
 uint8_t test_get_cell_temp(uint8_t cfga[6]){
     /*
     1. Prepare 6820s for reading/writing
-    2. Read current cfg register values
     3. Store read values in array
     4. for loop
     4a. write value to cfg reg. to select mux
@@ -363,17 +368,29 @@ uint8_t test_get_cell_temp(uint8_t cfga[6]){
     Select6820_Write(0);
     wakeup_sleep();
     CyDelay(100);
-
-    // 10/20/18: Testing ltc6804_wrfgca() to write to gpio pins for mux select
-    
     
     LTC6804_wrcfga(18); //write gpio pin 2 high
     LTC6804_wrcfga(18);
     CyDelay(100);
 
+    // Temporary reads to verify writes
+    pec_error = LTC6804_rdcfga(cfga);
+    pec_error = LTC6804_rdcfga(cfga);
     
-    pec_error = LTC6804_rdcfga(cfga);
-    pec_error = LTC6804_rdcfga(cfga);
+    for(int i = 0; i < 256; i++){
+        CyDelay(50);
+        LTC68_ClearFIFO();
+        Select6820_Write(0);
+        wakeup_sleep();
+        CyDelay(100);
+        
+        LTC6804_wrcfga(i);
+        LTC6804_wrcfga(i);
+        CyDelay(100);
+        
+        pec_error = LTC6804_rdcfga(cfga);
+        pec_error = LTC6804_rdcfga(cfga);
+    }
     
     CyDelay(100);
     

@@ -262,8 +262,29 @@ int main(void)
 		        get_cell_volt();// TODO test voltage
 				//TESTDAY_2_TODO. check_stack_fuse(); // TODO: check if stacks are disconnected
                 
-				//get_cell_temp(); TODO test temperature
+				//get_cell_temp(); Old temperature getting function (not needed for FE6)
+                
+                /*
+                    Get the current values of the cfga register,
+                    as we have to overwrite them when running wrcfga,
+                    so we get the default values so we can write them 
+                    back each time we write.
+                */
                 get_cfga_on_init(cfga_on_init);
+                
+                /*
+                    New cell temperature getter
+                    1. For each 6811 on each slave
+                    2. For mux select 0-7
+                    3. wrcfga to set mux select
+                    4. adcv to convert mux output to digital and store in register
+                    5. rdaux to read stored digital value
+                
+                    Temperature values may be stored in a 2-d array
+                
+                    11/1/18: able to set mux select on a single mux on a single slave
+                             Need to implement adcv on gpio pin 1 and rdaux to get temp data
+                */
                 test_get_cell_temp(cfga);
                 
                 
