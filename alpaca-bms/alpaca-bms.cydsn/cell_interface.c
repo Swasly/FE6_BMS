@@ -334,9 +334,10 @@ uint8_t open_wire_adow(uint8_t pup){
     to 3 bits in the register, and in order to write
     to 3 bits you must write to them all.
 */
-uint8_t get_cfga_on_init(uint8_t cfga[6]){
+uint8_t get_cfga_on_init(uint8_t cfga_data[5]){
     
     int8_t pec_error;
+    uint8_t cfga[6];
     
     LTC68_ClearFIFO();
     Select6820_Write(0);
@@ -346,10 +347,17 @@ uint8_t get_cfga_on_init(uint8_t cfga[6]){
     pec_error = LTC6804_rdcfga(cfga);
     pec_error = LTC6804_rdcfga(cfga);
     
+    cfga_data[0] = cfga[1];
+    cfga_data[1] = cfga[2];
+    cfga_data[2] = cfga[3];
+    cfga_data[3] = cfga[4];
+    cfga_data[4] = cfga[5];
+    
+    //TODO: add pec_error check 
     return 0;
 }
 
-uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t select){
+uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_data[5]){
     /*
     1. Prepare 6820s for reading/writing
     3. Store read values in array
@@ -369,34 +377,13 @@ uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t select){
     wakeup_sleep();
     CyDelay(100);
     
-    LTC6804_wrcfga(select); //write gpio pin 2 high
-    LTC6804_wrcfga(select);
+    LTC6804_wrcfga(mux_sel, orig_cfga_data); //write gpio pin 2 high
+    LTC6804_wrcfga(mux_sel, orig_cfga_data);
     CyDelay(100);
 
     // Temporary reads to verify writes
     pec_error = LTC6804_rdcfga(cfga);
     pec_error = LTC6804_rdcfga(cfga);
-    
-    /*for(int i = 16; i < 256; i++){
-        CyDelay(50);
-        LTC68_ClearFIFO();
-        Select6820_Write(0);
-        wakeup_sleep();
-        CyDelay(100);
-        
-        LTC6804_wrcfga(i);
-        LTC6804_wrcfga(i);
-        CyDelay(100);
-        
-        pec_error = LTC6804_rdcfga(cfga);
-        pec_error = LTC6804_rdcfga(cfga);
-        
-        uint8_t cfga_watch[6];
-        for (int j = 0; j < 6; j++){
-            cfga_watch[i] = cfga[i];
-        } 
-        CyDelay(100);
-    }*/
     
     CyDelay(100);
     
