@@ -46,3 +46,4 @@
 # Debug files
 *.dSYM/
 *.log
+*.xml

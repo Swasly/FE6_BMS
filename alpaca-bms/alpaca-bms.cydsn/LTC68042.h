@@ -198,6 +198,8 @@ void LTC6804_adcv();
 
 void LTC6804_wrcfga(uint8_t select);
 
+int8_t LTC6804_rdcfga(uint8_t cfga[6]);
+
 void LTC6804_adow(uint8_t pup);
 
 void LTC6804_adax();
