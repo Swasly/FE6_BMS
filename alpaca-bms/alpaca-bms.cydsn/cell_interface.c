@@ -349,7 +349,7 @@ uint8_t get_cfga_on_init(uint8_t cfga[6]){
     return 0;
 }
 
-uint8_t test_get_cell_temp(uint8_t cfga[6]){
+uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t select){
     /*
     1. Prepare 6820s for reading/writing
     3. Store read values in array
@@ -369,15 +369,15 @@ uint8_t test_get_cell_temp(uint8_t cfga[6]){
     wakeup_sleep();
     CyDelay(100);
     
-    LTC6804_wrcfga(18); //write gpio pin 2 high
-    LTC6804_wrcfga(18);
+    LTC6804_wrcfga(select); //write gpio pin 2 high
+    LTC6804_wrcfga(select);
     CyDelay(100);
 
     // Temporary reads to verify writes
     pec_error = LTC6804_rdcfga(cfga);
     pec_error = LTC6804_rdcfga(cfga);
     
-    for(int i = 0; i < 256; i++){
+    /*for(int i = 16; i < 256; i++){
         CyDelay(50);
         LTC68_ClearFIFO();
         Select6820_Write(0);
@@ -390,7 +390,13 @@ uint8_t test_get_cell_temp(uint8_t cfga[6]){
         
         pec_error = LTC6804_rdcfga(cfga);
         pec_error = LTC6804_rdcfga(cfga);
-    }
+        
+        uint8_t cfga_watch[6];
+        for (int j = 0; j < 6; j++){
+            cfga_watch[i] = cfga[i];
+        } 
+        CyDelay(100);
+    }*/
     
     CyDelay(100);
     

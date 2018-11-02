@@ -285,8 +285,10 @@ int main(void)
                     11/1/18: able to set mux select on a single mux on a single slave
                              Need to implement adcv on gpio pin 1 and rdaux to get temp data
                 */
-                test_get_cell_temp(cfga);
-                
+                for (uint8_t i = 0; i <= 7; i++){
+                    CyDelay(100);
+                    test_get_cell_temp(cfga, i);
+                }
                 
                 // TODO: Calculate SOC
                 //get_current(); // TODO get current reading from sensor
