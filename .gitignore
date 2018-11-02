@@ -47,3 +47,5 @@
 *.dSYM/
 alpaca-bms/alpaca-bms.cydsn/BUILD.log
 *.log
+*.log
+*.xml
