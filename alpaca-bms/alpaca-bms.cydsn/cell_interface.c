@@ -377,8 +377,14 @@ uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_d
     wakeup_sleep();
     CyDelay(100);
     
-    LTC6804_wrcfga(mux_sel, orig_cfga_data); //write gpio pin 2 high
     LTC6804_wrcfga(mux_sel, orig_cfga_data);
+    LTC6804_wrcfga(mux_sel, orig_cfga_data);
+    CyDelay(100);
+    
+    // Tell LT to adc signal on gpio1
+    LTC6804_adax_fe6();
+    LTC6804_adax_fe6();
+    
     CyDelay(100);
 
     // Temporary reads to verify writes

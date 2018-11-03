@@ -262,6 +262,21 @@ int8_t LTC6804_rdcfga(uint8_t cfga[6])
        
 }
 
+void LTC6804_adax_fe6()
+{
+    uint8_t cmd[4];
+    uint16_t temp_pec;
+    cmd[0] = 133;
+    cmd[1] = 97;
+    
+    temp_pec = pec15_calc(2, cmd);
+    cmd[2] = (uint8_t)(temp_pec >> 8);
+    cmd[3] = (uint8_t)(temp_pec);
+    
+    wakeup_idle();
+    spi_write_array(4, cmd);        
+}
+
 void LTC6804_adow(uint8_t pup)
 {
 
