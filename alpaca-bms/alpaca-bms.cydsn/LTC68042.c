@@ -256,7 +256,7 @@ void LTC6804_adax_fe6()
     uint8_t cmd[4];
     uint16_t cmd_pec;
     cmd[0] = 133;
-    cmd[1] = 97;
+    cmd[1] = 225;
     
     cmd_pec = pec15_calc(2, cmd);
     cmd[2] = (uint8_t)(cmd_pec >> 8);

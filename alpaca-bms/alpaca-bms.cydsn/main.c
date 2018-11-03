@@ -293,7 +293,6 @@ int main(void)
                 for (uint8_t mux_sel = 0; mux_sel <= 7; mux_sel++){
                     CyDelay(100);
                     test_get_cell_temp(cfga, mux_sel, orig_cfga_data, auxa);
-                    gpio1_received = *(uint16_t *)auxa;
                 }
                 
                 
