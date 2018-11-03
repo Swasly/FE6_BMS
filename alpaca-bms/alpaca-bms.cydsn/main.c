@@ -26,6 +26,7 @@ typedef enum
 }BMS_MODE;
 
 uint8_t cfga[6], cfga_on_init[6];
+uint8_t auxa[6];
 volatile uint8_t CAN_UPDATE_FLAG=0;
 extern volatile BAT_PACK_t bat_pack;
 extern BAT_SUBPACK_t bat_subpack[N_OF_SUBPACK];
@@ -287,10 +288,14 @@ int main(void)
                     11/1/18: able to set mux select on a single mux on a single slave
                              Need to implement adcv on gpio pin 1 and rdaux to get temp data
                 */
+                uint16_t gpio1_received;
+                
                 for (uint8_t mux_sel = 0; mux_sel <= 7; mux_sel++){
                     CyDelay(100);
-                    test_get_cell_temp(cfga, mux_sel, orig_cfga_data);
+                    test_get_cell_temp(cfga, mux_sel, orig_cfga_data, auxa);
+                    gpio1_received = *(uint16_t *)auxa;
                 }
+                
                 
                 // TODO: Calculate SOC
                 //get_current(); // TODO get current reading from sensor

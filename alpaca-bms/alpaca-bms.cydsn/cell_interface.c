@@ -353,11 +353,11 @@ uint8_t get_cfga_on_init(uint8_t cfga_data[5]){
     cfga_data[3] = cfga[4];
     cfga_data[4] = cfga[5];
     
-    //TODO: add pec_error check 
+    //TODO: add pec_error check
     return 0;
 }
 
-uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_data[5]){
+uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_data[5], uint8_t auxa[6]){
     /*
     1. Prepare 6820s for reading/writing
     3. Store read values in array
@@ -392,6 +392,14 @@ uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_d
     pec_error = LTC6804_rdcfga(cfga);
     
     CyDelay(100);
+    
+    LTC6804_adax_fe6();
+    LTC6804_adax_fe6();
+    
+    CyDelay(100);
+    
+    LTC6804_rdauxa(auxa);
+    LTC6804_rdauxa(auxa);
     
     return 0;
 }

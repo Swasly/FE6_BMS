@@ -222,40 +222,29 @@ int8_t LTC6804_rdcfga(uint8_t cfga[6])
     int8_t pec_error;       // returned, indicates whehter cmd failed or not
     uint16_t data_pec;      // stores our calculated pec
     uint16_t recieved_pec;  // stores 6811's calculated pec
-    uint16_t temp_pec;
-    uint8_t ones[6];
-    uint16_t temp_data_pec; // Testing pec calculation for data consisting of all 1's
+    uint16_t cmd_pec;
     uint8_t rx_data[8];     // stores slave to master data (6 bytes data, 2 bytes pec)
-    uint8_t RDCFGA[2];
-    uint8_t temp_cfga[6];   // Debugging, testing if local array gets correct value
-    
-    for (int j = 0; j < 8; j++){
-        rx_data[j] = 0;
-    }
-    
-    for (int j = 0; j < 6; j++){
-        ones[j] = 255;
-    }
+   
+
     
     cmd[0] = 128;          // See pg. 55-63 of 6811 datasheet for cmd formats
     cmd[1] = 2;                                              
-    temp_pec = pec15_calc(2, cmd);
-    cmd[2] = (uint8_t)(temp_pec >> 8);
-    cmd[3] = (uint8_t)(temp_pec);
+    cmd_pec = pec15_calc(2, cmd);
+    cmd[2] = (uint8_t)(cmd_pec >> 8);
+    cmd[3] = (uint8_t)(cmd_pec);
     
     wakeup_idle();
     spi_write_read(cmd, 4, rx_data, 8);
     
     recieved_pec = *(uint16_t *)(rx_data + 6);
-    temp_data_pec = pec15_calc(6, ones);
     data_pec = pec15_calc(6, rx_data);
+    
     if(recieved_pec != data_pec){
         pec_error = -1;
     }
     
     for(int i = 0; i < 6; i++){
         cfga[i] = rx_data[i];
-        temp_cfga[i] = rx_data[i];
     }
     
     return pec_error;
@@ -265,16 +254,56 @@ int8_t LTC6804_rdcfga(uint8_t cfga[6])
 void LTC6804_adax_fe6()
 {
     uint8_t cmd[4];
-    uint16_t temp_pec;
+    uint16_t cmd_pec;
     cmd[0] = 133;
     cmd[1] = 97;
     
-    temp_pec = pec15_calc(2, cmd);
-    cmd[2] = (uint8_t)(temp_pec >> 8);
-    cmd[3] = (uint8_t)(temp_pec);
+    cmd_pec = pec15_calc(2, cmd);
+    cmd[2] = (uint8_t)(cmd_pec >> 8);
+    cmd[3] = (uint8_t)(cmd_pec);
     
     wakeup_idle();
     spi_write_array(4, cmd);        
+}
+
+
+int LTC6804_rdauxa(uint8_t aux_data[6])
+{
+    uint8_t cmd[4];
+    uint8_t rx_data[8];
+    uint16_t cmd_pec;
+    uint16_t received_pec;
+    uint16_t data_pec;
+    
+    uint16_t gpio1_data;
+    
+    // set up read command
+    cmd[0] = 128;
+    cmd[1] = 12;
+    cmd_pec = pec15_calc(2, cmd);
+    cmd[2] = (uint8_t)(cmd_pec >> 8);
+    cmd[3] = (uint8_t)(cmd_pec);
+    
+    // read 
+    spi_write_read(cmd, 4, rx_data, 8);
+    
+    gpio1_data = *(uint16_t *)rx_data;
+    received_pec = *(uint16_t *)(rx_data + 6);
+    data_pec = pec15_calc(6, rx_data);
+    
+    aux_data[0] = rx_data[0];
+    aux_data[1] = rx_data[1];
+    aux_data[2] = rx_data[2];
+    aux_data[3] = rx_data[3];
+    aux_data[4] = rx_data[4];
+    aux_data[5] = rx_data[5];
+    
+    
+    if(data_pec != received_pec) {
+        return -1;
+    }
+    
+    return 1; 
 }
 
 void LTC6804_adow(uint8_t pup)

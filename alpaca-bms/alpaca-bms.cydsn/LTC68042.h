@@ -202,9 +202,13 @@ int8_t LTC6804_rdcfga(uint8_t cfga[6]);
 
 void LTC6804_adax_fe6();
 
+int LTC6804_rdauxa();
+
 void LTC6804_adow(uint8_t pup);
 
 void LTC6804_adax();
+
+
 
 uint8_t LTC6804_rdcv(uint8_t reg, uint8_t total_ic, uint16_t cell_codes[][12]);
 
