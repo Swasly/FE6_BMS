@@ -196,7 +196,7 @@ void set_adc(uint8_t MD, uint8_t DCP, uint8_t CH, uint8_t CHG);
 
 void LTC6804_adcv(); 
 
-void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5]);
+void LTC6804_wrcfga(uint8_t select);
 
 int8_t LTC6804_rdcfga(uint8_t cfga[6]);
 

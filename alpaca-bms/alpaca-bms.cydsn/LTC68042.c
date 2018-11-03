@@ -166,7 +166,7 @@ void LTC6804_adcv()
  * select - the value that should be selected. -> greatest value = 7
  */
 
-void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
+void LTC6804_wrcfga(uint8_t select)
 {
     uint8_t cmd[12];
     uint16_t temp_pec;
@@ -185,19 +185,19 @@ void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
     crfg0 - gpio select
     bits -  |7     |6       |5        |4        |3     |2     |1      |0          |
             |gpio5 |gpio4   |gpio3    |gpio2    |gpio1 |refon | dten  |adcopt (important) |
-            | x    |select2 | select1 | select 0|   x  | 1    | 1     | x         |
+            | x    |select2 | select1 | select 0|   x  | x    | 1     | x         |
     
     !!!!!! dten (bit 1) must always be high !!!!!!
-    !!!!!! gpios only change if refon == 1  !!!!!!
     */
     uint8_t cfgr0 = (select << 5) >> 1; // ensure that only the correct three bits are set.
     
-    cmd[4] = cfgr0 | 6;                 // Nee to make sure refon and dten are high
-    cmd[5] = orig_cfga_data[0];
-    cmd[6] = orig_cfga_data[1];
-    cmd[7] = orig_cfga_data[2];
-    cmd[8] = orig_cfga_data[3];
-    cmd[9] = orig_cfga_data[4];
+    cmd[4] = cfgr0 | 6;
+    cmd[5] = 0;
+    
+    cmd[6] = 19;
+    cmd[7] = 0;
+    cmd[8] = 0;
+    cmd[9] = 0;
     /*
     for(int i = 0; i < 6; i++){
         DATA[i] = cmd[i + 4];

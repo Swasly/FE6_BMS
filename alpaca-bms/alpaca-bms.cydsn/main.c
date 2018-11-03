@@ -270,9 +270,7 @@ int main(void)
                     so we get the default values so we can write them 
                     back each time we write.
                 */
-                uint8_t orig_cfga_data[5];
-                get_cfga_on_init(orig_cfga_data);
-                
+                get_cfga_on_init(cfga_on_init);
                 
                 /*
                     New cell temperature getter
@@ -287,9 +285,9 @@ int main(void)
                     11/1/18: able to set mux select on a single mux on a single slave
                              Need to implement adcv on gpio pin 1 and rdaux to get temp data
                 */
-                for (uint8_t mux_sel = 0; mux_sel <= 7; mux_sel++){
+                for (uint8_t i = 0; i <= 7; i++){
                     CyDelay(100);
-                    test_get_cell_temp(cfga, mux_sel, orig_cfga_data);
+                    test_get_cell_temp(cfga, i);
                 }
                 
                 // TODO: Calculate SOC
