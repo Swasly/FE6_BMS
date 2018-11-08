@@ -187,12 +187,14 @@ void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
             |gpio5 |gpio4   |gpio3    |gpio2    |gpio1 |refon | dten  |adcopt (important) |
             | x    |select2 | select1 | select 0|   x  | 1    | 1     | x         |
     
+    adcopt - determines which adc mode is set -> relates to md bits of adax command -> see pg. 58 for speed mode table
+    
     !!!!!! dten (bit 1) must always be high !!!!!!
     !!!!!! gpios only change if refon == 1  !!!!!!
     */
     uint8_t cfgr0 = (select << 5) >> 1; // ensure that only the correct three bits are set.
     
-    cmd[4] = cfgr0 | 6;                 // Nee to make sure refon and dten are high
+    cmd[4] = cfgr0 | 6;                 // Need to make sure refon and dten are high
     cmd[5] = orig_cfga_data[0];
     cmd[6] = orig_cfga_data[1];
     cmd[7] = orig_cfga_data[2];
@@ -219,14 +221,12 @@ void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
 int8_t LTC6804_rdcfga(uint8_t cfga[6])
 {
     uint8_t cmd[4];         // bytes for rdcfga cmd; sent to slaves
-    int8_t pec_error;       // returned, indicates whehter cmd failed or not
+    int8_t pec_error;       // returned, indicates whether cmd failed or not
     uint16_t data_pec;      // stores our calculated pec
     uint16_t recieved_pec;  // stores 6811's calculated pec
     uint16_t cmd_pec;
     uint8_t rx_data[8];     // stores slave to master data (6 bytes data, 2 bytes pec)
    
-
-    
     cmd[0] = 128;          // See pg. 55-63 of 6811 datasheet for cmd formats
     cmd[1] = 2;                                              
     cmd_pec = pec15_calc(2, cmd);
@@ -251,19 +251,34 @@ int8_t LTC6804_rdcfga(uint8_t cfga[6])
        
 }
 
+
+/* 
+ * Initiate measurement of GPIO input, specifically GPIO1
+ * 
+ */
 void LTC6804_adax_fe6()
 {
     uint8_t cmd[4];
     uint16_t cmd_pec;
-    cmd[0] = 133;
-    cmd[1] = 225;
+    /*
+        Adax CC:    |10     |9      |8      |7      |6      |5      |4      |3      |2      |1      |0      |
+                    |1      |0      |MD[1]  |MD[0]  |1      |1      |0      |0      |CHG[2] |CHG[1] |CHG[0] |
+        
+        MD : ADC Mode - see pg. 58 for MD speed table
+        CHG : GPIO Select for ADC conversion: 001 = GPIO1
+    
+    */
+    
+    // Current MD val = 11 and adcopt = 0 => 26 Hz mode
+    cmd[0] = 133; // For MD[1] = 0 -> cmd[0] = 132; MD[1] = 2 -> cmd[0] = 133
+    cmd[1] = 225; // For MD[0] = 0 -> cmd[1] = 97; MD[0] = 1 -> cmd[1] = 225
     
     cmd_pec = pec15_calc(2, cmd);
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     
     wakeup_idle();
-    spi_write_array(4, cmd);        
+    spi_write_array(4, cmd);
 }
 
 
@@ -286,6 +301,9 @@ int LTC6804_rdauxa(uint8_t aux_data[6])
     
     // read 
     spi_write_read(cmd, 4, rx_data, 8);
+    
+    CyDelay(20);
+    
     
     gpio1_data = *(uint16_t *)rx_data;
     received_pec = *(uint16_t *)(rx_data + 6);
