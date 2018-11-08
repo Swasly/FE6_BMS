@@ -192,7 +192,7 @@ void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
     */
     uint8_t cfgr0 = (select << 5) >> 1; // ensure that only the correct three bits are set.
     
-    cmd[4] = cfgr0 | 6;                 // Nee to make sure refon and dten are high
+    cmd[4] = cfgr0 | 6;                 // Need to make sure refon and dten are high
     cmd[5] = orig_cfga_data[0];
     cmd[6] = orig_cfga_data[1];
     cmd[7] = orig_cfga_data[2];
@@ -256,7 +256,7 @@ void LTC6804_adax_fe6()
     uint8_t cmd[4];
     uint16_t cmd_pec;
     cmd[0] = 133;
-    cmd[1] = 225;
+    cmd[1] = 1;             // Formerly 97 for ADAX, 1 is for ADAXD
     
     cmd_pec = pec15_calc(2, cmd);
     cmd[2] = (uint8_t)(cmd_pec >> 8);
