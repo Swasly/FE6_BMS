@@ -289,6 +289,7 @@ int main(void)
                              Need to implement adcv on gpio pin 1 and rdaux to get temp data
                 */
                 uint16_t gpio1_received;
+
                 uint16_t temperatures[8];
                 
                 for (uint8_t mux_sel = 0; mux_sel <= 7; mux_sel++){
@@ -297,7 +298,7 @@ int main(void)
                     temperatures[mux_sel] = auxa[0] + (auxa[1] << 8);
                 }
                 
-                
+                CyDelay(100);
                 // TODO: Calculate SOC
                 //get_current(); // TODO get current reading from sensor
 			    //bat_soc = get_soc(); // TODO calculate SOC()

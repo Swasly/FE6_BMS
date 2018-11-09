@@ -375,28 +375,24 @@ uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_d
     LTC68_ClearFIFO();
     Select6820_Write(0);
     wakeup_sleep();
-    CyDelay(100);
+    CyDelay(250);
     
     LTC6804_wrcfga(mux_sel, orig_cfga_data);
     LTC6804_wrcfga(mux_sel, orig_cfga_data);
+    
+    CyDelay(100);
+    
+    // Temporary reads to verify writes
+    pec_error = LTC6804_rdcfga(cfga);
+    pec_error = LTC6804_rdcfga(cfga);
+
     CyDelay(100);
     
     // Tell LT to adc signal on gpio1
     LTC6804_adax_fe6();
     LTC6804_adax_fe6();
     
-    CyDelay(100);
-
-    // Temporary reads to verify writes
-    pec_error = LTC6804_rdcfga(cfga);
-    pec_error = LTC6804_rdcfga(cfga);
-    
-    CyDelay(100);
-    
-    LTC6804_adax_fe6();
-    LTC6804_adax_fe6();
-    
-    CyDelay(100);
+    CyDelay(250);
     
     LTC6804_rdauxa(auxa);
     LTC6804_rdauxa(auxa);
