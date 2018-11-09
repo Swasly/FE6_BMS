@@ -265,14 +265,20 @@ void LTC6804_adax_fe6()
                     |1      |0      |MD[1]  |MD[0]  |1      |1      |0      |0      |CHG[2] |CHG[1] |CHG[0] |
         
         MD : ADC Mode - see pg. 58 for MD speed table
-        CHG : GPIO Select for ADC conversion: 001 = GPIO1
+        CHG : GPIO Select for ADC conversion: 001 = GPIO1, 110 = 2nd reference
     
     */
     
+    
     // Current MD val = 11 and adcopt = 0 => 26 Hz mode
     cmd[0] = 133; // For MD[1] = 0 -> cmd[0] = 132; MD[1] = 2 -> cmd[0] = 133
-    cmd[1] = 225; // For MD[0] = 0 -> cmd[1] = 97; MD[0] = 1 -> cmd[1] = 225
     
+    // If measuring GPIO1
+    //cmd[1] = 97; // For MD[0] = 0 -> cmd[1] = 97; MD[0] = 1 -> cmd[1] = 225 
+    
+    // If measuring Vref2?
+    //cmd[1] = 102;//For MD[0] = 0 -> cmd[1] = 102; MD[0] = 1 -> cmd[1] = 230 
+    cmd[1] = 6;//For MD[0] = 0 -> cmd[1] = 102; MD[0] = 1 -> cmd[1] = 230 // adaxd
     cmd_pec = pec15_calc(2, cmd);
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
@@ -294,7 +300,8 @@ int LTC6804_rdauxa(uint8_t aux_data[6])
     
     // set up read command
     cmd[0] = 128;
-    cmd[1] = 12;
+    //cmd[1] = 12; //auxa for gpio1
+    cmd[1] = 14; //auxb for vref2
     cmd_pec = pec15_calc(2, cmd);
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
@@ -302,7 +309,7 @@ int LTC6804_rdauxa(uint8_t aux_data[6])
     // read 
     spi_write_read(cmd, 4, rx_data, 8);
     
-    CyDelay(20);
+    //CyDelay(20);
     
     
     gpio1_data = *(uint16_t *)rx_data;

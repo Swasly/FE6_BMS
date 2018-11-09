@@ -289,10 +289,12 @@ int main(void)
                              Need to implement adcv on gpio pin 1 and rdaux to get temp data
                 */
                 uint16_t gpio1_received;
+                uint16_t temperatures[8];
                 
                 for (uint8_t mux_sel = 0; mux_sel <= 7; mux_sel++){
                     CyDelay(100);
                     test_get_cell_temp(cfga, mux_sel, orig_cfga_data, auxa);
+                    temperatures[mux_sel] = auxa[0] + (auxa[1] << 8);
                 }
                 
                 
