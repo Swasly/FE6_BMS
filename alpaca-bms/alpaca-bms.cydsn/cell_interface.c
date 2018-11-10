@@ -389,8 +389,8 @@ uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_d
     CyDelay(100);
     
     // Tell LT to adc signal on gpio1
-    LTC6804_adax_fe6();
-    LTC6804_adax_fe6();
+    LTC6804_adax();
+    LTC6804_adax();
     
     CyDelay(250);
     
