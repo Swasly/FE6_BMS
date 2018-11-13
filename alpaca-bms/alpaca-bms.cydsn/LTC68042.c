@@ -194,12 +194,13 @@ void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
     */
     uint8_t cfgr0 = (select << 5) >> 1; // ensure that only the correct three bits are set.
     
-    cmd[4] = cfgr0 | 6;                 // Need to make sure refon and dten are high
+    cmd[4] = cfgr0 | 0b1110;                 // Need to make sure refon and dten are high
     cmd[5] = orig_cfga_data[0];
     cmd[6] = orig_cfga_data[1];
     cmd[7] = orig_cfga_data[2];
     cmd[8] = orig_cfga_data[3];
     cmd[9] = orig_cfga_data[4];
+    
     /*
     for(int i = 0; i < 6; i++){
         DATA[i] = cmd[i + 4];
@@ -207,7 +208,7 @@ void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
     temp_pec = pec15_calc(6, DATA);
     */
 
-    temp_pec = pec15_calc(6, (uint8_t*)(cmd + 4));                    
+    temp_pec = pec15_calc(6, (uint8_t*)(cmd + 4));
     cmd[10] = (uint8_t)(temp_pec >> 8);
     cmd[11] = (uint8_t)(temp_pec);
     
