@@ -204,6 +204,17 @@ void LTC6804_adax_fe6();
 
 int LTC6804_rdauxa();
 
+
+enum AuxPins {
+    GPIO1,
+    GPIO2,
+    GPIO3,
+    GPIO4,
+    GPIO5,
+    VREF2
+};
+
+uint16_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t aux[3]);
 void LTC6804_adow(uint8_t pup);
 
 void LTC6804_adax();

@@ -357,7 +357,7 @@ uint8_t get_cfga_on_init(uint8_t cfga_data[5]){
     return 0;
 }
 
-uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_data[5], uint8_t auxa[6]){
+uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t auxa[3], enum AuxPins pin){
     /*
     1. Prepare 6820s for reading/writing
     3. Store read values in array
@@ -393,9 +393,8 @@ uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_d
     LTC6804_adax_fe6();
     
     CyDelay(250);
-    
-    LTC6804_rdauxa(auxa);
-    LTC6804_rdauxa(auxa);
+    LTC6804_rdaux_fe6(pin, auxa);
+    LTC6804_rdaux_fe6(pin, auxa);
     
     return 0;
 }

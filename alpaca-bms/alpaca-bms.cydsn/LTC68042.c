@@ -267,19 +267,30 @@ void LTC6804_adax_fe6()
         
         MD : ADC Mode - see pg. 58 for MD speed table
         CHG : GPIO Select for ADC conversion: 001 = GPIO1, 110 = 2nd reference
+    
+        Reference for values with certain parameters:
+        For MD[1] = 0 -> cmd[0] = 132
+            MD[1] = 1 -> cmd[0] = 133
+    
+        If MD[0] = 0:
+            GPIO1 with adax: cmd[1] = 97
+            VREF2 with adax: cmd[1] = 1
+            
+        
  
     */
     
     
     // Current MD val = 11 and adcopt = 0 => 26 Hz mode
-    cmd[0] = 133; // For MD[1] = 0 -> cmd[0] = 132; MD[1] = 2 -> cmd[0] = 133
+    cmd[0] = 133; // 
     
     // If measuring GPIO1
-    //cmd[1] = 97; // For MD[0] = 0 -> cmd[1] = 97; MD[0] = 1 -> cmd[1] = 225 
+    //cmd[1] = 97; // For MD[0] = 0 -> cmd[1] = 97; MD[0] = 1 -> cmd[1] = 225
+    
     
     // If measuring Vref2?
-    //cmd[1] = 102;//For MD[0] = 0 -> cmd[1] = 102; MD[0] = 1 -> cmd[1] = 230 
-    cmd[1] = 6;//For MD[0] = 0 -> cmd[1] = 102; MD[0] = 1 -> cmd[1] = 230 // adaxd
+    // cmd[1] = 102;//For MD[0] = 0 -> cmd[1] = 102; MD[0] = 1 -> cmd[1] = 230 
+     cmd[1] = 6;// For MD[0] = 0 -> cmd[1] = 6; MD[0] = 1 -> cmd[1] = 134 //adaxd
     
     
     cmd_pec = pec15_calc(2, cmd);
@@ -290,6 +301,46 @@ void LTC6804_adax_fe6()
     spi_write_array(4, cmd);
 }
 
+
+/*
+
+    Read the voltage of a specific pin
+    for reference:
+    group 0 (auxa): set 0 = gpio1, set 1 = gpio2, set 2 = gpio2
+    group 1 (auxb): set 0 = gpio4, set 1 = gpio5, set 2 = vref2
+    group 2 (auxc): ?? look for in data sheet
+    group 3 (auxd): ?? look for in data sheet
+ */
+uint16_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t aux[3])
+{
+    uint8_t cmd[4];
+    uint16_t cmd_pec;
+    uint8_t rx_data[8];
+    uint16_t pinVoltage;
+    
+    cmd[0] = 128;
+    
+    uint8_t group = pin / 3;
+    uint8_t set = pin % 3;
+    
+    switch(group) {
+        case 0: cmd[1] = 12; break;
+        case 1: cmd[1] = 14; break;
+        case 2: cmd[1] = 13; break;
+        case 3: cmd[1] = 15; break;
+    }
+    
+    cmd_pec = pec15_calc(2, cmd);
+    cmd[2] = (cmd_pec >> 8);
+    cmd[3] = cmd_pec;
+    spi_write_read(cmd, 4, rx_data, 8);
+    
+    for(int i = 0; i < 6; i+=2) {
+        aux[i] = rx_data[i] | (rx_data[i + 1] << 8);
+    }
+    
+    return pinVoltage;
+}
 
 int LTC6804_rdauxa(uint8_t aux_data[6])
 {
@@ -1235,7 +1286,6 @@ void my_spi_write_read(uint8_t tx_Data[],//array of data to be written on SPI po
     for(i = 0; i < rx_len; i++)
     {
         rx_data[i] = (uint8_t)LTC68_ReadRxData();
-
     }
 
 
@@ -1243,7 +1293,6 @@ void my_spi_write_read(uint8_t tx_Data[],//array of data to be written on SPI po
 CyDelayUs(200);
 CyDelay(10);
 }
-
 
 void LTC6804_init_cfg()
 {
