@@ -47,3 +47,5 @@
 *.dSYM/
 *.log
 *.xml
+*.xml
+alpaca-bms/alpaca-bms.cydsn/Export/PSoCCreatorExportIDE.xml
