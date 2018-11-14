@@ -293,7 +293,6 @@ int main(void)
                     CyDelay(100);
                     test_get_cell_temp(cfga, mux_sel, orig_cfga_data, auxa, GPIO1);
                     temperatures[mux_sel] = auxa[0]; // to save gpio1 voltages
-                    //temperatures[mux_sel] = *(uint16_t *)(auxa + 3);
                 }
                 
                 CyDelay(100);
