@@ -162,8 +162,9 @@ void LTC6804_adcv()
 }
 
 /*
- * Address write command -
+ * Broadcast write command -
  * select - the value that should be selected. -> greatest value = 7
+ * orig_cfga_data - old register values we don't want to change
  */
 
 void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
@@ -171,54 +172,50 @@ void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
     uint8_t cmd[12];
     uint16_t temp_pec;
     
-    //1
-    cmd[0] = 128;
-    cmd[1] = 1;
+    // see LTC6811 datasheet for command codes
+    cmd[0] = 0;     // broadcast command + part of wrcfga cmd
+    cmd[1] = 1;     // specifies wrcfga cmd
     
-    //2
+    // calculate pec for command code
     temp_pec = pec15_calc(2, (uint8_t *)cmd);
     cmd[2] = (uint8_t)(temp_pec >> 8);
     cmd[3] = (uint8_t)(temp_pec);
-    cmd[4] = 255;
 
     /*
-    crfg0 - gpio select
+    cfga is an 8 byte register on the LTC6811, we care about cfga[0]:
     bits -  |7     |6       |5        |4        |3     |2     |1      |0          |
             |gpio5 |gpio4   |gpio3    |gpio2    |gpio1 |refon | dten  |adcopt (important) |
-            | x    |select2 | select1 | select 0|   x  | 1    | 1     | x         |
+            | x    |select2 | select1 | select 0|   1  | 1    | 1     | 0         |
     
-    adcopt - determines which adc mode is set -> relates to md bits of adax command -> see pg. 58 for speed mode table
-    
-    !!!!!! dten (bit 1) must always be high !!!!!!
-    !!!!!! gpios only change if refon == 1  !!!!!!
+    In testing, we found that dten and refon must be 1, otherwise the function doesn't
+    write the select (gpio) bits.
     */
-    uint8_t cfgr0 = (select << 5) >> 1; // ensure that only the correct three bits are set.
     
-    cmd[4] = cfgr0 | 0b1110;                 // Need to make sure refon and dten are high
-    cmd[5] = orig_cfga_data[0];
+    uint8_t cfgr0 = (select << 5) >> 1; // 00000xxx -> 0xxx0000
+    
+    cmd[4] = cfgr0 | 0b1110;       // gpio1 = 1 refon = 1 dten = 1 adcopt = 0
+    cmd[5] = orig_cfga_data[0];    // rest of the register is written with its prev. values
     cmd[6] = orig_cfga_data[1];
     cmd[7] = orig_cfga_data[2];
     cmd[8] = orig_cfga_data[3];
     cmd[9] = orig_cfga_data[4];
-    
-    /*
-    for(int i = 0; i < 6; i++){
-        DATA[i] = cmd[i + 4];
-    }
-    temp_pec = pec15_calc(6, DATA);
-    */
 
+    // calculate pec on data
     temp_pec = pec15_calc(6, (uint8_t*)(cmd + 4));
     cmd[10] = (uint8_t)(temp_pec >> 8);
     cmd[11] = (uint8_t)(temp_pec);
     
-    //3
+    // wakeup device and send cmd
     wakeup_idle();
-    
-    //4
     spi_write_array(12, cmd);
 }
 
+
+/*
+ * Address read command 
+ * TODO: implement address parameter
+ * cfga[6] - stores values read from the 6811
+ */
 int8_t LTC6804_rdcfga(uint8_t cfga[6])
 {
     uint8_t cmd[4];         // bytes for rdcfga cmd; sent to slaves
@@ -254,8 +251,9 @@ int8_t LTC6804_rdcfga(uint8_t cfga[6])
 
 
 /* 
- * Initiate measurement of GPIO input, specifically GPIO1
- * 
+ * Address auxiallary adc command
+ * Used to start adc conversion on GPIO1
+ * TODO: implement 6811 addressing
  */
 void LTC6804_adax_fe6()
 {
@@ -267,7 +265,7 @@ void LTC6804_adax_fe6()
                     |1      |0      |MD[1]  |MD[0]  |1      |1      |0      |0      |CHG[2] |CHG[1] |CHG[0] |
         
         MD : ADC Mode - see pg. 58 for MD speed table
-        CHG : GPIO Select for ADC conversion: 001 = GPIO1, 110 = 2nd reference
+        CHG : GPIO Select for ADC conversion: 001 = GPIO1, 110 = 2nd reference (Vref)
     
         Reference for values with certain parameters:
         For MD[1] = 0 -> cmd[0] = 132

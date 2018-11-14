@@ -280,13 +280,10 @@ int main(void)
                     1. For each 6811 on each slave
                     2. For mux select 0-7
                     3. wrcfga to set mux select
-                    4. adcv to convert mux output to digital and store in register
+                    4. adax to convert mux output to digital and store in register
                     5. rdaux to read stored digital value
                 
                     Temperature values may be stored in a 2-d array
-                
-                    11/1/18: able to set mux select on a single mux on a single slave
-                             Need to implement adcv on gpio pin 1 and rdaux to get temp data
                 */
                 uint16_t gpio1_received;
 
