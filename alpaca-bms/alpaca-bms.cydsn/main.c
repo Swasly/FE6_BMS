@@ -9,6 +9,7 @@
 #include "uart-terminal.h"
 #include "BMS_monitor.h"
 #include "LTC68042.h"
+#include "math.h"
 
 //#define WDT_ENABLE
 
@@ -287,12 +288,24 @@ int main(void)
                 */
                 uint16_t gpio1_received;
 
-                uint16_t temperatures[8];
+                uint16_t voltages[8];
                 uint16_t auxa[3];
                 for (uint8_t mux_sel = 0; mux_sel <= 7; mux_sel++) {
                     CyDelay(100);
                     test_get_cell_temp(cfga, mux_sel, orig_cfga_data, auxa, GPIO1);
-                    temperatures[mux_sel] = auxa[0]; // to save gpio1 voltages
+                    voltages[mux_sel] = auxa[0]; // to save gpio1 voltages
+                }
+                
+                float32 T0 = 298.15;
+                float32 beta = 3428;
+                float32 R0 = 10000;
+                float32 Vconst = 3030.3;
+                float32 V = 3.3;
+                float32 temperatures[8];
+                for (uint8_t therm = 0; therm <= 7; therm++) {
+                    float32 temp = temperatures[therm]/10000;
+                    float32 R_therm = (3030.3 * temp)/(1 - (temp/3.3));
+                    temperatures[therm] = (1/((1/T0) + ((1/beta)*log(R_therm/R0)))) - 273.15;
                 }
                 
                 CyDelay(100);
