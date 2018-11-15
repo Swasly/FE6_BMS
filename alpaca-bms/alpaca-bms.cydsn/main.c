@@ -300,8 +300,8 @@ int main(void)
                 float32 beta = 3428;
                 float32 temperatures[8];
                 for (uint8_t therm = 0; therm <= 7; therm++) {
-                    float32 temp = voltages[therm]/10000;
-                    temperatures[therm] = (1/((1/T0) + ((1/beta)*log(temp/(3-temp))))) - 273.15;
+                    float32 temp = (float32)voltages[therm]/10000;
+                    temperatures[therm] = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
                 }
                 
                 CyDelay(100);
