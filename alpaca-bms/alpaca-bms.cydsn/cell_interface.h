@@ -320,7 +320,7 @@ void bat_balance();
 void bat_clear_balance();
 void DEBUG_balancing_on();
 double mvToC(uint16_t mv);
-uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t *auxVal, enum AuxPins pin);
+uint8_t get_cell_temp_fe6(uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t *auxVal);
 uint8_t get_cfga_on_init(uint8_t cfga_data[5]);
 uint8_t open_wire_adow(uint8_t pup);
 

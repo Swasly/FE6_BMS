@@ -84,7 +84,7 @@ uint8_t ADAX[2]; //!< GPIO conversion command.
 */
 void LTC6804_initialize()
 {
-  set_adc(MD_FILTERED,DCP_DISABLED,CELL_CH_ALL,AUX_CH_ALL); // MD_FILTERED from MD_NORMAL
+  set_adc(MD_FILTERED,DCP_DISABLED,CELL_CH_ALL,AUX_CH_GPIO1); // MD_FILTERED from MD_NORMAL
   LTC6804_init_cfg();
 }
 
@@ -249,73 +249,20 @@ int8_t LTC6804_rdcfga(uint8_t cfga[6])
        
 }
 
-
-/* 
- * Address auxiallary adc command
- * Used to start adc conversion on GPIO1
- * TODO: implement 6811 addressing
- */
-void LTC6804_adax_fe6()
-{
-    uint8_t cmd[4];
-    uint16_t cmd_pec;
-    
-    /*
-        Adax CC:    |10     |9      |8      |7      |6      |5      |4      |3      |2      |1      |0      |
-                    |1      |0      |MD[1]  |MD[0]  |1      |1      |0      |0      |CHG[2] |CHG[1] |CHG[0] |
-        
-        MD : ADC Mode - see pg. 58 for MD speed table
-        CHG : GPIO Select for ADC conversion: 001 = GPIO1, 110 = 2nd reference (Vref)
-    
-        Reference for values with certain parameters:
-        For MD[1] = 0 -> cmd[0] = 132
-            MD[1] = 1 -> cmd[0] = 133
-    
-        If MD[0] = 0:
-            GPIO1 with adax: cmd[1] = 97
-            VREF2 with adax: cmd[1] = 1
-            
-        
- 
-    */
-    
-    
-    // Current MD val = 11 and adcopt = 0 => 26 Hz mode
-    cmd[0] = 133; // 
-    
-    // If measuring GPIO1
-    //cmd[1] = 97; // For MD[0] = 0 -> cmd[1] = 97; MD[0] = 1 -> cmd[1] = 225
-    
-    
-    // If measuring Vref2?
-    // cmd[1] = 102;//For MD[0] = 0 -> cmd[1] = 102; MD[0] = 1 -> cmd[1] = 230 
-     cmd[1] = 6;// For MD[0] = 0 -> cmd[1] = 6; MD[0] = 1 -> cmd[1] = 134 //adaxd
-    
-    
-    cmd_pec = pec15_calc(2, cmd);
-    cmd[2] = (uint8_t)(cmd_pec >> 8);
-    cmd[3] = (uint8_t)(cmd_pec);
-    
-    wakeup_idle();
-    spi_write_array(4, cmd);
-}
-
-
 /*
-
-    Read the voltage of a specific pin
-    for reference:
-    group 0 (auxa): set 0 = gpio1, set 1 = gpio2, set 2 = gpio2
-    group 1 (auxb): set 0 = gpio4, set 1 = gpio5, set 2 = vref2
-    group 2 (auxc): ?? look for in data sheet
-    group 3 (auxd): ?? look for in data sheet
+ *  Read the voltage of a specific pin
+ *  for reference:
+ *  group 0 (auxa): set 0 = gpio1, set 1 = gpio2, set 2 = gpio2
+ *  group 1 (auxb): set 0 = gpio4, set 1 = gpio5, set 2 = vref2
+ *  group 2 (auxc): ?? look for in data sheet
+ *  group 3 (auxd): ?? look for in data sheet
  */
-uint16_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t aux[3])
+int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t aux[3])
 {
     uint8_t cmd[4];
     uint16_t cmd_pec;
     uint8_t rx_data[8];
-    uint16_t pinVoltage;
+    int8_t pec_error;
     
     cmd[0] = 128;
     
@@ -338,7 +285,7 @@ uint16_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t aux[3])
         aux[i] = rx_data[i] | (rx_data[i + 1] << 8);
     }
     
-    return pinVoltage;
+    return pec_error;
 }
 
 int LTC6804_rdauxa(uint8_t aux_data[6])

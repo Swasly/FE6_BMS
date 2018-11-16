@@ -26,7 +26,7 @@ typedef enum
 	BMS_FAULT
 }BMS_MODE;
 
-uint8_t cfga[6], cfga_on_init[6];
+uint8_t cfga_on_init[6];
 uint8_t auxa[6];
 volatile uint8_t CAN_UPDATE_FLAG=0;
 extern volatile BAT_PACK_t bat_pack;
@@ -274,8 +274,7 @@ int main(void)
                 */
                 uint8_t orig_cfga_data[5];
                 get_cfga_on_init(orig_cfga_data);
-                
-                
+                                
                 /*
                     New cell temperature getter
                     1. For each 6811 on each slave
@@ -286,25 +285,21 @@ int main(void)
                 
                     Temperature values may be stored in a 2-d array
                 */
-                uint16_t gpio1_received;
 
                 uint16_t voltages[8];
                 uint16_t auxa[3];
                 for (uint8_t mux_sel = 0; mux_sel <= 7; mux_sel++) {
-                    CyDelay(100);
-                    test_get_cell_temp(cfga, mux_sel, orig_cfga_data, auxa, GPIO1);
-                    voltages[mux_sel] = auxa[0]; // to save gpio1 voltages
+                    get_cell_temp_fe6(mux_sel, orig_cfga_data, auxa);
+                    voltages[mux_sel] = auxa[0]; 
                 }
                 
-                float32 T0 = 298.15;
-                float32 beta = 3428;
                 float32 temperatures[8];
                 for (uint8_t therm = 0; therm <= 7; therm++) {
                     float32 temp = (float32)voltages[therm]/10000;
                     temperatures[therm] = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
                 }
                 
-                CyDelay(100);
+                CyDelay(1);
                 // TODO: Calculate SOC
                 //get_current(); // TODO get current reading from sensor
 			    //bat_soc = get_soc(); // TODO calculate SOC()

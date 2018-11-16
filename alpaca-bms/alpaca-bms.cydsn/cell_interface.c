@@ -357,16 +357,12 @@ uint8_t get_cfga_on_init(uint8_t cfga_data[5]){
     return 0;
 }
 
-uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t auxa[3], enum AuxPins pin){
+uint8_t get_cell_temp_fe6(uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t auxa[3]){
     /*
-    1. Prepare 6820s for reading/writing
-    3. Store read values in array
-    4. for loop
-    4a. write value to cfg reg. to select mux
-    4b. adc on data gpio pin
-    4c. read adc data, store in array
-    5. ???
-    6. Profit
+     * 1. Prepare LTC6820 for traffic
+     * 2. Write the analog mux select value to GPIO pins 
+     * 3. Start LTC6811 ADC on GPIO1
+     * 4. Read the voltage from auxillary register A
     */
     
     int8_t pec_error;
@@ -375,27 +371,25 @@ uint8_t test_get_cell_temp(uint8_t cfga[6], uint8_t mux_sel, uint8_t orig_cfga_d
     LTC68_ClearFIFO();
     Select6820_Write(0);
     wakeup_sleep();
-    CyDelay(250);
+    CyDelay(1);
     
+    // 2
     LTC6804_wrcfga(mux_sel, orig_cfga_data);
     LTC6804_wrcfga(mux_sel, orig_cfga_data);
     
-    CyDelay(100);
+    CyDelay(1);
     
-    // Temporary reads to verify writes
-    pec_error = LTC6804_rdcfga(cfga);
-    pec_error = LTC6804_rdcfga(cfga);
-
-    CyDelay(100);
-    
-    // Tell LT to adc signal on gpio1
+    // 3
     LTC6804_adax();
     LTC6804_adax();
     
-    CyDelay(250);
-    LTC6804_rdaux_fe6(pin, auxa);
-    LTC6804_rdaux_fe6(pin, auxa);
+    CyDelay(35);   // Need time for adax to complete on 6811
     
+    // 4
+    LTC6804_rdaux_fe6(GPIO1, auxa);
+    LTC6804_rdaux_fe6(GPIO1, auxa);
+    
+    CyDelay(1);
     return 0;
 }
 
