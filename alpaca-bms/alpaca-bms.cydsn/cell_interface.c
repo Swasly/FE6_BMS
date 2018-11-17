@@ -357,7 +357,7 @@ uint8_t get_cfga_on_init(uint8_t cfga_data[5]){
     return 0;
 }
 
-uint8_t get_cell_temp_fe6(uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t auxa[3]){
+uint8_t get_cell_temp_fe6(uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t *auxa){
     /*
      * 1. Prepare LTC6820 for traffic
      * 2. Write the analog mux select value to GPIO pins 
@@ -371,25 +371,19 @@ uint8_t get_cell_temp_fe6(uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t a
     LTC68_ClearFIFO();
     Select6820_Write(0);
     wakeup_sleep();
-    CyDelay(1);
     
     // 2
     LTC6804_wrcfga(mux_sel, orig_cfga_data);
     LTC6804_wrcfga(mux_sel, orig_cfga_data);
     
-    CyDelay(1);
-    
     // 3
     LTC6804_adax();
     LTC6804_adax();
-    
-    CyDelay(35);   // Need time for adax to complete on 6811
     
     // 4
     LTC6804_rdaux_fe6(GPIO1, auxa);
     LTC6804_rdaux_fe6(GPIO1, auxa);
     
-    CyDelay(1);
     return 0;
 }
 

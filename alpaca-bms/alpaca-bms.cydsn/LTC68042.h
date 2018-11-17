@@ -214,7 +214,7 @@ enum AuxPins {
     VREF2
 };
 
-int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t aux[3]);
+int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t *aux);
 void LTC6804_adow(uint8_t pup);
 
 void LTC6804_adax();

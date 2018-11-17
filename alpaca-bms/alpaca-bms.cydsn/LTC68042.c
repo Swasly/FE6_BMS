@@ -84,7 +84,7 @@ uint8_t ADAX[2]; //!< GPIO conversion command.
 */
 void LTC6804_initialize()
 {
-  set_adc(MD_FILTERED,DCP_DISABLED,CELL_CH_ALL,AUX_CH_GPIO1); // MD_FILTERED from MD_NORMAL
+  set_adc(MD_NORMAL,DCP_DISABLED,CELL_CH_ALL,AUX_CH_GPIO1); // MD_FILTERED from MD_NORMAL
   LTC6804_init_cfg();
 }
 
@@ -257,7 +257,7 @@ int8_t LTC6804_rdcfga(uint8_t cfga[6])
  *  group 2 (auxc): ?? look for in data sheet
  *  group 3 (auxd): ?? look for in data sheet
  */
-int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t aux[3])
+int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t *aux)
 {
     uint8_t cmd[4];
     uint16_t cmd_pec;
@@ -267,13 +267,13 @@ int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t aux[3])
     cmd[0] = 128;
     
     uint8_t group = pin / 3;
-    uint8_t set = pin % 3;
+    uint8_t set = 2* (pin % 3);
     
     switch(group) {
-        case 0: cmd[1] = 12; break;
-        case 1: cmd[1] = 14; break;
-        case 2: cmd[1] = 13; break;
-        case 3: cmd[1] = 15; break;
+        case 0: cmd[1] = 12; break;     // GPIO 1 2 3 
+        case 1: cmd[1] = 14; break;     // GPIO 4 5 VRef
+        case 2: cmd[1] = 13; break;     // Different Register
+        case 3: cmd[1] = 15; break;     // Different Register
     }
     
     cmd_pec = pec15_calc(2, cmd);
@@ -281,11 +281,10 @@ int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t aux[3])
     cmd[3] = cmd_pec;
     spi_write_read(cmd, 4, rx_data, 8);
     
-    for(int i = 0; i < 6; i+=2) {
-        aux[i] = rx_data[i] | (rx_data[i + 1] << 8);
-    }
+    *aux = rx_data[set] | (rx_data[set + 1] << 8);
     
-    return pec_error;
+    
+    return pec_error;                   // Implement error path
 }
 
 int LTC6804_rdauxa(uint8_t aux_data[6])

@@ -287,10 +287,10 @@ int main(void)
                 */
 
                 uint16_t voltages[8];
-                uint16_t auxa[3];
+                uint16_t auxa;
                 for (uint8_t mux_sel = 0; mux_sel <= 7; mux_sel++) {
-                    get_cell_temp_fe6(mux_sel, orig_cfga_data, auxa);
-                    voltages[mux_sel] = auxa[0]; 
+                    get_cell_temp_fe6(mux_sel, orig_cfga_data, &auxa);
+                    voltages[mux_sel] = auxa; 
                 }
                 
                 float32 temperatures[8];
