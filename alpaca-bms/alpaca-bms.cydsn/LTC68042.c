@@ -189,6 +189,8 @@ void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
     
     In testing, we found that dten and refon must be 1, otherwise the function doesn't
     write the select (gpio) bits.
+    GPIO1 is the output of the mux and must be written high. 
+    If GPIO1 is written low then read function will get microvolts.
     */
     
     uint8_t cfgr0 = (select << 5) >> 1; // 00000xxx -> 0xxx0000
