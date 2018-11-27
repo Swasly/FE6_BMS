@@ -300,6 +300,7 @@ int main(void)
                 }
                 
                 CyDelay(1);
+                FanController_1_SetDutyCycle(1, 1000);
                 // TODO: Calculate SOC
                 //get_current(); // TODO get current reading from sensor
 			    //bat_soc = get_soc(); // TODO calculate SOC()
