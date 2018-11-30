@@ -215,7 +215,8 @@ int main(void)
 	BMS_MODE bms_status = BMS_BOOTUP;
 	uint32_t system_interval = 0;
     uint8_t led = 0;
-   
+    FanController_1_SetDutyCycle(1, 1000);
+    FanController_1_Start();
     
 	while(1){
 		switch (bms_status){
@@ -298,9 +299,12 @@ int main(void)
                     float32 temp = (float32)voltages[therm]/10000;
                     temperatures[therm] = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
                 }
-                
-                CyDelay(1);
-                FanController_1_SetDutyCycle(1, 1000);
+               
+                for (int fan_pwm = 0; fan_pwm < 10000; fan_pwm++){
+                    FanController_1_SetDutyCycle(1, fan_pwm);
+                    CyDelay(50);
+                }
+                CyDelay(10);
                 // TODO: Calculate SOC
                 //get_current(); // TODO get current reading from sensor
 			    //bat_soc = get_soc(); // TODO calculate SOC()
