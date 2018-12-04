@@ -215,7 +215,8 @@ int main(void)
 	BMS_MODE bms_status = BMS_BOOTUP;
 	uint32_t system_interval = 0;
     uint8_t led = 0;
-    FanController_1_SetDutyCycle(1, 1000);
+    //FanController_1_SetDutyCycle(1, 44000);
+    FanController_1_SetDesiredSpeed(1, 4400);
     FanController_1_Start();
     
 	while(1){
@@ -304,10 +305,12 @@ int main(void)
                 
                 while(1) {
                     if(mode % 2 == 0) {
-                        FanController_1_SetDutyCycle(1, 2000);
+                        //FanController_1_SetDutyCycle(1, 2000);
+                        FanController_1_SetDesiredSpeed(1, 4500);
                     }
                     else {
-                        FanController_1_SetDutyCycle(1, 4000);
+                        //FanController_1_SetDutyCycle(1, 4000);
+                        FanController_1_SetDesiredSpeed(1, 6000);
                     }
                     
                     mode = (mode + 1) % 2;

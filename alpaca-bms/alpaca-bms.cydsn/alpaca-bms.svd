@@ -309,125 +309,9 @@
       </addressBlock>
       <registers>
         <register>
-          <name>FanController_1_ALERT_STATUS</name>
-          <description>Alert Status Register</description>
-          <addressOffset>0x40006463</addressOffset>
-          <size>8</size>
-          <access>read-write</access>
-          <resetValue>0</resetValue>
-          <resetMask>0</resetMask>
-          <fields>
-            <field>
-              <name>STALL_STATUS</name>
-              <description>Stall status for all Fans</description>
-              <lsb>0</lsb>
-              <msb>0</msb>
-              <access>read-only</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>NO_STALL</name>
-                  <description>No stall occurred</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>STALL</name>
-                  <description>Stall is occurred</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>SPEED_STATUS</name>
-              <description>Speed status for all Fans</description>
-              <lsb>1</lsb>
-              <msb>1</msb>
-              <access>read-only</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>NO_SPEED_ERROR</name>
-                  <description>No speed error occurred</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>SPEED_ERROR</name>
-                  <description>Speed error is occurred</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>FanController_1_Alert_STALL_STATUS_LSB</name>
-          <description>Stall Status LSB Register</description>
-          <addressOffset>0x40006465</addressOffset>
-          <size>8</size>
-          <access>read-write</access>
-          <resetValue>0</resetValue>
-          <resetMask>0</resetMask>
-          <fields>
-            <field>
-              <name>STALL_STAT_1</name>
-              <description>Stall status for Fan1</description>
-              <lsb>0</lsb>
-              <msb>0</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>STALL_STAT_2</name>
-              <description>Stall status for Fan2</description>
-              <lsb>1</lsb>
-              <msb>1</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>STALL_STAT_3</name>
-              <description>Stall status for Fan3</description>
-              <lsb>2</lsb>
-              <msb>2</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>STALL_STAT_4</name>
-              <description>Stall status for Fan4</description>
-              <lsb>3</lsb>
-              <msb>3</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>STALL_STAT_5</name>
-              <description>Stall status for Fan5</description>
-              <lsb>4</lsb>
-              <msb>4</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>STALL_STAT_6</name>
-              <description>Stall status for Fan6</description>
-              <lsb>5</lsb>
-              <msb>5</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>STALL_STAT_7</name>
-              <description>Stall status for Fan7</description>
-              <lsb>6</lsb>
-              <msb>6</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>STALL_STAT_8</name>
-              <description>Stall status for Fan8</description>
-              <lsb>7</lsb>
-              <msb>7</msb>
-              <access>read-write</access>
-            </field>
-          </fields>
-        </register>
-        <register>
           <name>FanController_1_Alert_ALERT_MASK_LSB</name>
           <description>Alert Mask LSB Register</description>
-          <addressOffset>0x40006475</addressOffset>
+          <addressOffset>0x40006473</addressOffset>
           <size>8</size>
           <access>read-write</access>
           <resetValue>0</resetValue>
@@ -492,9 +376,125 @@
           </fields>
         </register>
         <register>
+          <name>FanController_1_ALERT_STATUS</name>
+          <description>Alert Status Register</description>
+          <addressOffset>0x40006566</addressOffset>
+          <size>8</size>
+          <access>read-write</access>
+          <resetValue>0</resetValue>
+          <resetMask>0</resetMask>
+          <fields>
+            <field>
+              <name>STALL_STATUS</name>
+              <description>Stall status for all Fans</description>
+              <lsb>0</lsb>
+              <msb>0</msb>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>NO_STALL</name>
+                  <description>No stall occurred</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>STALL</name>
+                  <description>Stall is occurred</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>SPEED_STATUS</name>
+              <description>Speed status for all Fans</description>
+              <lsb>1</lsb>
+              <msb>1</msb>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>NO_SPEED_ERROR</name>
+                  <description>No speed error occurred</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SPEED_ERROR</name>
+                  <description>Speed error is occurred</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>FanController_1_Alert_STALL_STATUS_LSB</name>
+          <description>Stall Status LSB Register</description>
+          <addressOffset>0x40006567</addressOffset>
+          <size>8</size>
+          <access>read-write</access>
+          <resetValue>0</resetValue>
+          <resetMask>0</resetMask>
+          <fields>
+            <field>
+              <name>STALL_STAT_1</name>
+              <description>Stall status for Fan1</description>
+              <lsb>0</lsb>
+              <msb>0</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>STALL_STAT_2</name>
+              <description>Stall status for Fan2</description>
+              <lsb>1</lsb>
+              <msb>1</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>STALL_STAT_3</name>
+              <description>Stall status for Fan3</description>
+              <lsb>2</lsb>
+              <msb>2</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>STALL_STAT_4</name>
+              <description>Stall status for Fan4</description>
+              <lsb>3</lsb>
+              <msb>3</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>STALL_STAT_5</name>
+              <description>Stall status for Fan5</description>
+              <lsb>4</lsb>
+              <msb>4</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>STALL_STAT_6</name>
+              <description>Stall status for Fan6</description>
+              <lsb>5</lsb>
+              <msb>5</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>STALL_STAT_7</name>
+              <description>Stall status for Fan7</description>
+              <lsb>6</lsb>
+              <msb>6</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>STALL_STAT_8</name>
+              <description>Stall status for Fan8</description>
+              <lsb>7</lsb>
+              <msb>7</msb>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
           <name>FanController_1_GLBL_CTRL</name>
           <description>Global Control Register</description>
-          <addressOffset>0x40006476</addressOffset>
+          <addressOffset>0x40006576</addressOffset>
           <size>8</size>
           <access>read-write</access>
           <resetValue>0</resetValue>
