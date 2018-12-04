@@ -8,8 +8,6 @@
 <files />
 <projects>
 <v>.\alpaca-bms.cydsn\alpaca-bms.cyprj</v>
-<v>..\..\..\..\Desktop\fantest\Fan_Control_Manual01.cydsn\Fan_Control_Manual01.cyprj</v>
-<v>..\..\..\..\Desktop\fantest\Design01.cydsn\Design01.cyprj</v>
 </projects>
 <workspace_id v="828352ce-afe0-48ca-8dbd-4c3b1b983025" />
 <WriteAppVersionLastSavedWith v="4.2.0.641" />
