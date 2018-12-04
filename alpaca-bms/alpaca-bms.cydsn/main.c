@@ -300,6 +300,20 @@ int main(void)
                     temperatures[therm] = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
                 }
                
+                int mode = 0;
+                
+                while(1) {
+                    if(mode % 2 == 0) {
+                        FanController_1_SetDutyCycle(1, 2000);
+                    }
+                    else {
+                        FanController_1_SetDutyCycle(1, 4000);
+                    }
+                    
+                    mode = (mode + 1) % 2;
+                    CyDelay(10000);
+                }
+                
                 for (int fan_pwm = 0; fan_pwm < 10000; fan_pwm++){
                     FanController_1_SetDutyCycle(1, fan_pwm);
                     CyDelay(50);

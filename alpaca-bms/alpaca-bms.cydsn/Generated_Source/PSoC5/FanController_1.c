@@ -2474,7 +2474,7 @@ FanController_1_fanControlStruct FanController_1_fanControl
         /* Initialize the Desired Period Field (RPM B scaled up by tolerance factor %) */
         #if(FanController_1_NUMBER_OF_FANS >= 1u)
             (uint16) (FanController_1_RPM_PERIOD_CONV_FACTOR /
-            (10000u + ((FanController_1_TOLERANCE * 10000u)/ FanController_1_TOLERANCE_DIVIDER))),
+            (16100u + ((FanController_1_TOLERANCE * 16100u)/ FanController_1_TOLERANCE_DIVIDER))),
         #endif /* FanController_1_NUMBER_OF_FANS >= 1u */
 
         #if(FanController_1_NUMBER_OF_FANS >= 2u)
@@ -2556,7 +2556,7 @@ FanController_1_fanControlStruct FanController_1_fanControl
         /* Initialize the Tolerance Field (% of RPM B) */
         #if(FanController_1_NUMBER_OF_FANS >= 1u)
             (uint16) (((FanController_1_RPM_PERIOD_CONV_FACTOR * FanController_1_TOLERANCE) /
-              FanController_1_TOLERANCE_DIVIDER) / (10000u)),
+              FanController_1_TOLERANCE_DIVIDER) / (16100u)),
         #endif /* FanController_1_NUMBER_OF_FANS >= 1u */
 
         #if(FanController_1_NUMBER_OF_FANS >= 2u)
@@ -2646,13 +2646,13 @@ FanController_1_fanPropertiesStruct FanController_1_fanProperties[FanController_
 {
     #if(FanController_1_NUMBER_OF_FANS >= 1u)
         {
-            1000u,
-            10000u,
-            (25u * 100u),
+            4200u,
+            16100u,
+            (20u * 100u),
             (100u * 100u),
-            (((100u - 25u) * 100u) / ((10000u - 1000u) / 100u)),
-            5000u,
-            (58u * 100u)
+            (((100u - 20u) * 100u) / ((16100u - 4200u) / 100u)),
+            4200u,
+            (20u * 100u)
         },
     #endif /* FanController_1_NUMBER_OF_FANS >= 1u */
 
