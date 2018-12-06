@@ -11,7 +11,7 @@
 */
 
 #include "uart-terminal.h"
-
+#define __cplusplus__strings__ macro
  /**
   * @brief ASCII control code
   */
@@ -220,6 +220,22 @@ bool terminal_detectESC() {
         return false;
     }
     return true;
+}
+
+/**
+ Redefinition of stricmp - returns 0 if both string are the same without case sensitivity
+**/
+int stricmp(char *str1, char *str2)
+{
+    while(*str1) {
+        if(tolower(*str1) != tolower(*str2)) {
+            break;
+        }
+        str1++;
+        str2++;
+    }
+    
+    return tolower(*str1) - tolower(*str2);
 }
 
 /****************************************************************************
