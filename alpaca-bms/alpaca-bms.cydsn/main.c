@@ -45,9 +45,6 @@ void DEBUG_send_temp();
 void DEBUG_send_current();
 
 
-
-
-
 CY_ISR(current_update_Handler){
     current_timer_STATUS;
 	update_soc();
@@ -205,6 +202,15 @@ void process_failure(){
         
 }*/
 bool BALANCE_FLAG = true;
+
+typedef enum {
+    FAN_MAX,
+    FAN_ZERO,
+    FAN_MIN
+} FAN_MODE;
+
+
+
 int main(void)
 {
     // Stablize the BMS OK signal when system is still setting up
@@ -213,6 +219,8 @@ int main(void)
     
 	// Initialize state machine
 	BMS_MODE bms_status = BMS_BOOTUP;
+    FAN_MODE fan_mode = FAN_ZERO;
+    
 	uint32_t system_interval = 0;
     uint8_t led = 0;
     //FanController_1_SetDutyCycle(1, 44000);
@@ -262,8 +270,23 @@ int main(void)
 			    OK_SIG_Write(1);
 			    //check_cfg(rx_cfg);  //CANNOT be finished, because 
 				
-                
+                uint16_t cell_volts[12];
+                /*Only here to check that the old voltage reading still works*/
 		        get_cell_volt();// TODO test voltage
+                cell_volts[0] = cell_codes[0][0];
+                cell_volts[1] = cell_codes[0][1];
+                cell_volts[2] = cell_codes[0][2];
+                cell_volts[3] = cell_codes[0][3];
+                cell_volts[4] = cell_codes[0][4];
+                cell_volts[5] = cell_codes[0][5];
+                cell_volts[6] = cell_codes[0][6];
+                cell_volts[7] = cell_codes[0][7];
+                cell_volts[8] = cell_codes[0][8];
+                cell_volts[9] = cell_codes[0][9];
+                cell_volts[10] = cell_codes[0][10];
+                cell_volts[11] = cell_codes[0][11];
+                
+                
 				//TESTDAY_2_TODO. check_stack_fuse(); // TODO: check if stacks are disconnected
                 
 				//get_cell_temp(); Old temperature getting function (not needed for FE6)
@@ -288,21 +311,50 @@ int main(void)
                     Temperature values may be stored in a 2-d array
                 */
 
-                uint16_t voltages[8];
                 uint16_t auxa;
+                uint16_t voltages[8];
+                float32 temperatures[8];
+                
                 for (uint8_t mux_sel = 0; mux_sel <= 7; mux_sel++) {
                     get_cell_temp_fe6(mux_sel, orig_cfga_data, &auxa);
-                    voltages[mux_sel] = auxa; 
+                   // voltages[mux_sel] = auxa; 
+                    float32 temp = (float32)auxa/10000;
+                    temperatures[mux_sel] = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
                 }
                 
-                float32 temperatures[8];
+                /*
                 for (uint8_t therm = 0; therm <= 7; therm++) {
                     float32 temp = (float32)voltages[therm]/10000;
                     temperatures[therm] = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
-                }
+                }*/
+                
+                /*
+                for (uint8_t therm = 0; therm <= 7; therm++) {
+                    float32 temp = (float32)voltages[therm]/10000;
+                    
+                }*/
                
                 int mode = 0;
+           
+                float32 med_temp = get_median_temp(temperatures);
                 
+                //fan control
+                if(med_temp >= 55.0 && fan_mode != FAN_MAX) {
+                    //full speed
+                    //TODO: set all fans to same speed. 
+                    FanController_1_SetDesiredSpeed(1, 6000); //TODO: check actual speed range
+                    fan_mode = FAN_MAX;
+                }
+                else if(med_temp >= 50.0 && fan_mode != FAN_MIN) {
+                    //start up fans
+                    FanController_1_SetDesiredSpeed(1, 4500);
+                    fan_mode = FAN_MIN;
+                } else if(fan_mode != FAN_ZERO){
+                    FanController_1_SetDesiredSpeed(1, 0);
+                    fan_mode = FAN_ZERO;
+                }
+                
+                /*             
                 while(1) {
                     if(mode % 2 == 0) {
                         //FanController_1_SetDutyCycle(1, 2000);
@@ -315,13 +367,15 @@ int main(void)
                     
                     mode = (mode + 1) % 2;
                     CyDelay(10000);
-                }
-                
+                }*/
+                /*
                 for (int fan_pwm = 0; fan_pwm < 10000; fan_pwm++){
                     FanController_1_SetDutyCycle(1, fan_pwm);
                     CyDelay(50);
-                }
-                CyDelay(10);
+                }*/
+         
+                
+                    CyDelay(10);
                 // TODO: Calculate SOC
                 //get_current(); // TODO get current reading from sensor
 			    //bat_soc = get_soc(); // TODO calculate SOC()
@@ -355,11 +409,11 @@ int main(void)
                 if (bat_pack.health == FAULT){
 					bms_status = BMS_FAULT;
 				}
-                
-                
+
                 set_current_interval(100);
 				system_interval = 500;
 				break;
+
 /*
 			case BMS_CHARGEMODE:
 				OK_SIG_Write(1);

@@ -314,6 +314,9 @@ BAT_SOC_t get_soc();
  */
 void update_soc();
 
+//sort temperatures and return median?
+float32 get_median_temp(float32 temps[8]);
+
 uint8_t bat_health_check();
 void _SOC_log();
 void bat_balance();

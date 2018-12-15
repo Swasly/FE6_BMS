@@ -357,6 +357,33 @@ uint8_t get_cfga_on_init(uint8_t cfga_data[5]){
     return 0;
 }
 
+
+float32 get_median_temp(float32 temps[8])
+{
+    float32 local_temps[8];
+    memcpy(local_temps, temps, 8 * sizeof(float32));
+    
+    float32 temp, start;
+    int j;
+    
+    //insertion sort
+    for(int i = 1; i < 8; i++) {
+        start = local_temps[i];
+        j = i - 1;
+        while(start < local_temps[j] && j >= 0) {
+            local_temps[j + 1] = local_temps[j];
+            j--;;
+        }
+        local_temps[j + 1] = start;
+    }
+    
+    return (local_temps[3] + local_temps[4])/2;
+}
+
+uint8_t get_cell_voltages(uint8 voltages[12]) {
+}
+
+
 uint8_t get_cell_temp_fe6(uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t *auxa){
     /*
      * 1. Prepare LTC6820 for traffic

@@ -161,12 +161,15 @@ void LTC6804_adcv()
 
 }
 
+
+
+
+
 /*
  * Broadcast write command -
  * select - the value that should be selected. -> greatest value = 7
  * orig_cfga_data - old register values we don't want to change
  */
-
 void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
 {
     uint8_t cmd[12];
@@ -248,7 +251,6 @@ int8_t LTC6804_rdcfga(uint8_t cfga[6])
     }
     
     return pec_error;
-       
 }
 
 /*
@@ -267,7 +269,7 @@ int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t *aux)
     int8_t pec_error;
     
     cmd[0] = 128;
-    
+  
     uint8_t group = pin / 3;
     uint8_t set = 2* (pin % 3);
     
@@ -414,6 +416,9 @@ void LTC6804_adax()
   spi_write_array(4,cmd);
 
 }
+
+
+
 /*
   LTC6804_adax Function sequence:
   
@@ -620,6 +625,20 @@ void LTC6804_rdcv_reg(uint8_t reg,
     CyDelay(1);
   }
 }
+
+/*Read Cell Voltages*/
+void LTC6804_readcv(uint8_t voltages[12])
+{
+    uint8_t cmd[4];
+    uint16_t temp_pec;
+    //each cell can be read in 290us.
+ 
+  
+}
+
+
+
+
 /*
   LTC6804_rdcv_reg Function Process:
   1. Determine Command and initialize command array
