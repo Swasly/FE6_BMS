@@ -310,17 +310,20 @@ int main(void)
                 
                     Temperature values may be stored in a 2-d array
                 */
-
+                
+                
+                /*
                 uint16_t auxa;
                 uint16_t voltages[8];
                 float32 temperatures[8];
+                
                 
                 for (uint8_t mux_sel = 0; mux_sel <= 7; mux_sel++) {
                     get_cell_temp_fe6(mux_sel, orig_cfga_data, &auxa);
                    // voltages[mux_sel] = auxa; 
                     float32 temp = (float32)auxa/10000;
                     temperatures[mux_sel] = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
-                }
+                }*/
                 
                 /*
                 for (uint8_t therm = 0; therm <= 7; therm++) {

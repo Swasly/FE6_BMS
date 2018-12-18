@@ -196,13 +196,13 @@ void set_adc(uint8_t MD, uint8_t DCP, uint8_t CH, uint8_t CHG);
 
 void LTC6804_adcv(); 
 
-void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5]);
+void LTC6804_wrcfga(uint8_t lt_addr, uint8_t select, uint8_t orig_cfga_data[5]);
 
-int8_t LTC6804_rdcfga(uint8_t cfga[6]);
+int8_t LTC6804_rdcfga(uint8_t lt_addr, uint8_t cfga[6]);
 
 void LTC6804_adax_fe6();
 
-int LTC6804_rdauxa();
+int LTC6804_rdauxa(uint8_t lt_addr);
 
 
 enum AuxPins {
@@ -214,7 +214,7 @@ enum AuxPins {
     VREF2
 };
 
-int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t *aux);
+int8_t LTC6804_rdaux_fe6(uint8_t lt_addr, enum AuxPins pin, uint16_t *aux);
 void LTC6804_adow(uint8_t pup);
 
 void LTC6804_adax();

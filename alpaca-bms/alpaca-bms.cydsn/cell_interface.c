@@ -334,7 +334,7 @@ uint8_t open_wire_adow(uint8_t pup){
     to 3 bits in the register, and in order to write
     to 3 bits you must write to them all.
 */
-uint8_t get_cfga_on_init(uint8_t cfga_data[5]){
+uint8_t get_cfga_on_init(uint8_t lt_addr, uint8_t cfga_data[5]){
     
     int8_t pec_error;
     uint8_t cfga[6];
@@ -344,8 +344,8 @@ uint8_t get_cfga_on_init(uint8_t cfga_data[5]){
     wakeup_sleep();
     CyDelay(100);
     
-    pec_error = LTC6804_rdcfga(cfga);
-    pec_error = LTC6804_rdcfga(cfga);
+    pec_error = LTC6804_rdcfga(lt_addr, cfga);
+    pec_error = LTC6804_rdcfga(lt_addr, cfga);
     
     cfga_data[0] = cfga[1];
     cfga_data[1] = cfga[2];
@@ -380,18 +380,53 @@ float32 get_median_temp(float32 temps[8])
     return (local_temps[3] + local_temps[4])/2;
 }
 
-uint8_t get_cell_voltages(uint8 voltages[12]) {
+#define NUM_LTS (3u) // TODO modify to be fll number of lt chips by the end.
+#define TEMPS_ON_BOARD (8u)
+
+
+/*lt_addr = 0-17, for lt 16 and 17 -> address is x % 16
+    subpack # = lt_addr / 3
+    
+*/
+uint8_t get_lt_temps(uint8_t lt_addr, float32 temperatures[N_OF_SUBPACK][TEMPS_ON_BOARD], uint8_t orig_cfga_data[5])
+{
+    uint16_t auxa;
+    int subpack_num = lt_addr % 3;
+    
+    for(uint8_t mux_sel = 0; mux_sel < 8; mux_sel++) {
+        get_cell_temp_fe6(lt_addr, mux_sel, orig_cfga_data, &auxa);
+        float32 temp = (float32)auxa/10000;
+        temperatures[lt_addr / 3][mux_sel] = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
+    }
+    
+    return 0;
 }
 
+uint8_t get_cell_temps_fe6(float32 temps[N_OF_SUBPACK][TEMPS_ON_BOARD])
+{
+    // the number of lt chips. 
+    // TODO modify to be full number of lt chips by the end.
+    uint8_t num_lts = 3;
+    
+    uint8_t orig_cfga_data[5];
+    
+    
+    
+    for(int i = 0; i < num_lts; i++) {
+        get_cfga_on_init(i, orig_cfga_data);
+        get_lt_temps(i, temps, orig_cfga_data);
+    }
 
-uint8_t get_cell_temp_fe6(uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t *auxa){
+}
+
+uint8_t get_cell_temp_fe6(uint8_t lt_addr, uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t *auxa){
     /*
      * 1. Prepare LTC6820 for traffic
      * 2. Write the analog mux select value to GPIO pins 
      * 3. Start LTC6811 ADC on GPIO1
      * 4. Read the voltage from auxillary register A
     */
-    
+
     int8_t pec_error;
     
     // 1
@@ -400,16 +435,16 @@ uint8_t get_cell_temp_fe6(uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t *
     wakeup_sleep();
     
     // 2
-    LTC6804_wrcfga(mux_sel, orig_cfga_data);
-    LTC6804_wrcfga(mux_sel, orig_cfga_data);
+    LTC6804_wrcfga(lt_addr, mux_sel, orig_cfga_data);
+    LTC6804_wrcfga(lt_addr, mux_sel, orig_cfga_data);
     
     // 3
     LTC6804_adax();
     LTC6804_adax();
     
     // 4
-    LTC6804_rdaux_fe6(GPIO1, auxa);
-    LTC6804_rdaux_fe6(GPIO1, auxa);
+    LTC6804_rdaux_fe6(lt_addr, GPIO1, auxa);
+    LTC6804_rdaux_fe6(lt_addr, GPIO1, auxa);
     
     return 0;
 }

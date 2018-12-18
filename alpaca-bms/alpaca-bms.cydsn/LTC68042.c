@@ -161,7 +161,11 @@ void LTC6804_adcv()
 
 }
 
-
+uint8_t addressify_cmd(uint8_t addr, uint8_t cmd0)
+{
+    uint8_t rval = cmd0 | ((addr & 0x00001111) << 4);
+    return rval;
+}
 
 
 
@@ -170,13 +174,16 @@ void LTC6804_adcv()
  * select - the value that should be selected. -> greatest value = 7
  * orig_cfga_data - old register values we don't want to change
  */
-void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
+void LTC6804_wrcfga(uint8_t lt_addr, uint8_t select, uint8_t orig_cfga_data[5])
 {
     uint8_t cmd[12];
     uint16_t temp_pec;
     
     // see LTC6811 datasheet for command codes
-    cmd[0] = 0;     // broadcast command + part of wrcfga cmd
+    //TODO: change so that it doesn't broadcast the write. potential for wrong 
+    //cmd[0] = 0;     // broadcast command + part of wrcfga cmd
+    cmd[0] = 128;     // single send
+    addressify_cmd(lt_addr, cmd[0]);
     cmd[1] = 1;     // specifies wrcfga cmd
     
     // calculate pec for command code
@@ -221,7 +228,7 @@ void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
  * TODO: implement address parameter
  * cfga[6] - stores values read from the 6811
  */
-int8_t LTC6804_rdcfga(uint8_t cfga[6])
+int8_t LTC6804_rdcfga(uint8_t lt_addr, uint8_t cfga[6])
 {
     uint8_t cmd[4];         // bytes for rdcfga cmd; sent to slaves
     int8_t pec_error;       // returned, indicates whether cmd failed or not
@@ -230,7 +237,9 @@ int8_t LTC6804_rdcfga(uint8_t cfga[6])
     uint16_t cmd_pec;
     uint8_t rx_data[8];     // stores slave to master data (6 bytes data, 2 bytes pec)
    
-    cmd[0] = 128;          // See pg. 55-63 of 6811 datasheet for cmd formats
+    cmd[0] = 128;           // See pg. 55-63 of 6811 datasheet for cmd formats
+    cmd[0] = addressify_cmd(lt_addr, cmd[0]);
+    
     cmd[1] = 2;                                              
     cmd_pec = pec15_calc(2, cmd);
     cmd[2] = (uint8_t)(cmd_pec >> 8);
@@ -261,7 +270,7 @@ int8_t LTC6804_rdcfga(uint8_t cfga[6])
  *  group 2 (auxc): ?? look for in data sheet
  *  group 3 (auxd): ?? look for in data sheet
  */
-int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t *aux)
+int8_t LTC6804_rdaux_fe6(uint8_t lt_addr, enum AuxPins pin, uint16_t *aux)
 {
     uint8_t cmd[4];
     uint16_t cmd_pec;
@@ -269,7 +278,8 @@ int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t *aux)
     int8_t pec_error;
     
     cmd[0] = 128;
-  
+    addressify_cmd(lt_addr, cmd[0]);
+    
     uint8_t group = pin / 3;
     uint8_t set = 2* (pin % 3);
     
@@ -291,7 +301,7 @@ int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t *aux)
     return pec_error;                   // Implement error path
 }
 
-int LTC6804_rdauxa(uint8_t aux_data[6])
+int LTC6804_rdauxa(uint8_t lt_addr, uint8_t aux_data[6])
 {
     uint8_t cmd[4];
     uint8_t rx_data[8];
@@ -625,18 +635,6 @@ void LTC6804_rdcv_reg(uint8_t reg,
     CyDelay(1);
   }
 }
-
-/*Read Cell Voltages*/
-void LTC6804_readcv(uint8_t voltages[12])
-{
-    uint8_t cmd[4];
-    uint16_t temp_pec;
-    //each cell can be read in 290us.
- 
-  
-}
-
-
 
 
 /*
