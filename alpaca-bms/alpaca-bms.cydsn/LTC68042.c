@@ -162,7 +162,11 @@ void LTC6804_adcv()
 }
 
 
-
+uint8_t addressify_cmd(uint8_t lt_addr, uint8_t cmd1)
+{
+    cmd1 = cmd1 | (lt_addr << 4);
+    return cmd1;
+}
 
 
 /*
@@ -170,16 +174,18 @@ void LTC6804_adcv()
  * select - the value that should be selected. -> greatest value = 7
  * orig_cfga_data - old register values we don't want to change
  */
-void LTC6804_wrcfga(uint8_t select, uint8_t orig_cfga_data[5])
+void LTC6804_wrcfga(uint8_t lt_addr, uint8_t select, uint8_t orig_cfga_data[5])
 {
     uint8_t cmd[12];
     uint16_t temp_pec;
     
     // see LTC6811 datasheet for command codes
+    
     cmd[0] = 0;     // broadcast command + part of wrcfga cmd
     cmd[1] = 1;     // specifies wrcfga cmd
     
     // calculate pec for command code
+
     temp_pec = pec15_calc(2, (uint8_t *)cmd);
     cmd[2] = (uint8_t)(temp_pec >> 8);
     cmd[3] = (uint8_t)(temp_pec);
