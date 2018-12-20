@@ -226,6 +226,8 @@ int main(void)
     //FanController_1_SetDutyCycle(1, 44000);
     FanController_1_SetDesiredSpeed(1, 4400);
     FanController_1_Start();
+    LTC6804_initialize(); // make  sure command info is set to begin?
+    
     
 	while(1){
 		switch (bms_status){
@@ -297,8 +299,8 @@ int main(void)
                     so we get the default values so we can write them 
                     back each time we write.
                 */
-                uint8_t orig_cfga_data[5];
-                get_cfga_on_init(orig_cfga_data);
+                //uint8_t orig_cfga_data[5];
+                //get_cfga_on_init(orig_cfga_data);
                                 
                 /*
                     New cell temperature getter
@@ -310,17 +312,20 @@ int main(void)
                 
                     Temperature values may be stored in a 2-d array
                 */
-
+                
+                
+                /*
                 uint16_t auxa;
                 uint16_t voltages[8];
                 float32 temperatures[8];
+                
                 
                 for (uint8_t mux_sel = 0; mux_sel <= 7; mux_sel++) {
                     get_cell_temp_fe6(mux_sel, orig_cfga_data, &auxa);
                    // voltages[mux_sel] = auxa; 
                     float32 temp = (float32)auxa/10000;
                     temperatures[mux_sel] = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
-                }
+                }*/
                 
                 /*
                 for (uint8_t therm = 0; therm <= 7; therm++) {
@@ -334,10 +339,13 @@ int main(void)
                     
                 }*/
                
+                float32 temperatures[N_OF_SUBPACK][TEMPS_ON_BOARD*LT_PER_PACK];
+                get_cell_temps_fe6(temperatures);
+                
                 int mode = 0;
            
-                float32 med_temp = get_median_temp(temperatures);
-                
+           //     float32 med_temp = get_median_temp(temperatures);
+                float32 med_temp = 28; //hardcoded for now
                 //fan control
                 if(med_temp >= 55.0 && fan_mode != FAN_MAX) {
                     //full speed

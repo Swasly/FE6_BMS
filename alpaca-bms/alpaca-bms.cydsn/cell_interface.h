@@ -82,7 +82,10 @@
     #define FULL   0x4000
     #define PRECHARGE_CLOSED   0x8000
 
-  
+    #define NUM_LTS (18u) // TODO modify to be fll number of lt chips by the end.
+    #define TEMPS_ON_BOARD (8u)
+    #define LT_PER_PACK (3u)
+
 
 //new data stucture
 
@@ -323,8 +326,9 @@ void bat_balance();
 void bat_clear_balance();
 void DEBUG_balancing_on();
 double mvToC(uint16_t mv);
-uint8_t get_cell_temp_fe6(uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t *auxVal);
-uint8_t get_cfga_on_init(uint8_t cfga_data[5]);
+uint8_t get_cell_temp_fe6(uint8_t lt_addr, uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t *auxVal);
+uint8_t get_cell_temps_fe6(float32 temps[N_OF_SUBPACK][TEMPS_ON_BOARD*LT_PER_PACK]);
+uint8_t get_cfga_on_init(uint8_t lt_addr, uint8_t cfga_data[5]);
 uint8_t open_wire_adow(uint8_t pup);
 
 uint8_t SKY_get_cell_volt();

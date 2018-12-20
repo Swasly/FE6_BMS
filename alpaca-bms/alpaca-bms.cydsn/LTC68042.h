@@ -50,7 +50,7 @@ Copyright 2013 Linear Technology Corp. (LTC)
 #include "project.h"
 
 // Battery characteristics
-#define IC_PER_BUS 9 // 6811 per bus
+#define IC_PER_BUS (9u) // 6811 per bus
 
 #ifndef LTC6804_CS
 #define LTC6804_CS QUIKEVAL_CS
@@ -192,6 +192,9 @@ void LTC6804_init_cfg();
 
 void LTC6804_initialize();
 
+uint8_t addressify_cmd(uint8_t addr, uint8_t cmd0);
+
+
 void set_adc(uint8_t MD, uint8_t DCP, uint8_t CH, uint8_t CHG);
 
 void LTC6804_adcv(); 
@@ -202,7 +205,7 @@ int8_t LTC6804_rdcfga(uint8_t lt_addr, uint8_t cfga[6]);
 
 void LTC6804_adax_fe6(uint8_t lt_addr);
 
-int LTC6804_rdauxa(uint8_t lt_addr);
+int LTC6804_rdauxa(uint8_t lt_addr, uint8_t aux_data[6]); //not used anymore?
 
 
 enum AuxPins {
@@ -214,7 +217,7 @@ enum AuxPins {
     VREF2
 };
 
-int8_t LTC6804_rdaux_fe6(enum AuxPins pin, uint16_t *aux);
+int8_t LTC6804_rdaux_fe6(uint8_t lt_addr, enum AuxPins pin, uint16_t *aux);
 void LTC6804_adow(uint8_t pup);
 
 void LTC6804_adax();
