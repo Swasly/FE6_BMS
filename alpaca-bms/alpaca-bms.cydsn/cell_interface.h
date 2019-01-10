@@ -43,7 +43,7 @@
     #define BALANCE_THRESHOLD (10u)
     
     #define N_OF_CELL (168u)
-    #define N_OF_TEMP (84u) // Monitoring the CELLS
+    #define N_OF_TEMP (90u) // Monitoring the CELLS
     #define N_OF_TEMP_BOARD (54u) // Number of thermistors monitoring the BOARD
 
     #define N_OF_SUBPACK (6u)
@@ -327,7 +327,7 @@ void bat_clear_balance();
 void DEBUG_balancing_on();
 double mvToC(uint16_t mv);
 uint8_t get_cell_temp_fe6(uint8_t lt_addr, uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t *auxVal);
-uint8_t get_cell_temps_fe6(float32 temps[N_OF_SUBPACK][TEMPS_ON_BOARD*LT_PER_PACK]);
+uint8_t get_cell_temps_fe6();
 uint8_t get_cfga_on_init(uint8_t lt_addr, uint8_t cfga_data[5]);
 uint8_t open_wire_adow(uint8_t pup);
 

@@ -393,32 +393,40 @@ float32 get_median_temp(float32 temps[8])
 /*lt_addr = 0-17, 0-8 on bus 0, 9-17 on bus 1
     subpack# = 
 */
-uint8_t get_lt_temps(uint8_t lt_addr, float32 temperatures[N_OF_SUBPACK][TEMPS_ON_BOARD*LT_PER_PACK], uint8_t orig_cfga_data[5])
+uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
 {
     uint16_t auxa;
-    uint8_t subpack_num = lt_addr / N_OF_SUBPACK;
-    uint8_t offset = (lt_addr % LT_PER_PACK) * TEMPS_ON_BOARD;
+    uint8_t subpack_num = lt_addr / LT_PER_PACK;
+    // uint8_t offset = (lt_addr % LT_PER_PACK) * TEMPS_ON_BOARD;
+    uint8_t offset;
     
     for(uint8_t mux_sel = 0; mux_sel < 8; mux_sel++) {
         get_cell_temp_fe6(lt_addr, mux_sel, orig_cfga_data, &auxa);
         float32 temp = (float32)auxa/10000;
-        temperatures[subpack_num][offset + mux_sel] = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
+        temp = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
+        if (mux_sel <= 4) {
+            offset = ((lt_addr % LT_PER_PACK) * 5) + mux_sel;
+            bat_pack.subpacks[subpack_num]->temps[offset]->temp_c = temp;
+        }
+        else {
+            offset = ((lt_addr % LT_PER_PACK) * LT_PER_PACK) + (mux_sel - 5);
+            bat_pack.subpacks[subpack_num]->board_temps[offset]->temp_c = temp;
+        }
     }
     
     return 0;
 }
 
-uint8_t get_cell_temps_fe6(float32 temps[N_OF_SUBPACK][TEMPS_ON_BOARD*LT_PER_PACK])
+uint8_t get_cell_temps_fe6()
 {
     // the number of lt chips. 
-    // TODO modify to be full number of lt chips by the end.
     uint8_t num_lts = 18;
     
     uint8_t orig_cfga_data[5];
     
     for(int lt = 0; lt < num_lts; lt++) {
         get_cfga_on_init(lt, orig_cfga_data);
-        get_lt_temps(lt, temps, orig_cfga_data);
+        get_lt_temps(lt, orig_cfga_data);
     }
     
     return 0;
@@ -604,10 +612,11 @@ void update_volt(volatile uint16_t cell_codes[IC_PER_BUS * N_OF_BUSSES][12]){
         }
     }
     
-    if (bat_subpack[2].cells[22]->voltage > 4199)                           // fixes a bug
+    // TODO
+    /* if (bat_subpack[2].cells[22]->voltage > 4199)                           // fixes a bug
         bat_subpack[2].cells[22]->voltage = 4199;                           // from hardware
     if (bat_subpack[2].cells[23]->voltage > 4199)
-        bat_subpack[2].cells[23]->voltage = 4199;
+        bat_subpack[2].cells[23]->voltage = 4199; */
     // Update subpack and pack voltages
     temp_volt = 0;
     uint32_t temp_pack_volt = 0;

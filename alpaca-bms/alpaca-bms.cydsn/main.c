@@ -240,18 +240,13 @@ int main(void)
                     // TODO Watchdog Timer
 			        CyWdtStart(CYWDT_1024_TICKS,CYWDT_LPMODE_NOCHANGE);
                 #endif
-                
-                
+                                
 				// Initialize
                 //SOC_Store_Start();
                 //SOC_Timer_Start();
 				bms_init();
 				mypack_init();
-				
-                //current_init();
-                
-                
-                
+                //current_init();              
 			    //monitor_init();
 			    
 			    //enable global interrupt
@@ -272,35 +267,12 @@ int main(void)
 			    OK_SIG_Write(1);
 			    //check_cfg(rx_cfg);  //CANNOT be finished, because 
 				
-                uint16_t cell_volts[12];
                 /*Only here to check that the old voltage reading still works*/
 		        get_cell_volt();// TODO test voltage
-                cell_volts[0] = cell_codes[0][0];
-                cell_volts[1] = cell_codes[0][1];
-                cell_volts[2] = cell_codes[0][2];
-                cell_volts[3] = cell_codes[0][3];
-                cell_volts[4] = cell_codes[0][4];
-                cell_volts[5] = cell_codes[0][5];
-                cell_volts[6] = cell_codes[0][6];
-                cell_volts[7] = cell_codes[0][7];
-                cell_volts[8] = cell_codes[0][8];
-                cell_volts[9] = cell_codes[0][9];
-                cell_volts[10] = cell_codes[0][10];
-                cell_volts[11] = cell_codes[0][11];
-                
                 
 				//TESTDAY_2_TODO. check_stack_fuse(); // TODO: check if stacks are disconnected
                 
 				//get_cell_temp(); Old temperature getting function (not needed for FE6)
-                
-                /*
-                    Get the current values of the cfga register,
-                    as we have to overwrite them when running wrcfga,
-                    so we get the default values so we can write them 
-                    back each time we write.
-                */
-                //uint8_t orig_cfga_data[5];
-                //get_cfga_on_init(orig_cfga_data);
                                 
                 /*
                     New cell temperature getter
@@ -310,41 +282,11 @@ int main(void)
                     4. adax to convert mux output to digital and store in register
                     5. rdaux to read stored digital value
                 
-                    Temperature values may be stored in a 2-d array
+                    Temperature values written to bat_pack.subpacks[subpack]->temps[temp]->temp_c
                 */
-                
-                
-                /*
-                uint16_t auxa;
-                uint16_t voltages[8];
-                float32 temperatures[8];
-                
-                
-                for (uint8_t mux_sel = 0; mux_sel <= 7; mux_sel++) {
-                    get_cell_temp_fe6(mux_sel, orig_cfga_data, &auxa);
-                   // voltages[mux_sel] = auxa; 
-                    float32 temp = (float32)auxa/10000;
-                    temperatures[mux_sel] = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
-                }*/
-                
-                /*
-                for (uint8_t therm = 0; therm <= 7; therm++) {
-                    float32 temp = (float32)voltages[therm]/10000;
-                    temperatures[therm] = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
-                }*/
-                
-                /*
-                for (uint8_t therm = 0; therm <= 7; therm++) {
-                    float32 temp = (float32)voltages[therm]/10000;
-                    
-                }*/
-               
-                float32 temperatures[N_OF_SUBPACK][TEMPS_ON_BOARD*LT_PER_PACK];
-                get_cell_temps_fe6(temperatures);
-                
-                int mode = 0;
+                get_cell_temps_fe6();
            
-           //     float32 med_temp = get_median_temp(temperatures);
+                // float32 med_temp = get_median_temp(temperatures);
                 float32 med_temp = 28; //hardcoded for now
                 //fan control
                 if(med_temp >= 55.0 && fan_mode != FAN_MAX) {
@@ -357,33 +299,13 @@ int main(void)
                     //start up fans
                     FanController_1_SetDesiredSpeed(1, 4500);
                     fan_mode = FAN_MIN;
-                } else if(fan_mode != FAN_ZERO){
+                } 
+                else if(fan_mode != FAN_ZERO){
                     FanController_1_SetDesiredSpeed(1, 0);
                     fan_mode = FAN_ZERO;
-                }
+                }    
+                CyDelay(10);
                 
-                /*             
-                while(1) {
-                    if(mode % 2 == 0) {
-                        //FanController_1_SetDutyCycle(1, 2000);
-                        FanController_1_SetDesiredSpeed(1, 4500);
-                    }
-                    else {
-                        //FanController_1_SetDutyCycle(1, 4000);
-                        FanController_1_SetDesiredSpeed(1, 6000);
-                    }
-                    
-                    mode = (mode + 1) % 2;
-                    CyDelay(10000);
-                }*/
-                /*
-                for (int fan_pwm = 0; fan_pwm < 10000; fan_pwm++){
-                    FanController_1_SetDutyCycle(1, fan_pwm);
-                    CyDelay(50);
-                }*/
-         
-                
-                    CyDelay(10);
                 // TODO: Calculate SOC
                 //get_current(); // TODO get current reading from sensor
 			    //bat_soc = get_soc(); // TODO calculate SOC()
@@ -398,7 +320,6 @@ int main(void)
                 } else if (bat_pack.HI_temp_board_c < 55) {
                     BALANCE_FLAG = true;
                 }
-                
                 
                 if (BALANCE_FLAG) {
                     
