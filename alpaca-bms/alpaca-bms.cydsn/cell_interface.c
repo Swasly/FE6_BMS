@@ -401,6 +401,7 @@ uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
     uint8_t offset;
     
     for(uint8_t mux_sel = 0; mux_sel < 8; mux_sel++) {
+        //CyDelay(5);
         get_cell_temp_fe6(lt_addr, mux_sel, orig_cfga_data, &auxa);
         float32 temp = (float32)auxa/10000;
         temp = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
@@ -447,6 +448,7 @@ uint8_t get_cell_temp_fe6(uint8_t lt_addr, uint8_t mux_sel, uint8_t orig_cfga_da
 
     int8_t pec_error;
     uint8_t bus = lt_addr / IC_PER_BUS;
+    uint8_t cfga[5];
     
     // 1
     LTC68_ClearFIFO();
@@ -459,9 +461,16 @@ uint8_t get_cell_temp_fe6(uint8_t lt_addr, uint8_t mux_sel, uint8_t orig_cfga_da
     LTC6804_wrcfga(lt_addr, mux_sel, orig_cfga_data);
     LTC6804_wrcfga(lt_addr, mux_sel, orig_cfga_data);
     
+    CyDelay(100);
+    
+    LTC6804_rdcfga(lt_addr, cfga);
+    LTC6804_rdcfga(lt_addr, cfga);
+    
     // 4
     LTC6804_adax();
     LTC6804_adax();
+    
+    //CyDelay(100);
     
     // 5
     LTC6804_rdaux_fe6(lt_addr, GPIO1, auxa);
