@@ -189,7 +189,7 @@ void LTC6804_wrcfga(uint8_t lt_addr, uint8_t select, uint8_t orig_cfga_data[5])
     //TODO: change so that it doesn't broadcast the write. potential for wrong 
     //cmd[0] = 0;     // broadcast command + part of wrcfga cmd
     cmd[0] = 128;     // single send
-    addressify_cmd(lt_addr, cmd[0]);
+    cmd[0] = addressify_cmd(lt_addr, cmd[0]);
     
     cmd[1] = 1;     // specifies wrcfga cmd
     
