@@ -1188,6 +1188,10 @@ void bat_balance(){
             if (cell_codes[ic][cell] / 10 > low_voltage)
                 diff = cell_codes[ic][cell]/10 - low_voltage;
             
+            // These two cases will set diff = 0 if there is an empty input on the 6811
+            // Each 6811 can measure 12 voltages. We use 9/9/10 per slave.
+            // First case is for chips that have 10 cells attached
+            // Second case is for chips that have 9 cells attached
             if (ic == 2 || ic == 5 || ic == 8 || ic == 11 || ic == 14 || ic == 17) { // These ICs have different cells used
                 if (!(CELL_ENABLE_HIGH & (0x1 << cell))){ // If not enabled
                     diff = 0;
