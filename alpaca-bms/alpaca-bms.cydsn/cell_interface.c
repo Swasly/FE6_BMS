@@ -1243,10 +1243,18 @@ void bat_balance(){
     wakeup_sleep();
     CyDelay(1);
     
-    LTC6804_wrcfg(IC_PER_BUS, temp_cfg + 9);
+    //LTC6804_wrcfg(IC_PER_BUS, temp_cfg + 9);
+    //CyDelay(100);
+    //LTC6804_wrcfg(IC_PER_BUS, temp_cfg + 9);
     CyDelay(100);
-    LTC6804_wrcfg(IC_PER_BUS, temp_cfg + 9);
+    
+    LTC6804_wrcfga(0x09, 0, temp_cfg[9]);
+    LTC6804_wrcfga(0x09, 0, temp_cfg[9]);
+    uint8_t cfg[6];
     CyDelay(100);
+    LTC6804_rdcfga(0x09, cfg);
+    LTC6804_rdcfga(0x09, cfg);
+    CyDelay(10);
     
 }
 

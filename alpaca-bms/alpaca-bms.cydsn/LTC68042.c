@@ -214,11 +214,11 @@ void LTC6804_wrcfga(uint8_t lt_addr, uint8_t select, uint8_t orig_cfga_data[5])
     uint8_t cfgr0 = (select << 5) >> 1; // 00000xxx -> 0xxx0000
     
     cmd[4] = cfgr0 | 0b1110;       // gpio1 = 1 refon = 1 dten = 1 adcopt = 0
-    cmd[5] = orig_cfga_data[0];    // rest of the register is written with its prev. values
-    cmd[6] = orig_cfga_data[1];
-    cmd[7] = orig_cfga_data[2];
-    cmd[8] = orig_cfga_data[3];
-    cmd[9] = orig_cfga_data[4];
+    cmd[5] = orig_cfga_data[1];    // rest of the register is written with its prev. values
+    cmd[6] = orig_cfga_data[2];
+    cmd[7] = orig_cfga_data[3];
+    cmd[8] = orig_cfga_data[4];
+    cmd[9] = orig_cfga_data[5];
 
     // calculate pec on data
     temp_pec = pec15_calc(6, (uint8_t*)(cmd + 4));
