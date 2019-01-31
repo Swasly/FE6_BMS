@@ -201,6 +201,8 @@ void LTC6804_adcv();
 
 void LTC6804_wrcfga(uint8_t lt_addr, uint8_t select, uint8_t orig_cfga_data[5]);
 
+void LTC6804_wrcfga_balance(uint8_t lt_addr, uint8_t cfga_data[5]);
+
 int8_t LTC6804_rdcfga(uint8_t lt_addr, uint8_t cfga[6]);
 
 void LTC6804_adax_fe6(uint8_t lt_addr);

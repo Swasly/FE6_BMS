@@ -230,6 +230,41 @@ void LTC6804_wrcfga(uint8_t lt_addr, uint8_t select, uint8_t orig_cfga_data[5])
     spi_write_array(12, cmd);
 }
 
+/*
+ *  Address write command for sending cell balance signals
+ *  data[5] bytes 4 and 5 contain discharge time and cells to discharge
+ *  lt_addr (0-17) corresponds to the address of an lt chip
+*/
+
+void LTC6804_wrcfga_balance(uint8_t lt_addr, uint8_t cfga_data[5]) {
+    
+    uint8_t cmd[12];
+    uint16_t temp_pec;
+    
+    cmd[0] = 128;
+    cmd[0] = addressify_cmd(lt_addr, cmd[0]);
+    
+    cmd[1] = 1;
+    
+    temp_pec = pec15_calc(2, (uint8_t*) cmd);
+    cmd[2] = (uint8_t) (temp_pec >> 8);
+    cmd[3] = (uint8_t) temp_pec;
+    
+    cmd[4] = 0x0E;
+    cmd[5] = cfga_data[1];
+    cmd[6] = cfga_data[2];
+    cmd[7] = cfga_data[3];
+    cmd[8] = cfga_data[4];
+    cmd[9] = cfga_data[5] | 0x20;
+    
+    temp_pec = pec15_calc(6, (uint8_t*) cmd + 4);
+    cmd[10] = (uint8_t) (temp_pec >> 8);
+    cmd[11] = (uint8_t) temp_pec;
+    
+    wakeup_idle();
+    spi_write_array(12, cmd);
+}
+
 
 /*
  * Address read command 

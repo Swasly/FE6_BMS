@@ -1228,34 +1228,37 @@ void bat_balance(){
     /* end purely test code */
     
     // discharge time has been set in void LTC6804_init_cfg() already. 0x2 = 1 min
+    uint8_t cfga[18][6]; 
     
     Select6820_Write(0);
     wakeup_sleep();
     CyDelay(1);
     
+    for (ic = 0; ic < 9; ic++) {
+        LTC6804_wrcfga_balance(ic, temp_cfg[ic]);
+        LTC6804_wrcfga_balance(ic, temp_cfg[ic]);
+        
+        CyDelay(50);
+        
+        LTC6804_rdcfga(ic, cfga[ic]);
+        LTC6804_rdcfga(ic, cfga[ic]);
+    }
+
+    CyDelay(50);
     
-    LTC6804_wrcfg(IC_PER_BUS, temp_cfg);
-    CyDelay(100);
-    LTC6804_wrcfg(IC_PER_BUS, temp_cfg);
-    CyDelay(100);
-  
     Select6820_Write(1);
     wakeup_sleep();
     CyDelay(1);
     
-    //LTC6804_wrcfg(IC_PER_BUS, temp_cfg + 9);
-    //CyDelay(100);
-    //LTC6804_wrcfg(IC_PER_BUS, temp_cfg + 9);
+    for (ic = 9; ic < 18; ic++) {
+        LTC6804_wrcfga_balance(ic, temp_cfg[ic]);
+        LTC6804_wrcfga_balance(ic, temp_cfg[ic]);  
+        CyDelay(50);
+        LTC6804_rdcfga(ic, cfga[ic]);
+        LTC6804_rdcfga(ic, cfga[ic]);
+    }
+
     CyDelay(100);
-    
-    LTC6804_wrcfga(0x09, 0, temp_cfg[9]);
-    LTC6804_wrcfga(0x09, 0, temp_cfg[9]);
-    uint8_t cfg[6];
-    CyDelay(100);
-    LTC6804_rdcfga(0x09, cfg);
-    LTC6804_rdcfga(0x09, cfg);
-    CyDelay(10);
-    
 }
 
 void bat_clear_balance() {
