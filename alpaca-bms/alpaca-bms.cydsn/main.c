@@ -312,6 +312,16 @@ int main(void)
 				// because it is normal mode, just set a median length current reading interval
 			    
                 //SKY_TODO update_soc();
+                
+                /* Data structure for tracking cell voltages over time */
+                uint16_t pack_voltages[6][28];
+                uint8_t pack;
+                uint8_t cell;
+                for (pack = 0; pack < 7; pack++){
+                    for (cell = 0; cell < 28; cell++) {
+                        pack_voltages[pack][cell] = bat_pack.subpacks[pack]->cells[cell]->voltage;
+                    }
+                }
 
                 
                 //Uncomment all of this to balance
