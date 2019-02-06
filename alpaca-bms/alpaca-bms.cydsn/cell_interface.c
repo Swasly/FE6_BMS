@@ -390,8 +390,8 @@ float32 get_median_temp(float32 temps[8])
 #define TEMPS_ON_BOARD (8u)
 
 
-/*lt_addr = 0-17, 0-8 on bus 0, 9-17 on bus 1
-    subpack# = 
+/**
+    Get all temperatures on a single lt chip
 */
 uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
 {
@@ -417,6 +417,10 @@ uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
     return 0;
 }
 
+
+/**
+ starting point for getting cell temperatures on the slave boards
+*/
 uint8_t get_cell_temps_fe6()
 {
     // the number of lt chips. 
@@ -429,12 +433,15 @@ uint8_t get_cell_temps_fe6()
         get_lt_temps(lt, orig_cfga_data);
     }
     
+    check_temp();
+    
+    
     return 0;
 }
 
 
 /*
- * lt_addr = value from 0 - 17
+ * get a temperature for a single cell
  */
 uint8_t get_cell_temp_fe6(uint8_t lt_addr, uint8_t mux_sel, uint8_t orig_cfga_data[5], uint16_t *auxa){
     /*
@@ -594,7 +601,6 @@ void update_volt(volatile uint16_t cell_codes[IC_PER_BUS * N_OF_BUSSES][12]){
     uint8_t ic = 0;
     uint8_t subpack = 0;
     uint32_t temp_volt;
-    
     // Update cell voltages
     for (ic = 0; ic < IC_PER_BUS * N_OF_BUSSES; ic++){
         for (raw_cell=0;raw_cell<12;raw_cell++){
