@@ -339,11 +339,11 @@ int main(void)
                     bat_balance();
                     bat_balance();
                     // Let it discharge for 5 seconds
-                    CyDelay(5000);
+                    CyDelay(15000);
                     bat_clear_balance();
                     // Let the boards cool down
-                    CyDelay(2000);
-                } 
+                    CyDelay(5000);
+                }
                 
                 
                 bat_health_check();

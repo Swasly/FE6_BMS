@@ -1280,6 +1280,15 @@ void bat_clear_balance() {
     LTC6804_wrcfg(IC_PER_BUS, tx_cfg);
     CyDelay(100);
     
+    Select6820_Write(1);
+    wakeup_sleep();
+    CyDelay(1);
+    
+    LTC6804_wrcfg(IC_PER_BUS, tx_cfg);
+    CyDelay(100);
+    LTC6804_wrcfg(IC_PER_BUS, tx_cfg);
+    CyDelay(100);
+    
 }
 void DEBUG_balancing_on(){
     /*
