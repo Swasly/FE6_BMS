@@ -590,6 +590,8 @@ uint8_t LTC6804_rdcv(uint8_t reg,
 		}
 	}
   }
+
+    CyDelay(1);
  //2
 return(pec_error);
 }
