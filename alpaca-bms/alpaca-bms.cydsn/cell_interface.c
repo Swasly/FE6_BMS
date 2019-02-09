@@ -1268,6 +1268,11 @@ void bat_balance(){
 }
 
 void bat_clear_balance() {
+    uint8_t cfg_data[6];
+    for (int i = 0; i < 6; i++) {
+        cfg_data[i] = 0x00;
+    }
+    
     LTC68_ClearFIFO();
 
     Select6820_Write(0);
@@ -1275,19 +1280,15 @@ void bat_clear_balance() {
     CyDelay(1);
     
     
-    LTC6804_wrcfg(IC_PER_BUS, tx_cfg);
-    CyDelay(100);
-    LTC6804_wrcfg(IC_PER_BUS, tx_cfg);
-    CyDelay(100);
+    LTC6804_wrcfga(0xFF, 0x00, cfg_data);
+    LTC6804_wrcfga(0xFF, 0x00, cfg_data);
     
     Select6820_Write(1);
     wakeup_sleep();
     CyDelay(1);
     
-    LTC6804_wrcfg(IC_PER_BUS, tx_cfg);
-    CyDelay(100);
-    LTC6804_wrcfg(IC_PER_BUS, tx_cfg);
-    CyDelay(100);
+    LTC6804_wrcfga(0xFF, 0x00, cfg_data);
+    LTC6804_wrcfga(0xFF, 0x00, cfg_data);
     
 }
 void DEBUG_balancing_on(){
