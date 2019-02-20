@@ -225,8 +225,11 @@ int main(void)
 	uint32_t system_interval = 0;
     uint8_t led = 0;
     //FanController_1_SetDutyCycle(1, 44000);
-    FanController_1_SetDesiredSpeed(1, 4400);
-    FanController_1_Start();
+    FanController_SetDesiredSpeed(1, 4400);
+    FanController_SetDesiredSpeed(2, 4400);
+    FanController_SetDesiredSpeed(3, 4400);
+    FanController_SetDesiredSpeed(4, 4400);
+    FanController_Start();
     LTC6804_initialize(); // make  sure command info is set to begin?
     
     
@@ -293,16 +296,25 @@ int main(void)
                 if(med_temp >= 55.0 && fan_mode != FAN_MAX) {
                     //full speed
                     //TODO: set all fans to same speed. 
-                    FanController_1_SetDesiredSpeed(1, 6000); //TODO: check actual speed range
+                    FanController_SetDesiredSpeed(1, 6000); //TODO: check actual speed range
+                    FanController_SetDesiredSpeed(2, 6000);
+                    FanController_SetDesiredSpeed(3, 6000);
+                    FanController_SetDesiredSpeed(4, 6000);
                     fan_mode = FAN_MAX;
                 }
                 else if(med_temp >= 50.0 && fan_mode != FAN_MIN) {
                     //start up fans
-                    FanController_1_SetDesiredSpeed(1, 4500);
+                    FanController_SetDesiredSpeed(1, 4500);
+                    FanController_SetDesiredSpeed(2, 4500);
+                    FanController_SetDesiredSpeed(3, 4500);
+                    FanController_SetDesiredSpeed(4, 4500);
                     fan_mode = FAN_MIN;
                 } 
                 else if(fan_mode != FAN_ZERO){
-                    FanController_1_SetDesiredSpeed(1, 0);
+                    FanController_SetDesiredSpeed(1, 0);
+                    FanController_SetDesiredSpeed(2, 0);
+                    FanController_SetDesiredSpeed(3, 0);
+                    FanController_SetDesiredSpeed(4, 0);
                     fan_mode = FAN_ZERO;
                 }    
                 CyDelay(10);
