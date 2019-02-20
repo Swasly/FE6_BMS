@@ -38,6 +38,7 @@ volatile uint8_t CAN_DEBUG=0;
 volatile uint8_t RACING_FLAG=0;    // this flag should be set in CAN handler
 BAT_SOC_t bat_soc;
 
+
 uint8_t rx_cfg[IC_PER_BUS][8];
 
 void DEBUG_send_cell_voltage();
@@ -286,8 +287,23 @@ int main(void)
                     Temperature values written to bat_pack.subpacks[subpack]->temps[temp]->temp_c
                 */
                 get_cell_temps_fe6();
+                
+                
            
-                // float32 med_temp = get_median_temp(temperatures);
+                //float32 med_temp = get_median_temp(temperatures)
+                float32 temperatures[6][24];
+                
+                // grab all of the temperatures into single array for cleaner processing later
+                for(int i = 0; i < 6; i++) {
+                    for(int j = 0; j < 15; j++) {
+                        temperatures[i][j] = bat_pack.subpacks[i]->temps[j]->temp_c;
+                    }
+                    for(int j = 15; j < 24; j++) {
+                        temperatures[i][j] = bat_pack.subpacks[i]->board_temps[j - 15]->temp_c;
+                    }
+                }
+                
+                //float32 med_temp = get_median_temp(temperatures); 
                 float32 med_temp = 28; //hardcoded for now
                 //fan control
                 if(med_temp >= 55.0 && fan_mode != FAN_MAX) {

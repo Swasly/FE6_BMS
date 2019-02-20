@@ -74,7 +74,7 @@
     #define IMBALANCE   0x0040
     #define COM_FAILURE   0x0080
     #define NEG_CONT_CLOSED   0x0100
-    #define POS_CONT_CLOSED   0x0200
+    #define POS_CONT_CLOSED   0x0200 
     #define ISO_FAULT   0x0400
     #define CELL_VOLT_OVER   0x0800
     #define CELL_VOLT_UNDER   0x1000
@@ -318,7 +318,7 @@ BAT_SOC_t get_soc();
 void update_soc();
 
 //sort temperatures and return median?
-float32 get_median_temp(float32 temps[8]);
+float32 get_median_temp(float32 temps[6][24]);
 
 uint8_t bat_health_check();
 void _SOC_log();
