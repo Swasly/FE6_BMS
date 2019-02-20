@@ -366,6 +366,7 @@ uint8_t get_cfga_on_init(uint8_t lt_addr, uint8_t cfga_data[5]){
 
 float32 get_median_temp(float32 temps[6][24])
 {
+    int num_temps = (TEMPS_ON_BOARD + 16) * 6;
     float32 local_temps[24 * 6];
     for(int i = 0; i < 6; i++) {
         memcpy(local_temps + 24*i, temps[i], 24 * sizeof(float32));
@@ -375,7 +376,7 @@ float32 get_median_temp(float32 temps[6][24])
     int j;
     
     //insertion sort
-    for(int i = 1; i < 8; i++) {
+    for(int i = 1; i < num_temps; i++) {
         start = local_temps[i];
         j = i - 1;
         while(start < local_temps[j] && j >= 0) {

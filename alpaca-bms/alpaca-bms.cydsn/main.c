@@ -295,11 +295,11 @@ int main(void)
                 
                 // grab all of the temperatures into single array for cleaner processing later
                 for(int i = 0; i < 6; i++) {
-                    for(int j = 0; j < 15; j++) {
+                    for(int j = 0; j < 16; j++) {
                         temperatures[i][j] = bat_pack.subpacks[i]->temps[j]->temp_c;
                     }
-                    for(int j = 15; j < 24; j++) {
-                        temperatures[i][j] = bat_pack.subpacks[i]->board_temps[j - 15]->temp_c;
+                    for(int j = 16; j < 24; j++) {
+                        temperatures[i][j] = bat_pack.subpacks[i]->board_temps[j - 16]->temp_c;
                     }
                 }
                 
