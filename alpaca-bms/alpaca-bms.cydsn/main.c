@@ -46,6 +46,9 @@ void DEBUG_send_temp();
 void DEBUG_send_current();
 
 
+int loop_count = 0; // TODO remove when fan controller tests stops
+int increment_mode = 1;
+
 CY_ISR(current_update_Handler){
     current_timer_STATUS;
 	update_soc();
@@ -227,10 +230,10 @@ int main(void)
     uint8_t led = 0;
     //FanController_1_SetDutyCycle(1, 44000);
     FanController_Start();
-    FanController_SetDesiredSpeed(1, 4200);
-    FanController_SetDesiredSpeed(2, 4200);
-    FanController_SetDesiredSpeed(3, 4200);
-    FanController_SetDesiredSpeed(4, 4200);
+    FanController_SetDesiredSpeed(1, 0);
+    FanController_SetDesiredSpeed(2, 0);
+    FanController_SetDesiredSpeed(3, 0);
+    FanController_SetDesiredSpeed(4, 0);
     
     LTC6804_initialize(); // make  sure command info is set to begin?
     
@@ -344,11 +347,51 @@ int main(void)
                 //SKY_TODO update_soc()
               
 #ifdef DEBUG_MODE
+                /*TODO: remove  fan testing code*/
+                
+                if(loop_count == 0) {
+                    FanController_SetDesiredSpeed(1, 4400);
+                    FanController_SetDesiredSpeed(2, 4400);
+                    FanController_SetDesiredSpeed(3, 4400);
+                    FanController_SetDesiredSpeed(4, 4400);
+                    loop_count = 1;
+                } else {
+                    FanController_SetDesiredSpeed(1, 0);
+                    FanController_SetDesiredSpeed(2, 0);
+                    FanController_SetDesiredSpeed(3, 0);
+                    FanController_SetDesiredSpeed(4, 0);
+                    loop_count = 0;
+                }
+    
+                /*
+                if(loop_count == 0) {
+                    FanController_SetDesiredSpeed(1, 0);
+                    FanController_SetDesiredSpeed(2, 0);
+                    FanController_SetDesiredSpeed(3, 0);
+                    FanController_SetDesiredSpeed(4, 0);
+                    loop_count = 1;
+                    increment_mode =  1;
+                }
+                else if(loop_count < 5) {
+                    if(increment_mode) {
+                        loop_count++;
+                    } else {
+                        loop_count--;
+                    }
+                } 
+                else if(loop_count == 5) {
+                    FanController_SetDesiredSpeed(1, 4400);
+                    FanController_SetDesiredSpeed(2, 4400);
+                    FanController_SetDesiredSpeed(3, 4400);
+                    FanController_SetDesiredSpeed(4, 4400);
+                    increment_mode = 0;
+                    loop_count = 4;
+                }*/
                 /* Data structure for tracking cell voltages over time - only used for debugging purposes*/
                 uint16_t pack_voltages[6][28];
                 uint8_t pack;
                 uint8_t cell;
-                for (pack = 0; pack < 7; pack++){
+                for (pack = 0; pack < 6; pack++){
                     for (cell = 0; cell < 28; cell++) {
                         pack_voltages[pack][cell] = bat_pack.subpacks[pack]->cells[cell]->voltage;
                     }

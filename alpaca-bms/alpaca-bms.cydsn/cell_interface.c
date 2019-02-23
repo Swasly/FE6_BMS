@@ -386,7 +386,7 @@ float32 get_median_temp(float32 temps[6][24])
         local_temps[j + 1] = start;
     }
     
-    return (local_temps[3] + local_temps[4])/2;
+    return local_temps[num_temps/2];
 }
 
 //#define NUM_LTS (3u) // TODO modify to be fll number of lt chips by the end.

@@ -29,7 +29,7 @@
 *   Conditional Compilation Parameters
 ***************************************/
 
-#define FanController_FAN_CTL_MODE               (1u)
+#define FanController_FAN_CTL_MODE               (0u)
 #define FanController_NUMBER_OF_FANS             (4u)
 #define FanController_NUMBER_OF_BANKS            (0u)
 #define FanController_PWMRES                     (0u)
