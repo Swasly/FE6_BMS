@@ -226,11 +226,12 @@ int main(void)
 	uint32_t system_interval = 0;
     uint8_t led = 0;
     //FanController_1_SetDutyCycle(1, 44000);
-    FanController_SetDesiredSpeed(1, 4400);
-    FanController_SetDesiredSpeed(2, 4400);
-    FanController_SetDesiredSpeed(3, 4400);
-    FanController_SetDesiredSpeed(4, 4400);
     FanController_Start();
+    FanController_SetDesiredSpeed(1, 4200);
+    FanController_SetDesiredSpeed(2, 4200);
+    FanController_SetDesiredSpeed(3, 4200);
+    FanController_SetDesiredSpeed(4, 4200);
+    
     LTC6804_initialize(); // make  sure command info is set to begin?
     
     
