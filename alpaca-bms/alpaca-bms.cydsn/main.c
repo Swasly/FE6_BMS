@@ -410,10 +410,10 @@ int main(void)
                     // Turn on cell discharging
                     bat_balance();
                     // Let it discharge for ... seconds
-                    CyDelay(20000);
+                    CyDelay(1000);
                     bat_clear_balance();
                     // Let the boards cool down
-                    CyDelay(5000);
+                    CyDelay(1000);
                 }
                 
                 
