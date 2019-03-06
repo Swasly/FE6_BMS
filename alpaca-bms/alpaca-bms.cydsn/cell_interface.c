@@ -213,18 +213,16 @@ uint8_t get_cell_volt(){
     
     Select6820_Write(0); // Select bus 0
     wakeup_sleep();
-    CyDelay(10);
+    
     //uint16_t *test = (uint16_t*)(&cell_codes[IC_PER_BUS]); // SHOULD PROBABLY REPLACE WITH SOMETHING LIKE 
                                                              // instead of copying values from two arrays
     
-    error1 = LTC6804_rdcv(0, IC_PER_BUS, cell_codes_lower); // Set to read back all cell voltage registers
     error1 = LTC6804_rdcv(0, IC_PER_BUS, cell_codes_lower); // Set to read back all cell voltage registers
     
     CyDelay(1); // Give it a moment before switching.
     Select6820_Write(1); // Select bus 1
     wakeup_sleep();
     CyDelay(10);
-    error2 = LTC6804_rdcv(0, IC_PER_BUS, cell_codes_higher);
     error2 = LTC6804_rdcv(0, IC_PER_BUS, cell_codes_higher);
     
     if (error1 == -1 || error2 == -1)

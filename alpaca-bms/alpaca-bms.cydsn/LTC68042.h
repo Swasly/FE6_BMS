@@ -228,6 +228,8 @@ uint8_t LTC6804_rdcv(uint8_t reg, uint8_t total_ic, uint16_t cell_codes[][12]);
 
 void LTC6804_rdcv_reg(uint8_t reg, uint8_t nIC, uint8_t *data);
 
+void LTC6804_rdcv_FE6(uint8_t reg, uint8_t * data, int ic_num);
+
 int8_t LTC6804_rdaux(uint8_t reg, uint8_t nIC, uint16_t aux_codes[][6]);
 
 void LTC6804_rdaux_reg(uint8_t reg, uint8_t nIC,uint8_t *data);
