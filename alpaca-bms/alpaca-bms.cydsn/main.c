@@ -392,9 +392,9 @@ int main(void)
                 uint16_t pack_voltages[NUM_SUBPACKS][28];
                 uint8_t pack;
                 uint8_t cell;
-                for (pack = 0; pack < 6; pack++){
+                for (pack = 0; pack < NUM_SUBPACKS; pack++){
                     for (cell = 0; cell < 28; cell++) {
-                        pack_voltages[pack][cell] = bat_pack.subpacks[pack]->cells[cell]->voltage;
+                        pack_voltages[pack][cell] = get_subpack_voltage(pack, cell);
                     }
                 }
 #endif

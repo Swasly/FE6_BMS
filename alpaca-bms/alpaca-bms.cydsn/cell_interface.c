@@ -647,14 +647,14 @@ void check_temp(){
         }
     }
     
-    // check board temps
+    // check board temps and count number of bad temps
     for (cell = 0; cell < N_OF_TEMP_BOARD; cell++){
         temp_c = board_temp[cell].temp_c;
-        if (temp_c > (uint8_t)CRITICAL_TEMP_BOARD_H){
+        if (temp_c > CRITICAL_TEMP_BOARD_H){
             //if over temperature
             board_temp[cell].bad_counter++;
             board_temp[cell].bad_type = 1;
-        }else if (temp_c < (uint8_t)CRITICAL_TEMP_BOARD_L){
+        }else if (temp_c < CRITICAL_TEMP_BOARD_L){
             // if under temperature
             board_temp[cell].bad_counter++;
             board_temp[cell].bad_type = 0;
@@ -873,30 +873,13 @@ void update_soc(){
     
     return;
 }
-/*
-    #define NO_ERROR 0x0000
-    #define CHARGEMODE 0x0001
-    #define PACK_TEMP_OVER 0x0002
-    #define STACK_FUSE_BROKEN 0x0004
-    #define PACK_TEMP_UNDER 0x0008
-    #define LOW_SOC   0x0010
-    #define CRITICAL_SOC   0x0020
-    #define IMBALANCE   0x0040
-    #define COM_FAILURE   0x0080
-    #define ISO_FAULT   0x0400
-    #define CELL_VOLT_OVER   0x0800
-    #define CELL_VOLT_UNDER   0x1000
-    #define CHARGE_HAULT   0x2000
-    #define FULL   0x4000
-*/
+
 uint8_t bat_health_check(){
     if (
         (bat_pack.status & PACK_TEMP_OVER) ||
         (bat_pack.status & STACK_FUSE_BROKEN) ||
         (bat_pack.status & PACK_TEMP_UNDER) ||
-        //(bat_pack.status & IMBALANCE) || not in use
         (bat_pack.status & COM_FAILURE) ||
-        //(bat_pack.status & ISO_FAULT) || not in use? 
         (bat_pack.status & CELL_VOLT_OVER) ||
         (bat_pack.status & CELL_VOLT_UNDER)       
     ){
