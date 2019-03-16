@@ -29,8 +29,8 @@
     #define UNDER_VOLTAGE (2500u) // Updated for FE5 (2.5V)
     #define STACK_VOLT_DIFF_LIMIT (9000u)   //9 volt
     #define CRITICAL_TEMP_L (0u)          // 0 C
-    #define CRITICAL_TEMP_H (60u)             //60 C
-    #define CRITICAL_TEMP_BOARD_L (0u)          // 0 C
+    #define CRITICAL_TEMP_H (60)             //60 C
+    #define CRITICAL_TEMP_BOARD_L (0)          // 0 C
     #define CRITICAL_TEMP_BOARD_H (60u)  
     #define BAD_THERM_LIMIT (15u)
     #define SOC_NOMIAL      (50000*3600u)    //nomial SOC before calibration
@@ -96,6 +96,8 @@ typedef enum {
 }BAT_HEALTH;
 
 
+
+
 typedef struct
 {
   volatile uint16_t err;
@@ -107,16 +109,20 @@ typedef struct
 {
   volatile uint16_t voltage;
   volatile uint8_t bad_counter;
-  volatile uint8_t bad_type;
+  volatile uint8_t bad_type; 
 }BAT_CELL_t;
+
+typedef enum {
+    TEMP_LOW,
+    TEMP_HIGH,
+} BAD_TEMP_TYPE;
 
 typedef struct
 {
-  volatile uint16_t temp_raw;
   volatile double temp_c;
   volatile uint8_t bad_counter;
   volatile uint8_t type;
-  volatile uint8_t bad_type;
+  volatile uint8_t bad_type; // if below temp then set to 0, if above temp then set to 1
   volatile uint16_t temp_ref;
 }BAT_TEMP_t;
 
@@ -133,7 +139,7 @@ typedef struct
   volatile uint32_t over_temp_board;
   volatile uint32_t under_voltage;
   volatile uint32_t voltage;
-  volatile uint8_t bad_counter;
+  volatile uint8_t bad_counter; //count of number of temps that are not within proper range.
 }BAT_SUBPACK_t;
 
 typedef struct

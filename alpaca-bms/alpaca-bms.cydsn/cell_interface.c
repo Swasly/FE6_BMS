@@ -14,8 +14,7 @@
 #include "current_sense.h"
 #include "LTC68042.h"
 #include "Select6820.h"
-#include "math.h"
-
+#include <math.h>
 #include <stdlib.h>
 
 uint8_t fatal_err;
@@ -78,14 +77,12 @@ void mypack_init(){
     
     for (temp = 0; temp < N_OF_TEMP; temp++){
         bat_temp[temp].temp_c = (uint8_t)temp;
-        bat_temp[temp].temp_raw = (uint16_t)temp;
         bat_temp[temp].bad_counter = 0;
         bat_temp[temp].bad_type = 0;
         bat_temp[temp].type = THERM_CELL;
     }
     for (temp = 0; temp < N_OF_TEMP_BOARD; temp++){
         board_temp[temp].temp_c = (uint8_t)temp;
-        board_temp[temp].temp_raw = (uint16_t)temp;
         board_temp[temp].bad_counter = 0;
         board_temp[temp].bad_type = 0;
         board_temp[temp].type = THERM_BOARD;
@@ -417,7 +414,6 @@ uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
         }
         else {
             offset = ((lt_addr % LT_PER_PACK) * LT_PER_PACK) + (mux_sel - 5);
-            bat_pack.subpacks[subpack_num]->board_temps[offset]->temp_c = temp;
             set_subpack_boardtemp(subpack_num, offset, temp);
         }
     }
@@ -501,7 +497,6 @@ uint8_t get_cell_temp(){
         }
     }
     
-    update_temp(rawTemp);
     check_temp();
 
     return 0;
@@ -624,76 +619,26 @@ double mvToC(uint16_t mv) {
     double T = (1/((1/298.15)+((double)1/3428)*log(RT/10000)))-273.15;
     return T;
 }
-void update_temp(volatile uint8_t rawTemp[(N_OF_TEMP + N_OF_TEMP_BOARD) * 2]) {
-    uint16_t rawIndex = 0;
-    uint16_t batIndex = 0;
-    uint16_t boardIndex = 0;
-    uint32_t temp = 0;
-    
-    for (uint16_t board = 0; board < 6; board++) {
-        for (uint8_t cellTemp = 0; cellTemp < 14; cellTemp++) {
-            bat_temp[batIndex].temp_raw = rawTemp[rawIndex++] << 8; // Upper bits
-            bat_temp[batIndex].temp_raw |= rawTemp[rawIndex++];
-            bat_temp[batIndex].temp_c = mvToC(bat_temp[batIndex].temp_raw);
-            batIndex++;
-        }
-        for (uint16_t boardTemp = 0; boardTemp < 9; boardTemp++) {
-            
-            board_temp[boardIndex].temp_raw = rawTemp[rawIndex++] << 8; // Upper bits
-            board_temp[boardIndex].temp_raw |= rawTemp[rawIndex++];
-            board_temp[boardIndex].temp_c = mvToC(board_temp[boardIndex].temp_raw);
-            boardIndex++;
-        }
-    }
-    
-    // Deal with bad thermistors by setting them to nearby thermistors
-    bat_subpack[1].temps[3]->temp_raw = bat_subpack[1].temps[2]->temp_raw;
-    bat_subpack[1].temps[3]->temp_c = bat_subpack[1].temps[2]->temp_c;
-    
-    bat_subpack[1].temps[4]->temp_raw = bat_subpack[1].temps[5]->temp_raw;
-    bat_subpack[1].temps[4]->temp_c = bat_subpack[1].temps[5]->temp_c;
-
-    bat_subpack[1].temps[11]->temp_raw = bat_subpack[1].temps[12]->temp_raw;
-    bat_subpack[1].temps[11]->temp_c = bat_subpack[1].temps[12]->temp_c;
-    
-    bat_subpack[4].temps[8]->temp_raw = bat_subpack[4].temps[10]->temp_raw;
-    bat_subpack[4].temps[8]->temp_c = bat_subpack[4].temps[10]->temp_c;
-    
-    bat_subpack[1].board_temps[6]->temp_raw = bat_subpack[1].board_temps[7]->temp_raw;
-    bat_subpack[1].board_temps[6]->temp_c = bat_subpack[1].board_temps[7]->temp_c;
-
-    bat_subpack[3].board_temps[2]->temp_raw = bat_subpack[3].board_temps[1]->temp_raw;
-    bat_subpack[3].board_temps[2]->temp_c = bat_subpack[3].board_temps[1]->temp_c;
-    
-    // Reading high at test day 3
-    bat_subpack[3].board_temps[6]->temp_raw = bat_subpack[3].board_temps[7]->temp_raw;
-    bat_subpack[3].board_temps[6]->temp_c = bat_subpack[3].board_temps[7]->temp_c;
-
-    bat_subpack[5].board_temps[7]->temp_raw = bat_subpack[5].board_temps[6]->temp_raw;
-    bat_subpack[5].board_temps[7]->temp_c = bat_subpack[5].board_temps[6]->temp_c;
-    
-}
 
 
 void check_temp(){
-        
     // TEST_DAY_1
     uint8_t temp=0;
     uint8_t subpack=0;
     uint8_t cell=0;
-    uint16_t temp_c=0;
+    float32 temp_c=0;
     
     // check temp
     for (cell = 0; cell < N_OF_TEMP; cell++){
         temp_c = bat_temp[cell].temp_c;
-        if (temp_c > (uint8_t)CRITICAL_TEMP_H){
+        if (temp_c > CRITICAL_TEMP_H){
             //if over temperature
             bat_temp[cell].bad_counter++;
-            bat_temp[cell].bad_type = 1;
-        }else if (temp_c < (uint8_t)CRITICAL_TEMP_L){
+            bat_temp[cell].bad_type = TEMP_HIGH;
+        }else if (temp_c < CRITICAL_TEMP_L){
             // if under temperature
             bat_temp[cell].bad_counter++;
-            bat_temp[cell].bad_type = 0;
+            bat_temp[cell].bad_type = TEMP_LOW;
         }else{
             //if there is no error
             if (bat_temp[cell].bad_counter > 0){
@@ -748,11 +693,11 @@ void check_temp(){
     uint8_t temp_temp=0;
     uint8_t i=0;
     for (subpack = 0; subpack < N_OF_SUBPACK; subpack++){
-        temp_temp = bat_pack.subpacks[subpack]->temps[0]->temp_c;
+        temp_temp = get_subpack_celltemp(subpack, 0);
         bat_pack.subpacks[subpack]->high_temp = temp_temp;
-        for (i = 1; i < (N_OF_TEMP / N_OF_SUBPACK); i++){
-            if (temp_temp < bat_pack.subpacks[subpack]->temps[i]->temp_c){
-                temp_temp = bat_pack.subpacks[subpack]->temps[i]->temp_c;
+        for (i = 1; i < NUM_CELL_TEMPS; i++){
+            if (temp_temp < get_subpack_celltemp(subpack, i)){
+                temp_temp = get_subpack_celltemp(subpack, i);
                 bat_pack.subpacks[subpack]->high_temp = temp_temp;
             }
         }
@@ -760,11 +705,9 @@ void check_temp(){
 
     // Update the battery_pack highest temperature
     bat_pack.HI_temp_c = bat_temp[0].temp_c;
-    bat_pack.HI_temp_raw = bat_temp[0].temp_raw;
     for (i = 1; i < N_OF_TEMP; i++){
         if (bat_temp[i].temp_c > bat_pack.HI_temp_c){
             bat_pack.HI_temp_c = bat_temp[i].temp_c;
-            bat_pack.HI_temp_raw = bat_temp[i].temp_raw;
             bat_pack.HI_temp_node = i / (N_OF_TEMP / N_OF_SUBPACK);
         }    
     }
@@ -804,79 +747,6 @@ void check_temp(){
     }
     
 }
-
-
-
-/*
-// TEST_DAY_2
-void check_stack_fuse()
-{
-	uint8_t stack=0;
-
-	int delta_0_1, delta_1_2, delta_2_0;
-
-	// compute delta
-	delta_0_1 = (int)bat_stack[0].voltage - (int)bat_stack[1].voltage;
-	delta_1_2 = (int)bat_stack[1].voltage - (int)bat_stack[2].voltage;
-	delta_2_0 = (int)bat_stack[2].voltage - (int)bat_stack[0].voltage;
-
-	// absolute value of delta
-	if(delta_0_1 < 0) delta_0_1 *= -1;
-	if(delta_1_2 < 0) delta_1_2 *= -1;
-	if(delta_2_0 < 0) delta_2_0 *= -1;
-
-	// Comparisons to stack limits
-	if((unsigned int)delta_0_1 > STACK_VOLT_DIFF_LIMIT)
-		bat_stack[0].bad_counter++;
-	else
-		if(bat_stack[0].bad_counter > 0)
-			bat_stack[0].bad_counter--;
-
-	if((unsigned int)delta_1_2 > STACK_VOLT_DIFF_LIMIT)
-		bat_stack[1].bad_counter++;
-	else
-		if(bat_stack[1].bad_counter > 0)
-			bat_stack[1].bad_counter--;
-
-	if((unsigned int)delta_2_0 > STACK_VOLT_DIFF_LIMIT)
-		bat_stack[2].bad_counter++;
-	else
-		if(bat_stack[2].bad_counter > 0)
-			bat_stack[2].bad_counter--;
-
-
-    // FUSE_BAD_LIMIT is not the actual stack number. It's how many times that Stack fuse fails
-	stack=0;
-	for (stack =0;stack<3;stack++){
-		if (bat_stack[stack].bad_counter>FUSE_BAD_LIMIT){
-			bat_pack.status |= STACK_FUSE_BROKEN;
-			fatal_err |= STACK_FUSE_BROKEN;
-
-		if(bat_stack[0].bad_counter > FUSE_BAD_LIMIT &&
-			bat_stack[1].bad_counter > FUSE_BAD_LIMIT)
-		{
-			bat_pack.fuse_fault = 1;
-            bat_pack.voltage = (bat_pack.stacks[0]->voltage+bat_pack.stacks[2]->voltage)/2;
-		} // if fuse on stack 1 fails and compensate the pack voltage
-
-		if(bat_stack[1].bad_counter > FUSE_BAD_LIMIT &&
-			bat_stack[2].bad_counter > FUSE_BAD_LIMIT)
-		{
-			bat_pack.fuse_fault = 2;
-            bat_pack.voltage = (bat_pack.stacks[0]->voltage+bat_pack.stacks[1]->voltage)/2;
-		} // if fuse on stack 2 fails and compensate the pack voltage
-
-		if(bat_stack[2].bad_counter > FUSE_BAD_LIMIT &&
-			bat_stack[0].bad_counter > FUSE_BAD_LIMIT)
-		{
-			bat_pack.fuse_fault = 0;
-            bat_pack.voltage = (bat_pack.stacks[1]->voltage+bat_pack.stacks[2]->voltage)/2;
-		} // if fuse on stack 0 fails and compensate the pack voltage
-
-		}  
-	}
-}
-*/
 
 void bat_err_add(uint16_t err, uint8_t bad_cell, uint8_t bad_subpack){
     bat_pack.health = FAULT; 
@@ -941,45 +811,6 @@ uint8_t temp_transfer(uint16_t in_raw, uint16_t ref){
     float T = beta/log(R/A)-273.16;
     return (uint8_t)ceil(T);
 }
-
-void voltage_compensation(){
-    //should compsensation to top and bottom cells
-    /*
-    float dV = 500;         //in 0.0001V
-    float temp = 0;
-    float d=0;
-    uint8_t stack=0;
-    float dT=0;
-    
-    for (stack=0;stack<3;stack++){
-        //calculate voltage across interface
-        if (temp_transfer(bat_stack[stack].value16) > 25){
-            dT = (float)(temp_transfer(bat_stack[stack].value16) - 25);
-            temp = dT*0.017+1.4;
-            d = (temp/1.4)*dV;
-        }else{
-            dT = (float)(25-temp_transfer(bat_stack[stack].value16));
-            temp = 1.4-dT*0.017;
-            d = (temp/1.4)*dV;
-        }
-        if (d>800){
-            d=800;
-        }else if(d<500){
-            d=500;
-        }
-        mypack.cell[stack][0][0].value16+=(uint16_t)d;
-        mypack.cell[stack][1][6].value16+=(uint16_t)d;
-        mypack.cell[stack][2][0].value16+=(uint16_t)d;
-        mypack.cell[stack][3][6].value16+=(uint16_t)d;
-        
-    }
-    
-    */
-    
-}
-
-
-
 
 // The basic idea of SOC estimation is reading current value and integrate them by time.
 // Time can be estimated from delta.Time
@@ -1205,27 +1036,4 @@ void bat_clear_balance() {
     LTC6804_wrcfga(0xFF, 0x00, cfg_data);
     
 }
-void DEBUG_balancing_on(){
-    /*
-    uint8_t ic=0;
-    uint8_t cell=0;
-    uint8_t i=0;
-    uint8_t temp_cfg[TOTAL_IC][6];
-    uint16_t low_voltage = bat_pack.LO_voltage <= UNDER_VOLTAGE ? UNDER_VOLTAGE :bat_pack.LO_voltage;
-    
-    for (ic=0;ic<TOTAL_IC;ic++){
-        for (i=0;i<6;i++){
-            temp_cfg[ic][i] = tx_cfg[ic][i];
-        }
-    }
-    
-    for (ic=0;ic<TOTAL_IC;ic++){
-        for (cell=0;cell<12;cell++){
-            temp_cfg[ic][4] |= 0x00;
-            temp_cfg[ic][5] |= 0x21;
-        }
-    }
-    
-    LTC6804_wrcfg(TOTAL_IC, temp_cfg);
-    */
-}
+
