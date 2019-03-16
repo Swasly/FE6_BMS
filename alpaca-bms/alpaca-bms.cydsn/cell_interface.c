@@ -10,6 +10,7 @@
 
 
 #include "cell_interface.h"
+#include "bat_pack_interface.h"
 #include "current_sense.h"
 #include "LTC68042.h"
 #include "Select6820.h"
@@ -74,6 +75,7 @@ void mypack_init(){
         bat_cell[cell].voltage = cell;
         bat_cell[cell].bad_counter = 0;
     }
+    
     for (temp = 0; temp < N_OF_TEMP; temp++){
         bat_temp[temp].temp_c = (uint8_t)temp;
         bat_temp[temp].temp_raw = (uint16_t)temp;
@@ -409,11 +411,14 @@ uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
         temp = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
         if (mux_sel <= 4) {
             offset = ((lt_addr % LT_PER_PACK) * 5) + mux_sel;
-            bat_pack.subpacks[subpack_num]->temps[offset]->temp_c = temp;
+            //bat_pack.subpacks[subpack_num]->temps[offset]->temp_c = temp;
+            set_subpack_celltemp(subpack_num, offset, temp);
+            
         }
         else {
             offset = ((lt_addr % LT_PER_PACK) * LT_PER_PACK) + (mux_sel - 5);
             bat_pack.subpacks[subpack_num]->board_temps[offset]->temp_c = temp;
+            set_subpack_boardtemp(subpack_num, offset, temp);
         }
     }
     
@@ -498,103 +503,9 @@ uint8_t get_cell_temp(){
     
     update_temp(rawTemp);
     check_temp();
-    /*
-    int error;
-    wakeup_sleep();
-    LTC6804_adax();
-    CyDelay(3);  
-    wakeup_sleep();
-    uint8_t redundant=10;
-    while (redundant>0){   
-        //read 10 time at most
-        error = LTC6804_rdaux(0,IC_PER_BUS,aux_codes); // Set to read back all aux registers
-        //DEBUG
-        error=0;
-        if (error == 0)
-        {
-            break;
-        }
-        redundant-=1;
-    }
-    
-    if (redundant <= 0){
-        #ifdef DEBUG_LCD
-        LCD_Position(0u,10u);
-        LCD_PrintString("ERROR");
-        #endif
-        bat_pack.health = FAULT;
-        return 1;
-    }
 
-    //get information
-    update_temp(aux_codes);
-
-    //check error
-    check_temp();
-   
-   
-    #ifdef DEBUG_LCD
-        LCD_Position(1u,10u);
-        print_cells(aux_codes[0][0]);
-        LCD_Position(0u,10u);
-        LCD_PrintString("OK");
-    #endif
-    */
     return 0;
 }// get_cell_temp()
-
-
-
-uint8_t check_cells(){ 
-    // not in use!!
-    //using ADOW
-    
-  /*
-  uint16_t cell_pu[TOTAL_IC][12];
-  uint16_t cell_pd[TOTAL_IC][12];
-  int error;
-  uint8_t i_IC=0;
-  uint8_t i_cell=0;
-
-  wakeup_sleep();
-
-  LTC6804_adow(ADOW_PUP_UP);
-  error = LTC6804_rdcv(0, TOTAL_IC,cell_pu); // Set to read back all cell voltage registers
-
-  wakeup_sleep();
-
-  LTC6804_adow(ADOW_PUP_DOWN);
-  error = LTC6804_rdcv(0, TOTAL_IC,cell_pd); // Set to read back all cell voltage registers
-
-  if (error==-1){
-    return 1;
-  }
-
-  for (i_IC=0;i_IC<TOTAL_IC;i_IC++){
-    for (i_cell=0;i_cell<12;i_cell++){
-      if ((((int16_t)cell_pu[i_IC][i_cell+1]-(int16_t)cell_pd[i_IC][i_cell+1]) < -400) && (CELL_ENABLE&(0x1<<i_cell))){
-        fatal_err |= CELL_VOLT_UNDER;
-        //LCD_Position(1u,0u);
-        //LCD_PrintString("big ");
-        return 1;
-      }
-      if (cell_pu[i_IC][0]==0){
-        fatal_err |= CELL_VOLT_UNDER;
-        //LCD_Position(1u,0u);
-        //LCD_PrintString("eq 0");
-        return 1;
-      }
-      if (cell_pd[i_IC][11]==0){
-        fatal_err |= CELL_VOLT_UNDER;
-        return 1;
-      }
-    }
-
-  }
-    return 0;
-    */
-    return 0xFF;
-}// check_cells()
 
 
 void update_volt(volatile uint16_t cell_codes[IC_PER_BUS * N_OF_BUSSES][12]){

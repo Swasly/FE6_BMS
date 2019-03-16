@@ -1,7 +1,7 @@
 #include "can_manager.h"
 
 #include "cell_interface.h"
-
+#include <math.h>
 volatile uint8_t can_buffer[8];
 extern BAT_PACK_t bat_pack;
 extern volatile uint8_t CAN_DEBUG;

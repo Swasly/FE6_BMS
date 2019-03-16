@@ -2,6 +2,7 @@
 #include <stdint.h>
 
 #include "cell_interface.h"
+#include "bat_pack_interface.h"
 #include "current_sense.h"
 #include "WDT.h"
 #include "data.h"
@@ -24,7 +25,7 @@ typedef enum
 	BMS_DEBUGMODE,
 	BMS_SLEEPMODE,
 	BMS_FAULT
-}BMS_MODE;
+} BMS_MODE;
 
 uint8_t cfga_on_init[6];
 uint8_t auxa[6];
@@ -298,15 +299,15 @@ int main(void)
                 
            
                 //float32 med_temp = get_median_temp(temperatures)
-                float32 temperatures[6][24];
+                float32 temperatures[NUM_SUBPACKS][NUM_TEMPS];
                 
                 // grab all of the temperatures into single array for cleaner processing later
-                for(int i = 0; i < 6; i++) {
-                    for(int j = 0; j < 16; j++) {
-                        temperatures[i][j] = bat_pack.subpacks[i]->temps[j]->temp_c;
+                for(uint subpack_num = 0; subpack_num < NUM_SUBPACKS; subpack_num++) { //15 cell, 9 board
+                    for(uint temp_index = 0; temp_index < NUM_CELL_TEMPS; temp_index++) {
+                        temperatures[subpack_num][temp_index] = get_subpack_celltemp(subpack_num, temp_index);
                     }
-                    for(int j = 16; j < 24; j++) {
-                        temperatures[i][j] = bat_pack.subpacks[i]->board_temps[j - 16]->temp_c;
+                    for(uint temp_index = NUM_CELL_TEMPS; temp_index < NUM_TEMPS; temp_index++) {
+                        temperatures[subpack_num][temp_index] = get_subpack_boardtemp(subpack_num, temp_index - NUM_CELL_TEMPS);
                     }
                 }
                 
@@ -388,7 +389,7 @@ int main(void)
                     loop_count = 4;
                 }*/
                 /* Data structure for tracking cell voltages over time - only used for debugging purposes*/
-                uint16_t pack_voltages[6][28];
+                uint16_t pack_voltages[NUM_SUBPACKS][28];
                 uint8_t pack;
                 uint8_t cell;
                 for (pack = 0; pack < 6; pack++){
