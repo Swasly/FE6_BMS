@@ -150,7 +150,7 @@ void mypack_init(){
  * @return 1 if everything is OK. 0 for hard failure.
  */
 void  wake_up(){
-    wakeup_sleep();
+    wakeup_sleep(0);
 }
 
 void check_cfg(uint8_t rx_cfg[][8]){
@@ -159,7 +159,7 @@ void check_cfg(uint8_t rx_cfg[][8]){
     int error2 = 0;
     
     Select6820_Write(0);
-    wakeup_sleep();
+    wakeup_sleep(0);
     CyDelay(1);
     //for (int i = 0; i < 100; i++) {
         LTC6804_rdcfg(IC_PER_BUS, rx_cfg);
@@ -193,8 +193,10 @@ uint8_t get_cell_volt(){
     int error1 = 0;
     int error2 = 0;
     
+    CyDelay(1);
     Select6820_Write(0); // allow conversions to happen on bus 0
-    wakeup_sleep();
+    CyDelay(1);
+    wakeup_sleep(0);
     CyDelay(1); // Waited more
     //for (int i = 0; i < 100; i++) {
         LTC6804_adcv();
@@ -203,16 +205,16 @@ uint8_t get_cell_volt(){
     CyDelay(1); // Give it time before switching
     
     Select6820_Write(1); // allow conversions to happen in bus 1
-    wakeup_sleep();
+    wakeup_sleep(1);
     //for (int i = 0; i < 100; i++) {
         LTC6804_adcv();
         LTC6804_adcv();
     //}
     
-    CyDelay(100);
+    CyDelay(200);
     
     Select6820_Write(0); // Select bus 0
-    wakeup_sleep();
+    wakeup_sleep(0);
     
     //uint16_t *test = (uint16_t*)(&cell_codes[IC_PER_BUS]); // SHOULD PROBABLY REPLACE WITH SOMETHING LIKE 
                                                              // instead of copying values from two arrays
@@ -221,7 +223,7 @@ uint8_t get_cell_volt(){
     
     CyDelay(1); // Give it a moment before switching.
     Select6820_Write(1); // Select bus 1
-    wakeup_sleep();
+    wakeup_sleep(1);
     CyDelay(10);
     error2 = LTC6804_rdcv(0, IC_PER_BUS, cell_codes_higher);
     
@@ -266,7 +268,7 @@ uint8_t open_wire_adow(uint8_t pup){
     int error2 = 0;
     
     Select6820_Write(0);
-    wakeup_sleep();
+    wakeup_sleep(0);
     CyDelay(100); // Waited more
     for (int i = 0; i < 3; i++) {
         LTC6804_adow(pup);
@@ -274,13 +276,13 @@ uint8_t open_wire_adow(uint8_t pup){
     CyDelay(100); // Give it time before switching
     
     Select6820_Write(1);
-    wakeup_sleep();
+    wakeup_sleep(1);
     LTC6804_adow(pup);
     
     CyDelay(10);
     
     Select6820_Write(0); // Select a bus
-    wakeup_sleep();
+    wakeup_sleep(0);
     CyDelay(1);
     //uint16_t *test = (uint16_t*)(&cell_codes[IC_PER_BUS]); // SHOULD PROBABLY REPLACE WITH SOMETHING LIKE 
                                                              // instead of copying values from two arrays
@@ -289,7 +291,7 @@ uint8_t open_wire_adow(uint8_t pup){
     
     CyDelay(10); // Give it a moment before switching.
     Select6820_Write(1); // Select a bus
-    wakeup_sleep();
+    wakeup_sleep(1);
     error2 = LTC6804_rdcv(0, IC_PER_BUS, cell_codes_higher);
     
     if (error1 == -1 || error2 == -1)
@@ -345,7 +347,7 @@ uint8_t get_cfga_on_init(uint8_t lt_addr, uint8_t cfga_data[5]){
     //Select6820_Write(0);
     Select6820_Write(bus);
     
-    wakeup_sleep();
+    wakeup_sleep(bus);
     CyDelay(100);
     
     pec_error = LTC6804_rdcfga(lt_addr, cfga);
@@ -461,7 +463,7 @@ uint8_t get_cell_temp_fe6(uint8_t lt_addr, uint8_t mux_sel, uint8_t orig_cfga_da
     
     // 2
     Select6820_Write(bus);
-    wakeup_sleep();
+    wakeup_sleep(bus);
     
     // 3
     LTC6804_wrcfga(lt_addr, mux_sel, orig_cfga_data);
@@ -1238,7 +1240,7 @@ void bat_balance(){
     uint8_t cfga[18][6]; 
     
     Select6820_Write(0);
-    wakeup_sleep();
+    wakeup_sleep(0);
     CyDelay(1);
     
     for (ic = 0; ic < 9; ic++) {
@@ -1254,7 +1256,7 @@ void bat_balance(){
     CyDelay(50);
     
     Select6820_Write(1);
-    wakeup_sleep();
+    wakeup_sleep(1);
     CyDelay(1);
     
     for (ic = 9; ic < 18; ic++) {
@@ -1277,7 +1279,7 @@ void bat_clear_balance() {
     LTC68_ClearFIFO();
 
     Select6820_Write(0);
-    wakeup_sleep();
+    wakeup_sleep(0);
     CyDelay(1);
     
     
@@ -1285,7 +1287,7 @@ void bat_clear_balance() {
     LTC6804_wrcfga(0xFF, 0x00, cfg_data);
     
     Select6820_Write(1);
-    wakeup_sleep();
+    wakeup_sleep(1);
     CyDelay(1);
     
     LTC6804_wrcfga(0xFF, 0x00, cfg_data);

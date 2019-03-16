@@ -155,11 +155,11 @@ void LTC6804_adcv()
   
   //3
   
-  wakeup_idle (); //This will guarantee that the LTC6804 isoSPI port is awake. This command can be removed.
   
   //4
-
+  CyDelay(1);
   spi_write_array(4,cmd);
+  CyDelay(1);
 }
 
 
@@ -216,7 +216,7 @@ void LTC6804_wrcfga(uint8_t lt_addr, uint8_t select, uint8_t orig_cfga_data[5])
     
     uint8_t cfgr0 = (select << 5) >> 1; // 00000xxx -> 0xxx0000
     
-    cmd[4] = cfgr0 | 0b1110;       // gpio1 = 1 refon = 1 dten = 1 adcopt = 0
+    cmd[4] = cfgr0 | 0b1100;       // gpio1 = 1 refon = 1 dten = 1 adcopt = 0
     cmd[5] = orig_cfga_data[1];    // rest of the register is written with its prev. values
     cmd[6] = orig_cfga_data[2];
     cmd[7] = orig_cfga_data[3];
@@ -1179,16 +1179,15 @@ void wakeup_idle()
   
  Generic wakeup commannd to wake the LTC6804 from sleep
  *****************************************************/
-void wakeup_sleep()
+void wakeup_sleep(int bus)
 {
-  /*CS_Write(0);
-  CyDelay(1);
-  LTC68_WriteTxData(0x4D);  //write dummy byte to wake up (ascii 'M')
-  CS_Write(1);
-  CyDelay(1);
-  while(! (LTC68_ReadTxStatus() & LTC68_STS_SPI_DONE)){}
-  LTC68_ReadRxData();
-  CyDelayUs(WAKE_UP_DELAY_US);*/
+    Select6820_Write(bus);
+    CyDelay(1);
+    LTC68_WriteTxData(0x4D);  //write dummy byte to wake up (ascii 'M')
+    CyDelay(1);
+    while(! (LTC68_ReadTxStatus() & LTC68_STS_SPI_DONE)){}
+    LTC68_ReadRxData();
+    CyDelayUs(WAKE_UP_DELAY_US);
 }
 /*!**********************************************************
  \brief calaculates  and returns the CRC15
