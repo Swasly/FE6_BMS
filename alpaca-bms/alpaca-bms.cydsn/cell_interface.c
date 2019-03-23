@@ -42,10 +42,10 @@ uint32_t lastTime;
  * @param no input parameters.
  * @return 1 if everything is OK. 0 for hard failure.
  */
-void  bms_init(){
+void  bms_init(uint8_t adc_mode){
     SS_SetDriveMode(SS_DM_RES_UP);
     LTC68_Start();
-    LTC6804_initialize();
+    LTC6804_initialize(adc_mode);
     Select6820_Write(0); // Configure each bus
     LTC6804_wrcfg(IC_PER_BUS, tx_cfg);
     Select6820_Write(1);

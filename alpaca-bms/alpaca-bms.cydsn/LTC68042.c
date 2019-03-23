@@ -82,9 +82,9 @@ uint8_t ADAX[2]; //!< GPIO conversion command.
   ------
   IC: number of ICs being controlled. The address of the ICs in a LTC6804-2 network will start at 0 and continue in an ascending order.
 */
-void LTC6804_initialize()
+void LTC6804_initialize(uint8_t adc_mode)
 {
-  set_adc(MD_FILTERED, DCP_DISABLED, CELL_CH_ALL, AUX_CH_GPIO1); // MD_FILTERED from MD_NORMAL
+  set_adc(adc_mode, DCP_DISABLED, CELL_CH_ALL, AUX_CH_GPIO1); // MD_FILTERED from MD_NORMAL
   LTC6804_init_cfg();
 }
 

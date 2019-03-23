@@ -250,7 +250,7 @@ int main(void)
 				// Initialize
                 //SOC_Store_Start();
                 //SOC_Timer_Start();
-				bms_init();
+				bms_init(MD_FILTERED);
 				mypack_init();
                 //current_init();              
 			    //monitor_init();
@@ -290,6 +290,7 @@ int main(void)
                 
                     Temperature values written to bat_pack.subpacks[subpack]->temps[temp]->temp_c
                 */
+                bms_init(MD_NORMAL);
                 get_cell_temps_fe6();
                 
                 

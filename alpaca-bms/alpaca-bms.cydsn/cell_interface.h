@@ -171,7 +171,7 @@ typedef struct
  * @param no input parameters.
  * @return 1 if everything is OK. 0 for hard failure.
  */
-void  bms_init();
+void  bms_init(uint8_t adc_mode);
 
 
 /**

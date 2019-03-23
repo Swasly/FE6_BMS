@@ -190,7 +190,7 @@ void LTC6804_init_cfg();
 
 // Between these comments
 
-void LTC6804_initialize();
+void LTC6804_initialize(uint8_t adc_mode);
 
 uint8_t addressify_cmd(uint8_t addr, uint8_t cmd0);
 
