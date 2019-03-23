@@ -84,7 +84,7 @@ uint8_t ADAX[2]; //!< GPIO conversion command.
 */
 void LTC6804_initialize()
 {
-  set_adc(MD_FILTERED,DCP_DISABLED,CELL_CH_ALL,AUX_CH_GPIO1); // MD_FILTERED from MD_NORMAL
+  set_adc(MD_FILTERED, DCP_DISABLED, CELL_CH_ALL, AUX_CH_GPIO1); // MD_FILTERED from MD_NORMAL
   LTC6804_init_cfg();
 }
 
