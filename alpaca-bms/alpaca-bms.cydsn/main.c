@@ -235,9 +235,6 @@ int main(void)
     FanController_SetDesiredSpeed(3, 0);
     FanController_SetDesiredSpeed(4, 0);
     
-    LTC6804_initialize(); // make  sure command info is set to begin?
-    
-    
 	while(1){
 		switch (bms_status){
 			case BMS_BOOTUP:
