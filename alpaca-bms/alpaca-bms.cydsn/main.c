@@ -345,46 +345,7 @@ int main(void)
                 //SKY_TODO update_soc()
               
 #ifdef DEBUG_MODE
-                /*TODO: remove  fan testing code*/
-                
-                if(loop_count == 0) {
-                    FanController_SetDesiredSpeed(1, 4400);
-                    FanController_SetDesiredSpeed(2, 4400);
-                    FanController_SetDesiredSpeed(3, 4400);
-                    FanController_SetDesiredSpeed(4, 4400);
-                    loop_count = 1;
-                } else {
-                    FanController_SetDesiredSpeed(1, 0);
-                    FanController_SetDesiredSpeed(2, 0);
-                    FanController_SetDesiredSpeed(3, 0);
-                    FanController_SetDesiredSpeed(4, 0);
-                    loop_count = 0;
-                }
-    
-                /*
-                if(loop_count == 0) {
-                    FanController_SetDesiredSpeed(1, 0);
-                    FanController_SetDesiredSpeed(2, 0);
-                    FanController_SetDesiredSpeed(3, 0);
-                    FanController_SetDesiredSpeed(4, 0);
-                    loop_count = 1;
-                    increment_mode =  1;
-                }
-                else if(loop_count < 5) {
-                    if(increment_mode) {
-                        loop_count++;
-                    } else {
-                        loop_count--;
-                    }
-                } 
-                else if(loop_count == 5) {
-                    FanController_SetDesiredSpeed(1, 4400);
-                    FanController_SetDesiredSpeed(2, 4400);
-                    FanController_SetDesiredSpeed(3, 4400);
-                    FanController_SetDesiredSpeed(4, 4400);
-                    increment_mode = 0;
-                    loop_count = 4;
-                }*/
+
                 /* Data structure for tracking cell voltages over time - only used for debugging purposes*/
                 uint16_t pack_voltages[6][28];
                 uint8_t pack;
