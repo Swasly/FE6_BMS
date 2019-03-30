@@ -274,6 +274,7 @@ int main(void)
 			    //check_cfg(rx_cfg);  //CANNOT be finished, because 
 				
                 /*Only here to check that the old voltage reading still works*/
+                bms_init(MD_FILTERED);
 		        get_cell_volt();// TODO test voltage
                 
 				//TESTDAY_2_TODO. check_stack_fuse(); // TODO: check if stacks are disconnected
@@ -369,13 +370,13 @@ int main(void)
                     // Turn on cell discharging
                     bat_balance();
                     // Let it discharge for ... seconds
-                    CyDelay(1000);
+                    CyDelay(10000);
                     bat_clear_balance();
                     // Let the boards cool down
                     CyDelay(1000);
                 }
                 */
-                
+                       
                 bat_health_check();
                 if (bat_pack.health == FAULT){
 					bms_status = BMS_FAULT;
