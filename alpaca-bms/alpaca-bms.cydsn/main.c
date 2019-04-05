@@ -56,8 +56,6 @@ CY_ISR(current_update_Handler){
 	return;
 }
 
-
-
 void process_event(){
     CyGlobalIntDisable
     // heartbeat
@@ -92,56 +90,6 @@ void process_event(){
     
     CyGlobalIntEnable;
 }
-
-void DEBUG_send_cell_voltage(){
-    /*
-    uint8_t node, cell;
-    for (node = 0; node< N_OF_NODE; node++){
-        cell = 0;
-        for (cell = 0;cell<14;cell++){
-            can_send_volt((node<<8 | cell),
-				bat_pack.nodes[node]->cells[cell]->voltage,
-				bat_pack.voltage);
-            CyDelay(1);
-        }
-    }
-    */
-}
-
-void DEBUG_send_temp(){
-    /*
-    uint8_t node, temp;
-    for (node = 0; node< N_OF_NODE; node++){
-        temp = 0;
-        for (temp = 0;temp<10;temp++){
- //           can_send_temp(temp,
-//				node,
-//				bat_pack.nodes[node]->temps[temp]->temp_c,
-//				bat_pack.nodes[node]->temps[temp]->temp_raw,
-  //              bat_pack.HI_temp_c);
-            CyDelay(1);
-        }
-    }
-    */
-}
-
-void DEBUG_send_current(){
-    /*
-    uint8_t node, temp;
-    for (node = 0; node< N_OF_NODE; node++){
-        temp = 0;
-        for (temp = 0;temp<10;temp++){
-//            can_send_temp(temp,
-//				node,
-//				bat_pack.nodes[node]->temps[temp]->temp_c,
-//				bat_pack.nodes[node]->temps[temp]->temp_raw,
-  //              bat_pack.HI_temp_c);
-            CyDelay(1);
-        }
-    }
-    */
-}
-
 
 void process_failure_helper(BAT_ERR_t err){
 	switch(err.err){
@@ -181,32 +129,6 @@ void process_failure(){
 	}
 }
 
-/*void debugMain() {
-    //while(1) { wakeup_sleep(); };
-    uint8_t txData[2] = {0x1E, 0xEE};
-    uint8_t rxData[23];
-    int t = 0;
-    while(1) {
-
-        // For debugging stay in here.
-        
-        //get_cell_volt();
-        //wakeup_sleep();
-        CyDelay(500);
-        //Select6820_Write(0);
-        //my_spi_write_read(txData, 2, rxData, 23);
-        //open_wire_adow(0x1);
-        //open_wire_adow(0x0);
-        
-        get_cell_volt();
-        get_cell_temp();
-        t++;
-    }
-    while(1) {
-        // DO nothing
-    }
-        
-}*/
 bool BALANCE_FLAG = true;
 
 typedef enum {
@@ -296,8 +218,6 @@ int main(void)
                 */
                 get_cell_temps_fe6();
                 
-                
-           
                 //float32 med_temp = get_median_temp(temperatures)
                 float32 temperatures[NUM_SUBPACKS][NUM_TEMPS];
                 
@@ -364,30 +284,6 @@ int main(void)
                     loop_count = 0;
                 }
     
-                /*
-                if(loop_count == 0) {
-                    FanController_SetDesiredSpeed(1, 0);
-                    FanController_SetDesiredSpeed(2, 0);
-                    FanController_SetDesiredSpeed(3, 0);
-                    FanController_SetDesiredSpeed(4, 0);
-                    loop_count = 1;
-                    increment_mode =  1;
-                }
-                else if(loop_count < 5) {
-                    if(increment_mode) {
-                        loop_count++;
-                    } else {
-                        loop_count--;
-                    }
-                } 
-                else if(loop_count == 5) {
-                    FanController_SetDesiredSpeed(1, 4400);
-                    FanController_SetDesiredSpeed(2, 4400);
-                    FanController_SetDesiredSpeed(3, 4400);
-                    FanController_SetDesiredSpeed(4, 4400);
-                    increment_mode = 0;
-                    loop_count = 4;
-                }*/
                 /* Data structure for tracking cell voltages over time - only used for debugging purposes*/
                 uint16_t pack_voltages[NUM_SUBPACKS][28];
                 uint8_t pack;
