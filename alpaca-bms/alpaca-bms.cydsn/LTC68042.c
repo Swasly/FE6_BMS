@@ -216,11 +216,13 @@ void LTC6804_wrcfga(uint8_t lt_addr, uint8_t select, uint8_t orig_cfga_data[5])
     uint8_t cfgr0 = (select << 5) >> 1; // 00000xxx -> 0xxx0000
     
     cmd[4] = cfgr0 | 0b1110;       // gpio1 = 1 refon = 1 dten = 1 adcopt = 0
-    cmd[5] = orig_cfga_data[1];    // rest of the register is written with its prev. values
+    
+    memcpy(cmd + 5, orig_cfga_data + 1, 5);// rest of the register is written with its prev. values
+    /*cmd[5] = orig_cfga_data[1];    
     cmd[6] = orig_cfga_data[2];
     cmd[7] = orig_cfga_data[3];
     cmd[8] = orig_cfga_data[4];
-    cmd[9] = orig_cfga_data[5];
+    cmd[9] = orig_cfga_data[5];*/
 
     // calculate pec on data
     temp_pec = pec15_calc(6, (uint8_t*)(cmd + 4));
@@ -1141,9 +1143,9 @@ void wakeup_idle()
   
  Generic wakeup commannd to wake the LTC6804 from sleep
  *****************************************************/
-void wakeup_sleep()
+void wakeup_sleep(int bus)
 {
-  CS_Write(0);
+  CS_Write(bus);
   CyDelay(1);
   LTC68_WriteTxData(0x4D);  //write dummy byte to wake up (ascii 'M')
   CS_Write(1);

@@ -423,13 +423,22 @@ uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
 
 
 /**
- starting point for getting cell temperatures on the slave boards
+    starting point for getting cell temperatures on the slave boards
+               
+    New cell temperature getter
+    1. For each 6811 on each slave
+    2. For mux select 0-7
+    3. wrcfga to set mux select
+    4. adax to convert mux output to digital and store in register
+    5. rdaux to read stored digital value
+
+    Temperature values written to bat_pack.subpacks[subpack]->temps[temp]->temp_c
+
 */
 uint8_t get_cell_temps_fe6()
 {
     // the number of lt chips. 
     uint8_t num_lts = 18;
-    
     uint8_t orig_cfga_data[5];
     
     for(int lt = 0; lt < num_lts; lt++) {
@@ -438,8 +447,7 @@ uint8_t get_cell_temps_fe6()
     }
     
     check_temp();
-    
-    
+ 
     return 0;
 }
 
@@ -464,7 +472,7 @@ uint8_t get_cell_temp_fe6(uint8_t lt_addr, uint8_t mux_sel, uint8_t orig_cfga_da
     
     // 2
     Select6820_Write(bus);
-    wakeup_sleep();
+    wakeup_sleep(bus);
     
     // 3
     LTC6804_wrcfga(lt_addr, mux_sel, orig_cfga_data);

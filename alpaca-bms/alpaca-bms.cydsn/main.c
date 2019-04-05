@@ -84,7 +84,6 @@ void process_event(){
 				bat_pack.HI_temp_c);
     
     // send current
-    //CyDelay(10);
     //can_send_current(bat_pack.current);
     CyDelay(10);
     
@@ -203,19 +202,8 @@ int main(void)
 		        get_cell_volt();// TODO test voltage
                 
 				//TESTDAY_2_TODO. check_stack_fuse(); // TODO: check if stacks are disconnected
-                
-				//get_cell_temp(); Old temperature getting function (not needed for FE6)
                                 
-                /*
-                    New cell temperature getter
-                    1. For each 6811 on each slave
-                    2. For mux select 0-7
-                    3. wrcfga to set mux select
-                    4. adax to convert mux output to digital and store in register
-                    5. rdaux to read stored digital value
-                
-                    Temperature values written to bat_pack.subpacks[subpack]->temps[temp]->temp_c
-                */
+
                 get_cell_temps_fe6();
                 
                 //float32 med_temp = get_median_temp(temperatures)
