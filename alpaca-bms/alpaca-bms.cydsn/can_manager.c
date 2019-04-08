@@ -1,4 +1,5 @@
-#include "can_manager.h"
+
+ #include "can_manager.h"
 
 #include "cell_interface.h"
 
@@ -12,9 +13,6 @@ The datatype consists of three bytes:
 2. upper byte of data
 3. lower byte of data
 */
-
-
-
 void can_send_temp(volatile uint8_t high_temp0,
     volatile uint8_t high_temp1,
     volatile uint8_t high_temp2,

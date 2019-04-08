@@ -84,6 +84,7 @@ void process_event(){
 				bat_pack.HI_temp_node,
 				bat_pack.HI_temp_c);
     
+    can_send_volt(bat_pack.LO_voltage, bat_pack.HI_voltage, bat_pack.voltage);
     // send current
     //CyDelay(10);
     //can_send_current(bat_pack.current);
