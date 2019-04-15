@@ -435,7 +435,7 @@ uint8_t get_cell_temps_fe6()
         get_cfga_on_init(lt, orig_cfga_data);
         get_lt_temps(lt, orig_cfga_data);
     }
-    
+    bat_pack.subpacks[5]->temps[0]->temp_c = (double) 20;
     check_temp();
     
     
