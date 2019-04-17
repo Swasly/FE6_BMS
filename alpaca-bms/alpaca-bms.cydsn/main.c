@@ -311,33 +311,18 @@ int main(void)
                     }
                 }
                 
-                //float32 med_temp = get_median_temp(temperatures); 
-                float32 med_temp = 28; //hardcoded for now
-                //fan control
-                if(med_temp >= 55.0 && fan_mode != FAN_MAX) {
-                    //full speed
-                    //TODO: set all fans to same speed. 
-                    FanController_SetDesiredSpeed(1, 6000); //TODO: check actual speed range
-                    FanController_SetDesiredSpeed(2, 6000);
-                    FanController_SetDesiredSpeed(3, 6000);
-                    FanController_SetDesiredSpeed(4, 6000);
-                    fan_mode = FAN_MAX;
+                if (bat_pack.HI_temp_c > 60) {
+                    FanController_SetDesiredSpeed(1, 4200);
+                    FanController_SetDesiredSpeed(2, 4200);
+                    FanController_SetDesiredSpeed(3, 4200);
+                    FanController_SetDesiredSpeed(4, 4200);     
                 }
-                else if(med_temp >= 50.0 && fan_mode != FAN_MIN) {
-                    //start up fans
-                    FanController_SetDesiredSpeed(1, 4500);
-                    FanController_SetDesiredSpeed(2, 4500);
-                    FanController_SetDesiredSpeed(3, 4500);
-                    FanController_SetDesiredSpeed(4, 4500);
-                    fan_mode = FAN_MIN;
-                } 
-                else if(fan_mode != FAN_ZERO){
+                else {
                     FanController_SetDesiredSpeed(1, 0);
                     FanController_SetDesiredSpeed(2, 0);
                     FanController_SetDesiredSpeed(3, 0);
                     FanController_SetDesiredSpeed(4, 0);
-                    fan_mode = FAN_ZERO;
-                }    
+                }
                 CyDelay(10);
                 
                 // TODO: Calculate SOC
@@ -359,7 +344,7 @@ int main(void)
                     }
                 }
 #endif
-                /*
+                
                 //Uncomment all of this to balance
                 if (bat_pack.HI_temp_board_c >= 60) {
                     BALANCE_FLAG = false;
@@ -377,7 +362,7 @@ int main(void)
                     // Let the boards cool down
                     CyDelay(1000);
                 }
-                */
+                
                        
                 bat_health_check();
                 if (bat_pack.health == FAULT){
