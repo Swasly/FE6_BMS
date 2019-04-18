@@ -143,9 +143,9 @@ void process_event(){
                 printUsbData('t', subpack, ind, (void *)&bat_pack.subpacks[subpack]->temps[ind]->temp_c);
             }
         }
+    #endif
+    
         
-        
-    #else
     // TEST_DAY_1
     can_send_temp(bat_pack.subpacks[0]->high_temp,
 				bat_pack.subpacks[1]->high_temp,
@@ -160,8 +160,7 @@ void process_event(){
     // send current
     //can_send_current(bat_pack.current);
     CyDelay(10);
-    #endif
-    
+
     CyGlobalIntEnable;
 }
 
