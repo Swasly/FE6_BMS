@@ -56,7 +56,15 @@ CY_ISR(current_update_Handler){
 	return;
 }
 
+/*
+    Code:
+    v = cell voltage
+    b = board temp
+    t = temp
 
+    //Data sent individually in following format.
+    code.subpack_index.index.value
+*/
 void printUsbData(char code, uint subpack, uint index, void *data)
 {
     USBUART_PutChar(code);
@@ -114,15 +122,7 @@ void process_event(){
         // Send board and thermistors temperatures over USB
 
         char buffer[12];
-        /*
-        Code:
-        v = cell voltage
-        b = board temp
-        t = temp
-        
-        //Data sent individually in following format.
-        code,subpack_index,index,value
-        */
+
         
         // send cell voltages 
         for(uint subpack = 0; subpack < NUM_SUBPACKS; subpack++) {
@@ -155,6 +155,7 @@ void process_event(){
 				bat_pack.HI_temp_node,
 				bat_pack.HI_temp_c);
     
+    can_send_volt(bat_pack.LO_voltage, bat_pack.HI_voltage, bat_pack.voltage);
     // send current
     //can_send_current(bat_pack.current);
     CyDelay(10);
@@ -220,24 +221,18 @@ int main(void)
 	// Initialize state machine
 	BMS_MODE bms_status = BMS_BOOTUP;
     FAN_MODE fan_mode = FAN_ZERO;
-    
 	uint32_t system_interval = 0;
     uint8_t led = 0;
-    //FanController_1_SetDutyCycle(1, 44000);
+    
     FanController_Start();
     FanController_SetDesiredSpeed(1, 0);
     FanController_SetDesiredSpeed(2, 0);
     FanController_SetDesiredSpeed(3, 0);
     FanController_SetDesiredSpeed(4, 0);
     
-    LTC6804_initialize(); // make  sure command info is set to begin?
-    
     #ifdef DEBUG_MODE
         USBUART_Start(0, USBUART_3V_OPERATION);
-     //   terminal_run();
-        //terminal_init();
     #endif
-    
     
 	while(1){
 		switch (bms_status){
@@ -254,7 +249,7 @@ int main(void)
 				// Initialize
                 //SOC_Store_Start();
                 //SOC_Timer_Start();
-				bms_init();
+				bms_init(MD_FILTERED);
 				mypack_init();
                 //current_init();              
 			    //monitor_init();
@@ -278,11 +273,22 @@ int main(void)
 			    //check_cfg(rx_cfg);  //CANNOT be finished, because 
 				
                 /*Only here to check that the old voltage reading still works*/
+                bms_init(MD_FILTERED);
 		        get_cell_volt();// TODO test voltage
                 
 				//TESTDAY_2_TODO. check_stack_fuse(); // TODO: check if stacks are disconnected
                                 
-
+                /*
+                    New cell temperature getter
+                    1. For each 6811 on each slave
+                    2. For mux select 0-7
+                    3. wrcfga to set mux select
+                    4. adax to convert mux output to digital and store in register
+                    5. rdaux to read stored digital value
+                
+                    Temperature values written to bat_pack.subpacks[subpack]->temps[temp]->temp_c
+                */
+                bms_init(MD_NORMAL);
                 get_cell_temps_fe6();
                 
                 //float32 med_temp = get_median_temp(temperatures)
@@ -291,49 +297,28 @@ int main(void)
                 // grab all of the temperatures into single array for cleaner processing later
                 for(uint subpack_num = 0; subpack_num < NUM_SUBPACKS; subpack_num++) { //15 cell, 9 board
                     for(uint temp_index = 0; temp_index < NUM_CELL_TEMPS; temp_index++) {
-                        temperatures[subpack_num][temp_index] = get_subpack_celltemp(subpack_num, temp_index);
+                        temperatures[subpack_num][temp_index] = 
+                            get_subpack_celltemp(subpack_num, temp_index);
                     }
                     for(uint temp_index = NUM_CELL_TEMPS; temp_index < NUM_TEMPS; temp_index++) {
-                        temperatures[subpack_num][temp_index] = get_subpack_boardtemp(subpack_num, temp_index - NUM_CELL_TEMPS);
+                        temperatures[subpack_num][temp_index] = 
+                            get_subpack_boardtemp(subpack_num, temp_index - NUM_CELL_TEMPS);
                     }
                 }
-                
-                //float32 med_temp = get_median_temp(temperatures); 
-                float32 med_temp = 28; //hardcoded for now
-                //fan control
-                if(med_temp >= 55.0 && fan_mode != FAN_MAX) {
-                    //full speed
-                    //TODO: set all fans to same speed. 
-                    FanController_SetDesiredSpeed(1, 6000); //TODO: check actual speed range
-                    FanController_SetDesiredSpeed(2, 6000);
-                    FanController_SetDesiredSpeed(3, 6000);
-                    FanController_SetDesiredSpeed(4, 6000);
-                    fan_mode = FAN_MAX;
+            
+                if (bat_pack.HI_temp_c > 60) {
+                    FanController_SetDesiredSpeed(1, 4200);
+                    FanController_SetDesiredSpeed(2, 4200);
+                    FanController_SetDesiredSpeed(3, 4200);
+                    FanController_SetDesiredSpeed(4, 4200);     
                 }
-                else if(med_temp >= 50.0 && fan_mode != FAN_MIN) {
-                    //start up fans
-                    FanController_SetDesiredSpeed(1, 4500);
-                    FanController_SetDesiredSpeed(2, 4500);
-                    FanController_SetDesiredSpeed(3, 4500);
-                    FanController_SetDesiredSpeed(4, 4500);
-                    fan_mode = FAN_MIN;
-                } 
-                else if(fan_mode != FAN_ZERO){
+                else {
                     FanController_SetDesiredSpeed(1, 0);
                     FanController_SetDesiredSpeed(2, 0);
                     FanController_SetDesiredSpeed(3, 0);
                     FanController_SetDesiredSpeed(4, 0);
-                    fan_mode = FAN_ZERO;
-                }    
+                }
                 CyDelay(10);
-                
-            
-                
-                //board temps 
-                
-                //thermistor temps
-                
-                //cell volts
                 
                 // TODO: Calculate SOC
                 //get_current(); // TODO get current reading from sensor
@@ -343,22 +328,6 @@ int main(void)
                 //SKY_TODO update_soc()
               
 #ifdef DEBUG_MODE
-                /*TODO: remove  fan testing code*/
-                
-                if(loop_count == 0) {
-                    FanController_SetDesiredSpeed(1, 4400);
-                    FanController_SetDesiredSpeed(2, 4400);
-                    FanController_SetDesiredSpeed(3, 4400);
-                    FanController_SetDesiredSpeed(4, 4400);
-                    loop_count = 1;
-                } else {
-                    FanController_SetDesiredSpeed(1, 0);
-                    FanController_SetDesiredSpeed(2, 0);
-                    FanController_SetDesiredSpeed(3, 0);
-                    FanController_SetDesiredSpeed(4, 0);
-                    loop_count = 0;
-                }
-    
                 /* Data structure for tracking cell voltages over time - only used for debugging purposes*/
                 uint16_t pack_voltages[NUM_SUBPACKS][28];
                 uint8_t pack;
@@ -382,13 +351,12 @@ int main(void)
                     // Turn on cell discharging
                     bat_balance();
                     // Let it discharge for ... seconds
-                    CyDelay(1000);
+                    CyDelay(10000);
                     bat_clear_balance();
                     // Let the boards cool down
                     CyDelay(1000);
                 }
-                
-                
+                       
                 bat_health_check();
                 if (bat_pack.health == FAULT){
 					bms_status = BMS_FAULT;

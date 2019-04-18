@@ -82,9 +82,9 @@ uint8_t ADAX[2]; //!< GPIO conversion command.
   ------
   IC: number of ICs being controlled. The address of the ICs in a LTC6804-2 network will start at 0 and continue in an ascending order.
 */
-void LTC6804_initialize()
+void LTC6804_initialize(uint8_t adc_mode)
 {
-  set_adc(MD_FILTERED,DCP_DISABLED,CELL_CH_ALL,AUX_CH_GPIO1); // MD_FILTERED from MD_NORMAL
+  set_adc(adc_mode, DCP_DISABLED, CELL_CH_ALL, AUX_CH_GPIO1); // MD_FILTERED from MD_NORMAL
   LTC6804_init_cfg();
 }
 
@@ -154,11 +154,12 @@ void LTC6804_adcv()
   cmd[3] = (uint8_t)(temp_pec);
   
   //3
-  wakeup_idle (); //This will guarantee that the LTC6804 isoSPI port is awake. This command can be removed.
+  
   
   //4
+  CyDelay(1);
   spi_write_array(4,cmd);
-
+  CyDelay(1);
 }
 
 
@@ -214,15 +215,13 @@ void LTC6804_wrcfga(uint8_t lt_addr, uint8_t select, uint8_t orig_cfga_data[5])
     */
     
     uint8_t cfgr0 = (select << 5) >> 1; // 00000xxx -> 0xxx0000
-    
-    cmd[4] = cfgr0 | 0b1110;       // gpio1 = 1 refon = 1 dten = 1 adcopt = 0
-    
-    memcpy(cmd + 5, orig_cfga_data + 1, 5);// rest of the register is written with its prev. values
-    /*cmd[5] = orig_cfga_data[1];    
+
+    cmd[4] = cfgr0 | 0b1100;       // gpio1 = 1 refon = 1 dten = 1 adcopt = 0
+    cmd[5] = orig_cfga_data[1];    // rest of the register is written with its prev. values
     cmd[6] = orig_cfga_data[2];
     cmd[7] = orig_cfga_data[3];
     cmd[8] = orig_cfga_data[4];
-    cmd[9] = orig_cfga_data[5];*/
+    cmd[9] = orig_cfga_data[5];
 
     // calculate pec on data
     temp_pec = pec15_calc(6, (uint8_t*)(cmd + 4));
@@ -239,7 +238,6 @@ void LTC6804_wrcfga(uint8_t lt_addr, uint8_t select, uint8_t orig_cfga_data[5])
  *  data[5] bytes 4 and 5 contain discharge time and cells to discharge
  *  lt_addr (0-17) corresponds to the address of an lt chip
 */
-
 void LTC6804_wrcfga_balance(uint8_t lt_addr, uint8_t cfga_data[5]) {
     
     uint8_t cmd[12];
@@ -547,7 +545,13 @@ uint8_t LTC6804_rdcv(uint8_t reg,
     for(uint8_t cell_reg = 1; cell_reg<5; cell_reg++)         			 //executes once for each of the LTC6804 cell voltage registers
     {
       data_counter = 0;
-      LTC6804_rdcv_reg(cell_reg, total_ic,cell_data);
+      //LTC6804_rdcv_reg(cell_reg, total_ic,cell_data);
+    
+      for (int ic_num = 0; ic_num < total_ic; ic_num++) {
+         LTC6804_rdcv_FE6(cell_reg, cell_data, ic_num);
+         LTC6804_rdcv_FE6(cell_reg, cell_data, ic_num);
+      }
+    
       for (uint8_t current_ic = 0 ; current_ic < total_ic; current_ic++) // executes for every LTC6804 in the stack
       {																 	  // current_ic is used as an IC counter
         //a.ii
@@ -685,7 +689,6 @@ void LTC6804_rdcv_reg(uint8_t reg,
   }
 }
 
-
 /*
   LTC6804_rdcv_reg Function Process:
   1. Determine Command and initialize command array
@@ -726,6 +729,38 @@ void LTC6804_rdcv_reg(uint8_t reg,
   
 	-1: PEC error detected, retry read
  *************************************************/
+
+void LTC6804_rdcv_FE6(uint8_t reg, uint8_t * data, int ic_num){
+    uint8_t cmd[4];
+    uint16_t temp_pec;
+
+    if (reg == 1) {
+        cmd[1] = 0x04;
+        cmd[0] = 0x00;
+    }
+    else if (reg == 2) {
+        cmd[1] = 0x06;
+        cmd[0] = 0x00;
+    }
+    else if (reg == 3) {
+        cmd[1] = 0x08;
+        cmd[0] = 0x00;
+    }
+    else if (reg == 4) {
+        cmd[1] = 0x0A;
+        cmd[0] = 0x00;
+    }
+
+    cmd[0] = 0x80 + (ic_num << 3);
+
+    temp_pec = pec15_calc(2, cmd);
+    cmd[2] = (uint8_t)(temp_pec >> 8);
+    cmd[3] = (uint8_t)(temp_pec);
+
+    wakeup_idle();
+
+    spi_write_read(cmd, 4, &data[ic_num*8], 8);
+}
 int8_t LTC6804_rdaux(uint8_t reg,
 					 uint8_t total_ic, 
 					 uint16_t aux_codes[][6]
@@ -1145,14 +1180,13 @@ void wakeup_idle()
  *****************************************************/
 void wakeup_sleep(int bus)
 {
-  CS_Write(bus);
-  CyDelay(1);
-  LTC68_WriteTxData(0x4D);  //write dummy byte to wake up (ascii 'M')
-  CS_Write(1);
-  CyDelay(1);
-  while(! (LTC68_ReadTxStatus() & LTC68_STS_SPI_DONE)){}
-  LTC68_ReadRxData();
-  CyDelayUs(WAKE_UP_DELAY_US);
+    Select6820_Write(bus);
+    CyDelay(1);
+    LTC68_WriteTxData(0x4D);  //write dummy byte to wake up (ascii 'M')
+    CyDelay(1);
+    while(! (LTC68_ReadTxStatus() & LTC68_STS_SPI_DONE)){}
+    LTC68_ReadRxData();
+    CyDelayUs(WAKE_UP_DELAY_US);
 }
 /*!**********************************************************
  \brief calaculates  and returns the CRC15
@@ -1190,15 +1224,11 @@ void spi_write_array(uint8_t len, // Option: Number of bytes to be written on th
 					 uint8_t data[] //Array of bytes to be written on the SPI port
 					 )
 { // SKY_ADDED
-  CS_Write(0);
   CyDelay(1);
   for(uint8_t i = 0; i < len; i++)
   {
      LTC68_WriteTxData((int8_t)data[i]);
   }
-  CyDelay(1);
-
-  CS_Write(1);
   CyDelay(1);
 }
 /*!
