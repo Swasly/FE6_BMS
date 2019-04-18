@@ -57,6 +57,52 @@ CY_ISR(current_update_Handler){
 
 
 
+/*
+    Code:
+    v = cell voltage
+    b = board temp
+    t = temp
+
+    //Data sent individually in following format.
+    code.subpack_index.index.value
+*/
+void printUsbData(char code, uint subpack, uint index, void *data)
+{
+    USBUART_PutChar(code);
+    USBUART_PutChar('.');
+    USBUART_PutChar(subpack);
+    USBUART_PutChar('.');
+    USBUART_PutChar(index);
+    USBUART_PutChar('.');
+    uint16 cell;
+    uint32 temp;
+    
+    switch(code)
+    {
+        case 'c': 
+            cell = *((uint16_t*)data);
+            char lsb = cell & 0x0f;
+            char msb = (cell & 0xf0) >> 8;
+            USBUART_PutChar(msb);
+            USBUART_PutChar(lsb);            
+            break;
+        case 'b':
+        case 't': //NOTE: ignore the naming here
+            temp = *((uint32 *)data);
+            char ms = (temp & 0xf000) >> 24;
+            char ns = (temp & 0x0f00) >> 16;
+            char os = (temp & 0x00f0) >> 8;
+            char ls = temp & 0x000f;
+            USBUART_PutChar(ms);
+            USBUART_PutChar(os);
+            USBUART_PutChar(ns);
+            USBUART_PutChar(ls);
+            break;
+    }
+    USBUART_PutChar('\n');
+}
+
+
 void process_event(){
     CyGlobalIntDisable
     // heartbeat
@@ -73,7 +119,33 @@ void process_event(){
     CyDelay(10);
 
     // send temperature
-    
+    #ifdef DEBUG_MODE
+        // Send board and thermistors temperatures over USB
+
+        char buffer[12];
+
+        
+        // send cell voltages 
+        for(uint subpack = 0; subpack < 6; subpack++) {
+            for(uint ind = 0; ind < 28; ind++) {
+                printUsbData('c', subpack, ind, (void *)&bat_pack.subpacks[subpack]->cells[ind]->voltage);
+            }
+        }
+        // send board temps
+        for(uint subpack = 0; subpack < 6; subpack++) {
+            for(uint ind = 0; ind < 9; ind++) {
+                printUsbData('b', subpack, ind, (void *)&bat_pack.subpacks[subpack]->board_temps[ind]->temp_c);
+            }
+        }
+        // send cell temps
+        for(uint subpack = 0; subpack < 6; subpack++) {
+            for(uint ind = 0; ind < 15; ind++) {
+                printUsbData('t', subpack, ind, (void *)&bat_pack.subpacks[subpack]->temps[ind]->temp_c);
+            }
+        }
+        
+        
+    #else
     // TEST_DAY_1
     can_send_temp(bat_pack.subpacks[0]->high_temp,
 				bat_pack.subpacks[1]->high_temp,
@@ -86,9 +158,9 @@ void process_event(){
     
     can_send_volt(bat_pack.LO_voltage, bat_pack.HI_voltage, bat_pack.voltage);
     // send current
-    //CyDelay(10);
     //can_send_current(bat_pack.current);
     CyDelay(10);
+    #endif
     
     CyGlobalIntEnable;
 }
