@@ -34,7 +34,7 @@ static func_ptr_t currentFunc = NULL;
 
 void terminal_parse(char serial_in[]);
 bool terminal_helpFunc();
-inline void terminal_printPrompt();
+void terminal_printPrompt();
 
 
 void terminal_init() {
@@ -284,7 +284,7 @@ void terminal_parse(char serial_in[])
     terminal_printPrompt();
 }
 
-inline void terminal_printPrompt() {
+void terminal_printPrompt() {
     while(USBUART_CDCIsReady() == 0u);
     USBUART_PutString("\n");
     if (terminal_error_flag) {

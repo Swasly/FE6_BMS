@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <device schemaVersion="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_0.xsd">
-  <name>CY8C5868AXI_LP035</name>
+  <name>CY8C5868LTI_LP039</name>
   <version>0.1</version>
   <description>CY8C58LP</description>
   <addressUnitBits>8</addressUnitBits>
@@ -332,7 +332,7 @@
         <register>
           <name>FanController_Alert_STALL_STATUS_LSB</name>
           <description>Stall Status LSB Register</description>
-          <addressOffset>0x4000646B</addressOffset>
+          <addressOffset>0x40006464</addressOffset>
           <size>8</size>
           <access>read-write</access>
           <resetValue>0</resetValue>
@@ -399,7 +399,7 @@
         <register>
           <name>FanController_ALERT_STATUS</name>
           <description>Alert Status Register</description>
-          <addressOffset>0x4000646C</addressOffset>
+          <addressOffset>0x4000646F</addressOffset>
           <size>8</size>
           <access>read-write</access>
           <resetValue>0</resetValue>
@@ -446,76 +446,9 @@
           </fields>
         </register>
         <register>
-          <name>FanController_Alert_ALERT_MASK_LSB</name>
-          <description>Alert Mask LSB Register</description>
-          <addressOffset>0x4000647B</addressOffset>
-          <size>8</size>
-          <access>read-write</access>
-          <resetValue>0</resetValue>
-          <resetMask>0</resetMask>
-          <fields>
-            <field>
-              <name>ALRT_MASK_1</name>
-              <description>Alert Mask for Fan1</description>
-              <lsb>0</lsb>
-              <msb>0</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>ALRT_MASK_2</name>
-              <description>Alert Mask for Fan2</description>
-              <lsb>1</lsb>
-              <msb>1</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>ALRT_MASK_3</name>
-              <description>Alert Mask for Fan3</description>
-              <lsb>2</lsb>
-              <msb>2</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>ALRT_MASK_4</name>
-              <description>Alert Mask for Fan4</description>
-              <lsb>3</lsb>
-              <msb>3</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>ALRT_MASK_5</name>
-              <description>Alert Mask for Fan5</description>
-              <lsb>4</lsb>
-              <msb>4</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>ALRT_MASK_6</name>
-              <description>Alert Mask for Fan6</description>
-              <lsb>5</lsb>
-              <msb>5</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>ALRT_MASK_7</name>
-              <description>Alert Mask for Fan7</description>
-              <lsb>6</lsb>
-              <msb>6</msb>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>ALRT_MASK_8</name>
-              <description>Alert Mask for Fan8</description>
-              <lsb>7</lsb>
-              <msb>7</msb>
-              <access>read-write</access>
-            </field>
-          </fields>
-        </register>
-        <register>
           <name>FanController_GLBL_CTRL</name>
           <description>Global Control Register</description>
-          <addressOffset>0x4000647D</addressOffset>
+          <addressOffset>0x40006470</addressOffset>
           <size>8</size>
           <access>read-write</access>
           <resetValue>0</resetValue>
@@ -622,6 +555,73 @@
               <lsb>7</lsb>
               <msb>7</msb>
               <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>FanController_Alert_ALERT_MASK_LSB</name>
+          <description>Alert Mask LSB Register</description>
+          <addressOffset>0x40006474</addressOffset>
+          <size>8</size>
+          <access>read-write</access>
+          <resetValue>0</resetValue>
+          <resetMask>0</resetMask>
+          <fields>
+            <field>
+              <name>ALRT_MASK_1</name>
+              <description>Alert Mask for Fan1</description>
+              <lsb>0</lsb>
+              <msb>0</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>ALRT_MASK_2</name>
+              <description>Alert Mask for Fan2</description>
+              <lsb>1</lsb>
+              <msb>1</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>ALRT_MASK_3</name>
+              <description>Alert Mask for Fan3</description>
+              <lsb>2</lsb>
+              <msb>2</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>ALRT_MASK_4</name>
+              <description>Alert Mask for Fan4</description>
+              <lsb>3</lsb>
+              <msb>3</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>ALRT_MASK_5</name>
+              <description>Alert Mask for Fan5</description>
+              <lsb>4</lsb>
+              <msb>4</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>ALRT_MASK_6</name>
+              <description>Alert Mask for Fan6</description>
+              <lsb>5</lsb>
+              <msb>5</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>ALRT_MASK_7</name>
+              <description>Alert Mask for Fan7</description>
+              <lsb>6</lsb>
+              <msb>6</msb>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>ALRT_MASK_8</name>
+              <description>Alert Mask for Fan8</description>
+              <lsb>7</lsb>
+              <msb>7</msb>
+              <access>read-write</access>
             </field>
           </fields>
         </register>

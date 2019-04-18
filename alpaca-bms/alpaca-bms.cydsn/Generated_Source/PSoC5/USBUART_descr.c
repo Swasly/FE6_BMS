@@ -59,7 +59,7 @@ const uint8 CYCODE USBUART_DEVICE0_CONFIGURATION0_DESCR[67u] = {
 /*  bNumInterfaces                         */ 0x02u,
 /*  bConfigurationValue                    */ 0x01u,
 /*  iConfiguration                         */ 0x01u,
-/*  bmAttributes                           */ 0xC0u,
+/*  bmAttributes                           */ 0x80u,
 /*  bMaxPower                              */ 0x32u,
 /*********************************************************************
 * CDC Interface Descriptor
