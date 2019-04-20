@@ -13,7 +13,7 @@
 
 //#define WDT_ENABLE
 
-#define DEBUG_MODE //TODO: comment this out when running  on actual car
+//#define DEBUG_MODE //TODO: comment this out when running  on actual car
 
 typedef enum 
 {
@@ -367,7 +367,7 @@ int main(void)
                 get_cell_temps_fe6();
                 
                 
-           
+#ifdef DEBUG_MODE         
                 //float32 med_temp = get_median_temp(temperatures)
                 float32 temperatures[6][24];
                 
@@ -381,18 +381,49 @@ int main(void)
                         temperatures[i][j] = bat_pack.subpacks[i]->board_temps[j - 15]->temp_c;
                     }
                 }
+#endif
+                //uint16 desiredRPM = (bat_pack.HI_temp_c * 540) - (9300);
                 
-                if (bat_pack.HI_temp_c > 60) {
-                    FanController_SetDesiredSpeed(1, 4200);
-                    FanController_SetDesiredSpeed(2, 4200);
-                    FanController_SetDesiredSpeed(3, 4200);
-                    FanController_SetDesiredSpeed(4, 4200);     
-                }
-                else {
+                if (bat_pack.HI_temp_c < 30) {
+                    FanController_SetSaturation(1, 65535/4, 0);
+                    FanController_SetSaturation(2, 65535/4, 0);
+                    FanController_SetSaturation(3, 65535/4, 0);
+                    FanController_SetSaturation(4, 65535/4, 0);
                     FanController_SetDesiredSpeed(1, 0);
                     FanController_SetDesiredSpeed(2, 0);
                     FanController_SetDesiredSpeed(3, 0);
-                    FanController_SetDesiredSpeed(4, 0);
+                    FanController_SetDesiredSpeed(4, 0);     
+                }
+
+                else if(bat_pack.HI_temp_c < 35) {
+                    FanController_SetSaturation(1, 65535/2, 0);
+                    FanController_SetSaturation(2, 65535/2, 0);
+                    FanController_SetSaturation(3, 65535/2, 0);
+                    FanController_SetSaturation(4, 65535/2, 0);
+                    FanController_SetDesiredSpeed(1, 8200);
+                    FanController_SetDesiredSpeed(2, 8200);
+                    FanController_SetDesiredSpeed(3, 8200);
+                    FanController_SetDesiredSpeed(4, 8200);     
+                }
+                else if(bat_pack.HI_temp_c < 45){
+                    FanController_SetSaturation(1, 65535, 0);
+                    FanController_SetSaturation(2, 65535, 0);
+                    FanController_SetSaturation(3, 65535, 0);
+                    FanController_SetSaturation(4, 65535, 0);
+                    FanController_SetDesiredSpeed(1, 12200);
+                    FanController_SetDesiredSpeed(2, 12200);
+                    FanController_SetDesiredSpeed(3, 12200);
+                    FanController_SetDesiredSpeed(4, 12200);     
+                }
+                else {
+                    FanController_SetSaturation(1, 65535, 0);
+                    FanController_SetSaturation(2, 65535, 0);
+                    FanController_SetSaturation(3, 65535, 0);
+                    FanController_SetSaturation(4, 65535, 0);                   
+                    FanController_SetDesiredSpeed(1, 15200);
+                    FanController_SetDesiredSpeed(2, 15200);
+                    FanController_SetDesiredSpeed(3, 15200);
+                    FanController_SetDesiredSpeed(4, 15200);     
                 }
                 CyDelay(10);
                 
@@ -415,7 +446,7 @@ int main(void)
                     }
                 }
 #endif
-                
+                /*
                 //Uncomment all of this to balance
                 if (bat_pack.HI_temp_board_c >= 60) {
                     BALANCE_FLAG = false;
@@ -433,7 +464,7 @@ int main(void)
                     // Let the boards cool down
                     CyDelay(1000);
                 }
-                
+                */
                        
                 bat_health_check();
                 if (bat_pack.health == FAULT){
