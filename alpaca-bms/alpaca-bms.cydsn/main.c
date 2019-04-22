@@ -382,48 +382,24 @@ int main(void)
                     }
                 }
 #endif
-                //uint16 desiredRPM = (bat_pack.HI_temp_c * 540) - (9300);
+                uint16 desiredRPM = (bat_pack.HI_temp_c * 650) - (17000);
+                uint16 saturation = 4 * desiredRPM;
                 
                 if (bat_pack.HI_temp_c < 30) {
-                    FanController_SetSaturation(1, 65535/4, 0);
-                    FanController_SetSaturation(2, 65535/4, 0);
-                    FanController_SetSaturation(3, 65535/4, 0);
-                    FanController_SetSaturation(4, 65535/4, 0);
                     FanController_SetDesiredSpeed(1, 0);
                     FanController_SetDesiredSpeed(2, 0);
                     FanController_SetDesiredSpeed(3, 0);
                     FanController_SetDesiredSpeed(4, 0);     
                 }
-
-                else if(bat_pack.HI_temp_c < 35) {
-                    FanController_SetSaturation(1, 65535/2, 0);
-                    FanController_SetSaturation(2, 65535/2, 0);
-                    FanController_SetSaturation(3, 65535/2, 0);
-                    FanController_SetSaturation(4, 65535/2, 0);
-                    FanController_SetDesiredSpeed(1, 8200);
-                    FanController_SetDesiredSpeed(2, 8200);
-                    FanController_SetDesiredSpeed(3, 8200);
-                    FanController_SetDesiredSpeed(4, 8200);     
-                }
-                else if(bat_pack.HI_temp_c < 45){
-                    FanController_SetSaturation(1, 65535, 0);
-                    FanController_SetSaturation(2, 65535, 0);
-                    FanController_SetSaturation(3, 65535, 0);
-                    FanController_SetSaturation(4, 65535, 0);
-                    FanController_SetDesiredSpeed(1, 12200);
-                    FanController_SetDesiredSpeed(2, 12200);
-                    FanController_SetDesiredSpeed(3, 12200);
-                    FanController_SetDesiredSpeed(4, 12200);     
-                }
                 else {
-                    FanController_SetSaturation(1, 65535, 0);
-                    FanController_SetSaturation(2, 65535, 0);
-                    FanController_SetSaturation(3, 65535, 0);
-                    FanController_SetSaturation(4, 65535, 0);                   
-                    FanController_SetDesiredSpeed(1, 15200);
-                    FanController_SetDesiredSpeed(2, 15200);
-                    FanController_SetDesiredSpeed(3, 15200);
-                    FanController_SetDesiredSpeed(4, 15200);     
+                    FanController_SetSaturation(1, saturation, 0);
+                    FanController_SetSaturation(2, saturation, 0);
+                    FanController_SetSaturation(3, saturation, 0);
+                    FanController_SetSaturation(4, saturation, 0);
+                    FanController_SetDesiredSpeed(1, desiredRPM);
+                    FanController_SetDesiredSpeed(2, desiredRPM);
+                    FanController_SetDesiredSpeed(3, desiredRPM);
+                    FanController_SetDesiredSpeed(4, desiredRPM);                     
                 }
                 CyDelay(10);
                 
