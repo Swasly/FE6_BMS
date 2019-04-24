@@ -279,6 +279,7 @@ void process_failure(){
         
 }*/
 bool BALANCE_FLAG = true;
+BMS_MODE previous_state = BMS_BOOTUP;
 
 typedef enum {
     FAN_MAX,
@@ -333,6 +334,7 @@ int main(void)
 			    //some variables and states
 			    OK_SIG_Write(1);
                 bms_status = BMS_NORMAL;
+                previous_state = BMS_BOOTUP;
 		        //terminal_run();
                 #ifdef DEBUG_MODE
                     //debugMain();
@@ -343,6 +345,12 @@ int main(void)
                 // while loop with get volt get temp and bat_balance no delays
                 // DCP Enable in 68042.c!!!
 			    OK_SIG_Write(1);
+                
+                // send CAN message with SOC
+                if(previous_state == BMS_BOOTUP) {
+                   uint8_t soc = can_rx_soc();
+                   can_send_soc(soc);
+                }
 			    //check_cfg(rx_cfg);  //CANNOT be finished, because 
 				
                 /*Only here to check that the old voltage reading still works*/

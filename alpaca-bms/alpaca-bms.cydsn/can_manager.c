@@ -3,7 +3,10 @@
 
 #include "cell_interface.h"
 
+// declared as external vars in generated can files
 volatile uint8_t can_buffer[8];
+volatile uint8_t charge;
+
 extern BAT_PACK_t bat_pack;
 extern volatile uint8_t CAN_DEBUG;
 
@@ -101,6 +104,24 @@ void can_send_status(volatile uint8_t name,
     can_buffer[7] = LO8(value16);
 
     CAN_1_SendMsgstatus();
+}
+                    
+void can_send_soc(uint8_t charge) {
+    can_buffer[0] = charge;
+    can_buffer[1] = 0;
+    can_buffer[2] = 0;
+    can_buffer[3] = 0;
+    can_buffer[4] = 0;
+    can_buffer[5] = 0;
+    can_buffer[6] = 0;
+    can_buffer[7] = 0;
+    
+    CAN_1_SendMsgsoc();
+}
+
+uint8 can_rx_soc() {
+    CAN_1_ReceiveMsg0();
+    return charge;
 }
 
                     

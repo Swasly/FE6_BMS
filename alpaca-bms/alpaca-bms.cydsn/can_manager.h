@@ -27,7 +27,6 @@ typedef enum{
 
     
     
-    
 void can_send_temp(uint8_t high_temp0,
     uint8_t high_temp1,
     uint8_t high_temp2,
@@ -50,6 +49,10 @@ void can_send_status(uint8_t name,
                     uint8_t stack,
                     uint8_t cell,
                     uint16_t value16);
+
+void can_send_soc(uint8_t charge);
+
+uint8_t can_rx_soc();
 
 uint8_t can_test_send();
 void can_init();

@@ -426,6 +426,13 @@
                     if ((CAN_1_RX_MAILBOX_TYPE & shift) != 0u)
                     {
                         /* RX Full mailboxes handler */
+                        switch(mailboxNumber)
+                        {
+                            case 0u : CAN_1_ReceiveMsg0();
+                            break;
+                            default:
+                            break;
+                        }
                     }
                     else
                     {
