@@ -38,6 +38,8 @@ volatile uint8_t CAN_DEBUG=0;
 volatile uint8_t RACING_FLAG=0;    // this flag should be set in CAN handler
 BAT_SOC_t bat_soc;
 
+uint8_t rx_soc;
+
 
 uint8_t rx_cfg[IC_PER_BUS][8];
 
@@ -291,6 +293,7 @@ int main(void)
 {
     // Stablize the BMS OK signal when system is still setting up
     OK_SIG_Write(1);
+    SOC_Store_Enable();
     
     
 	// Initialize state machine
@@ -344,11 +347,12 @@ int main(void)
                 // DCP Enable in 68042.c!!!
 			    OK_SIG_Write(1);
                 
+                // read SOC from EEPROM on bootup
                 // send CAN message with SOC
-                if(previous_state == BMS_BOOTUP) {
-                   uint8_t soc = can_rx_soc();
-                   can_send_soc(soc);
-                }
+                //if(previous_state == BMS_BOOTUP) {
+                   //uint8_t soc = read_rom_soc();
+                   //can_send_soc();
+                //}
                 
 			    //check_cfg(rx_cfg);  //CANNOT be finished, because 
 				
@@ -456,6 +460,12 @@ int main(void)
 
                 set_current_interval(100);
 				system_interval = 500;
+                
+                rx_soc = can_rx_soc();
+                //if(rx_soc != 255) {
+                //    write_soc(rx_soc);
+                //}
+                
 				break;
 
 /*
