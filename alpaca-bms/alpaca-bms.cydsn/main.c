@@ -13,7 +13,7 @@
 
 //#define WDT_ENABLE
 
-//#define DEBUG_MODE //TODO: comment this out when running  on actual car
+#define DEBUG_MODE //TODO: comment this out when running  on actual car
 
 typedef enum 
 {
@@ -54,8 +54,6 @@ CY_ISR(current_update_Handler){
 	update_soc();
 	return;
 }
-
-
 
 /*
     Code:
@@ -351,6 +349,7 @@ int main(void)
                    uint8_t soc = can_rx_soc();
                    can_send_soc(soc);
                 }
+                
 			    //check_cfg(rx_cfg);  //CANNOT be finished, because 
 				
                 /*Only here to check that the old voltage reading still works*/

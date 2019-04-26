@@ -5,6 +5,7 @@
 
 // declared as external vars in generated can files
 volatile uint8_t can_buffer[8];
+volatile uint8_t can_rx_buffer[8];
 volatile uint8_t charge;
 
 extern BAT_PACK_t bat_pack;
@@ -119,8 +120,13 @@ void can_send_soc(uint8_t charge) {
     CAN_1_SendMsgsoc();
 }
 
+// return 256 if there is no need to save SOC
+// return SOC to save if dash thinks car is turning off
 uint8 can_rx_soc() {
-    CAN_1_ReceiveMsg0();
+    CAN_1_ReceiveMsgSOC();
+    if(can_rx_buffer[1] == 0) {
+        return 255;    
+    }
     return charge;
 }
 
