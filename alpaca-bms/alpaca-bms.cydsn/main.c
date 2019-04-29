@@ -461,7 +461,7 @@ int main(void)
 				}
 
                 set_current_interval(100);
-				system_interval = 500;
+				system_interval = 10;
                 
                 rx_soc = can_rx_soc();
                 //if(rx_soc != 255) {

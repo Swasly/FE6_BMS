@@ -211,7 +211,7 @@ uint8_t get_cell_volt(){
         LTC6804_adcv();
     //}
     
-    CyDelay(200);
+    CyDelay(10);
     
     Select6820_Write(0); // Select bus 0
     wakeup_sleep(0);
@@ -269,11 +269,11 @@ uint8_t open_wire_adow(uint8_t pup){
     
     Select6820_Write(0);
     wakeup_sleep(0);
-    CyDelay(100); // Waited more
+    CyDelay(10); // Waited more
     for (int i = 0; i < 3; i++) {
         LTC6804_adow(pup);
     }
-    CyDelay(100); // Give it time before switching
+    CyDelay(10); // Give it time before switching
     
     Select6820_Write(1);
     wakeup_sleep(1);
@@ -348,7 +348,7 @@ uint8_t get_cfga_on_init(uint8_t lt_addr, uint8_t cfga_data[5]){
     Select6820_Write(bus);
     
     wakeup_sleep(bus);
-    CyDelay(100);
+    CyDelay(10);
     
     pec_error = LTC6804_rdcfga(lt_addr, cfga);
     pec_error = LTC6804_rdcfga(lt_addr, cfga);
