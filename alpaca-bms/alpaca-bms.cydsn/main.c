@@ -395,8 +395,8 @@ int main(void)
 #endif
                 uint16 desiredRPM = (bat_pack.HI_temp_c * 650) - (17000);
                 uint16 saturation = 4 * desiredRPM;
-                if (desiredRPM > 15500)
-                    desiredRPM = 15500;
+                if (desiredRPM > 12500)
+                    desiredRPM = 12500;
                 
                 if (bat_pack.HI_temp_c < 30) {
                     FanController_SetDesiredSpeed(1, 0);
