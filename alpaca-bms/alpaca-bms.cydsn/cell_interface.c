@@ -210,7 +210,7 @@ uint8_t get_cell_volt(){
         LTC6804_adcv();
     //}
     
-    CyDelay(200);
+    CyDelay(10);
     
     Select6820_Write(0); // Select bus 0
     wakeup_sleep(0);
@@ -268,11 +268,11 @@ uint8_t open_wire_adow(uint8_t pup){
     
     Select6820_Write(0);
     wakeup_sleep(0);
-    CyDelay(100); // Waited more
+    CyDelay(10); // Waited more
     for (int i = 0; i < 3; i++) {
         LTC6804_adow(pup);
     }
-    CyDelay(100); // Give it time before switching
+    CyDelay(10); // Give it time before switching
     
     Select6820_Write(1);
     wakeup_sleep(1);
@@ -347,7 +347,7 @@ uint8_t get_cfga_on_init(uint8_t lt_addr, uint8_t cfga_data[5]){
     Select6820_Write(bus);
     
     wakeup_sleep(bus);
-    CyDelay(100);
+    CyDelay(10);
     
     pec_error = LTC6804_rdcfga(lt_addr, cfga);
     pec_error = LTC6804_rdcfga(lt_addr, cfga);
@@ -401,11 +401,14 @@ uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
     uint8_t subpack_num = lt_addr / LT_PER_PACK;
     // uint8_t offset = (lt_addr % LT_PER_PACK) * TEMPS_ON_BOARD;
     uint8_t offset;
-    
+
     for(uint8_t mux_sel = 0; mux_sel < 8; mux_sel++) {
         get_cell_temp_fe6(lt_addr, mux_sel, orig_cfga_data, &auxa);
         float32 temp = (float32)auxa/10000;
         temp = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
+        //uint16 temp = Thermistor1_GetTemperature(Thermistor1_GetResistance(3 - auxa, auxa));
+        
+        
         if (mux_sel <= 4) {
             offset = ((lt_addr % LT_PER_PACK) * 5) + mux_sel;
             //bat_pack.subpacks[subpack_num]->temps[offset]->temp_c = temp;
@@ -416,6 +419,7 @@ uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
             offset = ((lt_addr % LT_PER_PACK) * LT_PER_PACK) + (mux_sel - 5);
             set_subpack_boardtemp(subpack_num, offset, temp);
         }
+        
     }
     
     return 0;
@@ -445,7 +449,7 @@ uint8_t get_cell_temps_fe6()
         get_cfga_on_init(lt, orig_cfga_data);
         get_lt_temps(lt, orig_cfga_data);
     }
-    
+    bat_pack.subpacks[5]->temps[0]->temp_c = (double) 20;
     check_temp();
  
     return 0;

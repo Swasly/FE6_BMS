@@ -79,11 +79,11 @@ extern uint8 CAN_1_initVar;
 #define CAN_1_TX1_FUNC_ENABLE          (1u)
 #define CAN_1_TX2_FUNC_ENABLE          (1u)
 #define CAN_1_TX3_FUNC_ENABLE          (1u)
-#define CAN_1_TX4_FUNC_ENABLE          (0u)
+#define CAN_1_TX4_FUNC_ENABLE          (1u)
 #define CAN_1_TX5_FUNC_ENABLE          (0u)
 #define CAN_1_TX6_FUNC_ENABLE          (0u)
 #define CAN_1_TX7_FUNC_ENABLE          (0u)
-#define CAN_1_RX0_FUNC_ENABLE          (0u)
+#define CAN_1_RX0_FUNC_ENABLE          (1u)
 #define CAN_1_RX1_FUNC_ENABLE          (0u)
 #define CAN_1_RX2_FUNC_ENABLE          (0u)
 #define CAN_1_RX3_FUNC_ENABLE          (0u)
@@ -99,8 +99,8 @@ extern uint8 CAN_1_initVar;
 #define CAN_1_RX13_FUNC_ENABLE         (0u)
 #define CAN_1_RX14_FUNC_ENABLE         (0u)
 #define CAN_1_RX15_FUNC_ENABLE         (0u)
-#define CAN_1_RX_MAILBOX_TYPE          (0x0u)
-#define CAN_1_TX_MAILBOX_TYPE          (0xFu)
+#define CAN_1_RX_MAILBOX_TYPE          (0x1u)
+#define CAN_1_TX_MAILBOX_TYPE          (0x1Fu)
 
 
 /***************************************
@@ -294,7 +294,7 @@ void  CAN_1_ReceiveMsg(uint8 rxMailbox) ;
     uint8 CAN_1_SendMsgstatus(void) ;
 #endif /* CAN_1_TX3_FUNC_ENABLE */
 #if (CAN_1_TX4_FUNC_ENABLE)
-    uint8 CAN_1_SendMsg4(void) ;
+    uint8 CAN_1_SendMsgsoc(void) ;
 #endif /* CAN_1_TX4_FUNC_ENABLE */
 #if (CAN_1_TX5_FUNC_ENABLE)
     uint8 CAN_1_SendMsg5(void) ;
@@ -306,7 +306,7 @@ void  CAN_1_ReceiveMsg(uint8 rxMailbox) ;
     uint8 CAN_1_SendMsg7(void) ;
 #endif /* CAN_1_TX7_FUNC_ENABLE */
 #if (CAN_1_RX0_FUNC_ENABLE)
-    void CAN_1_ReceiveMsg0(void) ;
+    void CAN_1_ReceiveMsgSOC(void) ;
 #endif /* CAN_1_RX0_FUNC_ENABLE */
 #if (CAN_1_RX1_FUNC_ENABLE)
     void CAN_1_ReceiveMsg1(void) ;
@@ -415,13 +415,13 @@ void  CAN_1_ReceiveMsg(uint8 rxMailbox) ;
 #define CAN_1_TX_MAILBOX_volt          (1u)
 #define CAN_1_TX_MAILBOX_current       (2u)
 #define CAN_1_TX_MAILBOX_status        (3u)
-#define CAN_1_TX_MAILBOX_4             (4u)
+#define CAN_1_TX_MAILBOX_soc           (4u)
 #define CAN_1_TX_MAILBOX_5             (5u)
 #define CAN_1_TX_MAILBOX_6             (6u)
 #define CAN_1_TX_MAILBOX_7             (7u)
 
 /* RX Defines to link mailbox names with mailbox numbers */
-#define CAN_1_RX_MAILBOX_0             (0u)
+#define CAN_1_RX_MAILBOX_SOC           (0u)
 #define CAN_1_RX_MAILBOX_1             (1u)
 #define CAN_1_RX_MAILBOX_2             (2u)
 #define CAN_1_RX_MAILBOX_3             (3u)

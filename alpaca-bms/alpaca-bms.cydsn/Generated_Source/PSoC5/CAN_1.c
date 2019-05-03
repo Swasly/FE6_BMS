@@ -49,7 +49,7 @@ uint8 CAN_1_RxTxBuffersConfig(void)
     /* Initial values of CAN RX and TX registers */
     static const CAN_1_RX_CFG CYCODE CAN_1_RXConfigStruct[] =
     {
-        { 0u, 0x0u, 0x0u, 0x0u },
+        { 0u, 0x8u, 0x1FFFF9u, 0x71200000u },
         { 1u, 0x0u, 0x0u, 0x0u },
         { 2u, 0x0u, 0x0u, 0x0u },
         { 3u, 0x0u, 0x0u, 0x0u },
@@ -73,7 +73,7 @@ uint8 CAN_1_RxTxBuffersConfig(void)
         { 1u, 0x80000u, 0x71000000u },
         { 2u, 0x80000u, 0x51000000u },
         { 3u, 0x80000u, 0x31000000u },
-        { 4u, 0x880008u, 0x0u },
+        { 4u, 0x80000u, 0x6D200000u },
         { 5u, 0x880008u, 0x0u },
         { 6u, 0x880008u, 0x0u },
         { 7u, 0x880008u, 0x0u }

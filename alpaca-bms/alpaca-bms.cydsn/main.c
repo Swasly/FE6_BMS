@@ -39,6 +39,8 @@ volatile uint8_t CAN_DEBUG=0;
 volatile uint8_t RACING_FLAG=0;    // this flag should be set in CAN handler
 BAT_SOC_t bat_soc;
 
+uint8_t rx_soc;
+
 
 uint8_t rx_cfg[IC_PER_BUS][8];
 
@@ -133,6 +135,7 @@ void process_event(){
         // send board temps
         for(uint subpack = 0; subpack < NUM_SUBPACKS; subpack++) {
             for(uint ind = 0; ind < NUM_BOARD_TEMPS; ind++) {
+        for(uint subpack = 0; subpack < 6; subpack++) {
                 printUsbData('b', subpack, ind, (void *)&bat_pack.subpacks[subpack]->board_temps[ind]->temp_c);
             }
         }
@@ -144,7 +147,6 @@ void process_event(){
         }
         
         
-    #else
     // TEST_DAY_1
     can_send_temp(bat_pack.subpacks[0]->high_temp,
 				bat_pack.subpacks[1]->high_temp,
@@ -203,6 +205,7 @@ void process_failure(){
 }
 
 bool BALANCE_FLAG = true;
+BMS_MODE previous_state = BMS_BOOTUP;
 
 typedef enum {
     FAN_MAX,
@@ -216,6 +219,7 @@ int main(void)
 {
     // Stablize the BMS OK signal when system is still setting up
     OK_SIG_Write(1);
+    SOC_Store_Enable();
     
     
 	// Initialize state machine
@@ -245,8 +249,6 @@ int main(void)
                     // TODO Watchdog Timer
 			        CyWdtStart(CYWDT_1024_TICKS,CYWDT_LPMODE_NOCHANGE);
                 #endif
-                             
-				// Initialize
                 //SOC_Store_Start();
                 //SOC_Timer_Start();
 				bms_init(MD_FILTERED);
@@ -260,6 +262,7 @@ int main(void)
 			    //some variables and states
 			    OK_SIG_Write(1);
                 bms_status = BMS_NORMAL;
+                previous_state = BMS_BOOTUP;
 		        //terminal_run();
                 #ifdef DEBUG_MODE
                     //debugMain();
@@ -270,6 +273,14 @@ int main(void)
                 // while loop with get volt get temp and bat_balance no delays
                 // DCP Enable in 68042.c!!!
 			    OK_SIG_Write(1);
+                
+                // read SOC from EEPROM on bootup
+                // send CAN message with SOC
+                //if(previous_state == BMS_BOOTUP) {
+                   //uint8_t soc = read_rom_soc();
+                   //can_send_soc();
+                //}
+                
 			    //check_cfg(rx_cfg);  //CANNOT be finished, because 
 				
                 /*Only here to check that the old voltage reading still works*/
@@ -291,6 +302,8 @@ int main(void)
                 bms_init(MD_NORMAL);
                 get_cell_temps_fe6();
                 
+                
+#ifdef DEBUG_MODE         
                 //float32 med_temp = get_median_temp(temperatures)
                 float32 temperatures[NUM_SUBPACKS][NUM_TEMPS];
                 
@@ -306,17 +319,27 @@ int main(void)
                     }
                 }
             
-                if (bat_pack.HI_temp_c > 60) {
-                    FanController_SetDesiredSpeed(1, 4200);
-                    FanController_SetDesiredSpeed(2, 4200);
-                    FanController_SetDesiredSpeed(3, 4200);
-                    FanController_SetDesiredSpeed(4, 4200);     
-                }
-                else {
+#endif
+                uint16 desiredRPM = (bat_pack.HI_temp_c * 650) - (17000);
+                uint16 saturation = 4 * desiredRPM;
+                if (desiredRPM > 12500)
+                    desiredRPM = 12500;
+                
+                if (bat_pack.HI_temp_c < 30) {
                     FanController_SetDesiredSpeed(1, 0);
                     FanController_SetDesiredSpeed(2, 0);
                     FanController_SetDesiredSpeed(3, 0);
-                    FanController_SetDesiredSpeed(4, 0);
+                    FanController_SetDesiredSpeed(4, 0);     
+                }
+                else {
+                    FanController_SetSaturation(1, saturation, 0);
+                    FanController_SetSaturation(2, saturation, 0);
+                    FanController_SetSaturation(3, saturation, 0);
+                    FanController_SetSaturation(4, saturation, 0);
+                    FanController_SetDesiredSpeed(1, desiredRPM);
+                    FanController_SetDesiredSpeed(2, desiredRPM);
+                    FanController_SetDesiredSpeed(3, desiredRPM);
+                    FanController_SetDesiredSpeed(4, desiredRPM);                     
                 }
                 CyDelay(10);
                 
@@ -363,7 +386,13 @@ int main(void)
 				}
 
                 set_current_interval(100);
-				system_interval = 500;
+				system_interval = 10;
+                
+                rx_soc = can_rx_soc();
+                //if(rx_soc != 255) {
+                //    write_soc(rx_soc);
+                //}
+                
 				break;
 
 /*

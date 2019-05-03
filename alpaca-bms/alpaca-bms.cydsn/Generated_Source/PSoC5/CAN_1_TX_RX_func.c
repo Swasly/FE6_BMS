@@ -30,7 +30,11 @@
 #define CAN_CURRENT_LEN 8
 #define CAN_STATUS_LEN 8
 
+// vars used for tx and rx messages
+// also found in can_manager.c
 extern uint8_t can_buffer[];
+extern uint8_t can_rx_buffer[];
+extern  uint8_t charge;
 
 /* `#END` */
 
@@ -414,7 +418,7 @@ void CAN_1_TxCancel(uint8 bufferId)
 
 #if (CAN_1_TX4_FUNC_ENABLE)
     /*******************************************************************************
-    * FUNCTION NAME:   CAN_1_SendMsg4
+    * FUNCTION NAME:   CAN_1_SendMsgsoc
     ********************************************************************************
     *
     * Summary:
@@ -433,7 +437,7 @@ void CAN_1_TxCancel(uint8 bufferId)
     *    CAN_1_FAIL              The function failed
     *
     *******************************************************************************/
-    uint8 CAN_1_SendMsg4(void) 
+    uint8 CAN_1_SendMsgsoc(void) 
     {
         uint8 result = CYRET_SUCCESS;
 
@@ -447,13 +451,16 @@ void CAN_1_TxCancel(uint8 bufferId)
             }
             else
             {
-                /* `#START MESSAGE_4_TRASMITTED` */
+                /* `#START MESSAGE_soc_TRASMITTED` */
+						uint8_t i;
 
+						for(i=0; i<CAN_STATUS_LEN; i++)
+							CAN_1_TX_DATA_BYTE(4,i) = can_buffer[i];
                 /* `#END` */
 
-                #ifdef CAN_1_SEND_MSG_4_CALLBACK
-                    CAN_1_SendMsg_4_Callback();
-                #endif /* CAN_1_SEND_MSG_4_CALLBACK */
+                #ifdef CAN_1_SEND_MSG_soc_CALLBACK
+                    CAN_1_SendMsg_soc_Callback();
+                #endif /* CAN_1_SEND_MSG_soc_CALLBACK */
 
                 CY_SET_REG32(CAN_1_TX_CMD_PTR(4u),
                 CY_GET_REG32(CAN_1_TX_CMD_PTR(4u)) | CAN_1_SEND_MESSAGE);
@@ -649,6 +656,7 @@ void CAN_1_ReceiveMsg(uint8 rxMailbox)
         {
             /* `#START MESSAGE_BASIC_RECEIVED` */
 
+            
             /* `#END` */
 
             #ifdef CAN_1_RECEIVE_MSG_CALLBACK
@@ -666,7 +674,7 @@ void CAN_1_ReceiveMsg(uint8 rxMailbox)
 
 #if (CAN_1_RX0_FUNC_ENABLE)
     /*******************************************************************************
-    * FUNCTION NAME:   CAN_1_ReceiveMsg0
+    * FUNCTION NAME:   CAN_1_ReceiveMsgSOC
     ********************************************************************************
     *
     * Summary:
@@ -684,15 +692,19 @@ void CAN_1_ReceiveMsg(uint8 rxMailbox)
     *  Depends on the Customer code.
     *
     *******************************************************************************/
-    void CAN_1_ReceiveMsg0(void) 
+    void CAN_1_ReceiveMsgSOC(void) 
     {
-        /* `#START MESSAGE_0_RECEIVED` */
-
+        /* `#START MESSAGE_SOC_RECEIVED` */
+        charge = CAN_1_RX_DATA_BYTE1(0);
+        int i;
+        for(i = 0; i < 8; i++) {
+            can_rx_buffer[i] = CAN_1_RX_DATA_BYTE(0, 1);
+        }
         /* `#END` */
 
-        #ifdef CAN_1_RECEIVE_MSG_0_CALLBACK
-            CAN_1_ReceiveMsg_0_Callback();
-        #endif /* CAN_1_RECEIVE_MSG_0_CALLBACK */
+        #ifdef CAN_1_RECEIVE_MSG_SOC_CALLBACK
+            CAN_1_ReceiveMsg_SOC_Callback();
+        #endif /* CAN_1_RECEIVE_MSG_SOC_CALLBACK */
 
         CAN_1_RX[0u].rxcmd.byte[0u] |= CAN_1_RX_ACK_MSG;
     }

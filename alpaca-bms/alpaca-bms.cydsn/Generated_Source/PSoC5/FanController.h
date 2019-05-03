@@ -67,14 +67,14 @@
 
 /* PID Constants */
 #if(FanController_IS_AUTO_FIRMWARE_MODE)
-    #define FanController_PID_A1             (716)
-    #define FanController_PID_A2             (-614)
-    #define FanController_PID_A3             (0)
+    #define FanController_PID_A1             (3072)
+    #define FanController_PID_A2             (-5120)
+    #define FanController_PID_A3             (2252)
 
     #define FanController_PID_POST_GAIN      (20u)
 
     #define FanController_PID_OUTPUT_SAT_L   (0u)
-    #define FanController_PID_OUTPUT_SAT_H   (251658240u)
+    #define FanController_PID_OUTPUT_SAT_H   (50331648u)
 
     /* PID error low and high saturation. These are constants defined
     * by EROS to be (-4096) and (4096) respectively.
@@ -339,7 +339,7 @@ extern FanController_fanPropertiesStruct FanController_fanProperties[FanControll
 ***************************************/
 
 #define FanController_MAX_FAN_NUM                 (FanController_NUMBER_OF_FANS - 1u)
-#define FanController_DAMPING_FACTOR              (50u)
+#define FanController_DAMPING_FACTOR              (2u)
 #define FanController_INIT_ALERT_ENABLE           (0u)
 #define FanController_NOISE_REDUCTION_MODE        (0u)
 #define FanController_INIT_ALERT_MASK             ((uint16) (((uint32) 0x01u << 4u) - 1u))
