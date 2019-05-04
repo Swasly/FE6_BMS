@@ -1,6 +1,5 @@
 #include <project.h>
 #include <stdint.h>
-
 #include "cell_interface.h"
 #include "current_sense.h"
 #include "WDT.h"
@@ -26,26 +25,29 @@ typedef enum
 	BMS_FAULT
 }BMS_MODE;
 
+#define BOARD_TEMPS_PER_PACK 15u
+#define CELL_TEMPS_PER_PACK 9u
+#define TEMPS_PER_PACK 24u
+
 uint8_t cfga_on_init[6];
 uint8_t auxa[6];
 volatile uint8_t CAN_UPDATE_FLAG=0;
 extern volatile BAT_PACK_t bat_pack;
 extern BAT_SUBPACK_t bat_subpack[N_OF_SUBPACK];
+extern float32 sortedTemps[N_OF_TEMP]; 
+extern float32 high_temp_overall;
 extern volatile BAT_ERR_t* bat_err_array;
 extern volatile uint8_t bat_err_index;
 extern volatile uint8_t bat_err_index_loop;
 volatile uint8_t CAN_DEBUG=0;
 volatile uint8_t RACING_FLAG=0;    // this flag should be set in CAN handler
 BAT_SOC_t bat_soc;
-
 uint8_t rx_soc;
-
-
 uint8_t rx_cfg[IC_PER_BUS][8];
-
 void DEBUG_send_cell_voltage();
 void DEBUG_send_temp();
 void DEBUG_send_current();
+
 
 
 int loop_count = 0; // TODO remove when fan controller tests stops
@@ -55,6 +57,11 @@ CY_ISR(current_update_Handler){
     current_timer_STATUS;
 	update_soc();
 	return;
+}
+
+float32 getMedianTemp()
+{
+    return (sortedTemps[45] + sortedTemps[44]) / 2;
 }
 
 /*
@@ -393,6 +400,9 @@ int main(void)
                     }
                 }
 #endif
+
+                // grab median temperature
+
                 uint16 desiredRPM = (bat_pack.HI_temp_c * 650) - (17000);
                 uint16 saturation = 4 * desiredRPM;
                 if (desiredRPM > 12500)

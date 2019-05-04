@@ -6,9 +6,6 @@
 /************************************
 
 ***********************************************************/
-
-
-
 #include "cell_interface.h"
 #include "current_sense.h"
 #include "LTC68042.h"
@@ -26,6 +23,10 @@ BAT_TEMP_t board_temp[N_OF_TEMP_BOARD];
 BAT_SUBPACK_t bat_subpack[N_OF_SUBPACK];
 volatile BAT_ERR_t bat_err;
 BAT_PACK_t bat_pack;
+
+extern float32 sortedTemps[N_OF_TEMP]; 
+extern uint8 high_temp_subpack;
+extern uint8 high_temp_subpack_ind;
 
 extern volatile uint8_t CAN_DEBUG;
 volatile uint8_t bad_therm=0;
@@ -405,8 +406,11 @@ uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
 
     for(uint8_t mux_sel = 0; mux_sel < 8; mux_sel++) {
         get_cell_temp_fe6(lt_addr, mux_sel, orig_cfga_data, &auxa);
-        float32 temp = (float32)auxa/10000;
-        temp = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
+        //float32 temp = (float32)auxa/10000;
+        //temp = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
+        uint16 temp;
+        temp = Thermistor1_GetResistance(3, auxa);
+        temp = Thermistor1_GetTemperature(temp);
         //uint16 temp = Thermistor1_GetTemperature(Thermistor1_GetResistance(3 - auxa, auxa));
         
         
@@ -767,6 +771,28 @@ void update_temp(volatile uint8_t rawTemp[(N_OF_TEMP + N_OF_TEMP_BOARD) * 2]) {
     
 }
 
+// Index -> sent so that we know how many values to compare with max.
+// newtemp 
+//might create linked list later
+void addToSorted(float32 newtemp, int index) {
+    uint8 i = 1;
+    float32 temp_temp;
+    if(index == 0) {
+        sortedTemps[0] = newtemp;
+    }
+    else {
+        while(i <= index) {
+            uint8 j = 1;
+            while(j > 0 && sortedTemps[j - 1] > sortedTemps[j]) {
+                temp_temp = sortedTemps[j];
+                sortedTemps[j] = sortedTemps[j - 1];
+                sortedTemps[j - 1] = temp_temp;
+                j--;
+            }
+            i++;
+        }
+    }
+}
 
 void check_temp(){
         
@@ -839,6 +865,7 @@ void check_temp(){
     // update temperature highest to each node
     subpack = 0;
     uint8_t temp_temp=0;
+    
     uint8_t i=0;
     for (subpack = 0; subpack < N_OF_SUBPACK; subpack++){
         temp_temp = bat_pack.subpacks[subpack]->temps[0]->temp_c;
@@ -854,12 +881,17 @@ void check_temp(){
     // Update the battery_pack highest temperature
     bat_pack.HI_temp_c = bat_temp[0].temp_c;
     bat_pack.HI_temp_raw = bat_temp[0].temp_raw;
+    addToSorted(bat_temp[0].temp_c, 0);
     for (i = 1; i < N_OF_TEMP; i++){
         if (bat_temp[i].temp_c > bat_pack.HI_temp_c){
             bat_pack.HI_temp_c = bat_temp[i].temp_c;
             bat_pack.HI_temp_raw = bat_temp[i].temp_raw;
             bat_pack.HI_temp_node = i / (N_OF_TEMP / N_OF_SUBPACK);
-        }    
+            bat_pack.HI_temp_node_index = i % (N_OF_TEMP / N_OF_SUBPACK);
+        }   
+        
+        //insert val into sorted temps
+        addToSorted(bat_temp[i].temp_c, i);
     }
     
     // Update the battery_pack highest temperature
@@ -870,6 +902,7 @@ void check_temp(){
         if (board_temp[i].temp_c > bat_pack.HI_temp_board_c){
             bat_pack.HI_temp_board_c = board_temp[i].temp_c;
             bat_pack.HI_temp_board_node = i / (N_OF_TEMP_BOARD / N_OF_SUBPACK);
+            subpack_max_ind[subpack] = i;
         }    
     }
     
@@ -878,6 +911,7 @@ void check_temp(){
         if (bat_pack.subpacks[subpack]->over_temp != 0){
             bat_pack.status |= PACK_TEMP_OVER;
             bat_err_add(PACK_TEMP_OVER, bat_subpack[subpack].over_temp, subpack);
+            
         }
 
         if (bat_pack.subpacks[subpack]->under_temp != 0){

@@ -151,6 +151,7 @@ typedef struct
   volatile uint8_t HI_temp_board_c;
   volatile uint8_t HI_temp_board_node;
   volatile uint8_t HI_temp_node;
+  volatile uint8_t HI_temp_node_index;
   volatile uint8_t HI_temp_raw;
   volatile uint16_t HI_voltage;
   volatile uint16_t LO_voltage;
