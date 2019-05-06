@@ -386,7 +386,6 @@ int main(void)
                 
                 
 #ifdef DEBUG_MODE         
-                //float32 med_temp = get_median_temp(temperatures)
                 float32 temperatures[6][24];
                 
                 // grab all of the temperatures into single array for cleaner processing later
@@ -402,8 +401,9 @@ int main(void)
 #endif
 
                 // grab median temperature
-
-                uint16 desiredRPM = (bat_pack.HI_temp_c * 650) - (17000);
+                uint8_t medianTemp = (uint8_t)getMedianTemp();
+                //uint16 desiredRPM = (bat_pack.HI_temp_c * 650) - (17000);
+                uint16 desiredRPM = (medianTemp * 650) - (17000);
                 uint16 saturation = 4 * desiredRPM;
                 if (desiredRPM > 12500)
                     desiredRPM = 12500;

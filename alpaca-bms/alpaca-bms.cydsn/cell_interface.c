@@ -24,9 +24,7 @@ BAT_SUBPACK_t bat_subpack[N_OF_SUBPACK];
 volatile BAT_ERR_t bat_err;
 BAT_PACK_t bat_pack;
 
-extern float32 sortedTemps[N_OF_TEMP]; 
-extern uint8 high_temp_subpack;
-extern uint8 high_temp_subpack_ind;
+float32 sortedTemps[N_OF_TEMP]; 
 
 extern volatile uint8_t CAN_DEBUG;
 volatile uint8_t bad_therm=0;
@@ -902,7 +900,6 @@ void check_temp(){
         if (board_temp[i].temp_c > bat_pack.HI_temp_board_c){
             bat_pack.HI_temp_board_c = board_temp[i].temp_c;
             bat_pack.HI_temp_board_node = i / (N_OF_TEMP_BOARD / N_OF_SUBPACK);
-            subpack_max_ind[subpack] = i;
         }    
     }
     
