@@ -404,11 +404,11 @@ uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
 
     for(uint8_t mux_sel = 0; mux_sel < 8; mux_sel++) {
         get_cell_temp_fe6(lt_addr, mux_sel, orig_cfga_data, &auxa);
-        //float32 temp = (float32)auxa/10000;
-        //temp = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
-        uint16 temp;
-        temp = Thermistor1_GetResistance(3, auxa);
-        temp = Thermistor1_GetTemperature(temp);
+        float32 temp = (float32)auxa/10000;
+        temp = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
+        //uint16 temp;
+        //temp = Thermistor1_GetResistance(3, auxa);
+        //temp = Thermistor1_GetTemperature(temp);
         //uint16 temp = Thermistor1_GetTemperature(Thermistor1_GetResistance(3 - auxa, auxa));
         
         
@@ -773,22 +773,17 @@ void update_temp(volatile uint8_t rawTemp[(N_OF_TEMP + N_OF_TEMP_BOARD) * 2]) {
 // newtemp 
 //might create linked list later
 void addToSorted(float32 newtemp, int index) {
-    uint8 i = 1;
     float32 temp_temp;
     if(index == 0) {
         sortedTemps[0] = newtemp;
     }
     else {
-        while(i <= index) {
-            uint8 j = 1;
-            while(j > 0 && sortedTemps[j - 1] > sortedTemps[j]) {
-                temp_temp = sortedTemps[j];
-                sortedTemps[j] = sortedTemps[j - 1];
-                sortedTemps[j - 1] = temp_temp;
-                j--;
-            }
-            i++;
+        int8 j = index-1;
+        while(j >= 0 && sortedTemps[j] > newtemp) {
+            sortedTemps[j+1] = sortedTemps[j];
+            j--;
         }
+        sortedTemps[j+1] = newtemp;
     }
 }
 

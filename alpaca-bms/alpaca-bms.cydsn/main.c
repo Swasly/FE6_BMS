@@ -34,7 +34,7 @@ uint8_t auxa[6];
 volatile uint8_t CAN_UPDATE_FLAG=0;
 extern volatile BAT_PACK_t bat_pack;
 extern BAT_SUBPACK_t bat_subpack[N_OF_SUBPACK];
-extern float32 sortedTemps[N_OF_TEMP]; 
+extern volatile float32 sortedTemps[N_OF_TEMP]; 
 extern float32 high_temp_overall;
 extern volatile BAT_ERR_t* bat_err_array;
 extern volatile uint8_t bat_err_index;
