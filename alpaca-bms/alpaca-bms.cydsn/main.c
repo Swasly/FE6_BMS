@@ -109,6 +109,11 @@ void printUsbData(char code, uint subpack, uint index, void *data)
     USBUART_PutChar('\n');
 }
 
+uint8 lastHighTemp = 0;
+uint8 lastHighSubpack = 0;
+uint8 lastHighIndex = 0;
+int repeatHighsCount = 0; //count the number of times the same high is reached
+int repeatHighNode = 0; //count the number of times in a row the same node is high
 
 void process_event(){
     CyGlobalIntDisable
@@ -152,9 +157,26 @@ void process_event(){
         }
     #endif
     
-        
+    
+    uint8 currHighTemp = bat_pack.HI_temp_c;
+    uint8 currHighNode = bat_pack.HI_temp_node;
+    uint8 currHighIndex = bat_pack.HI_temp_node_index;
+    
     // TEST_DAY_1
-    can_send_temp(bat_pack.subpacks[0]->high_temp,
+    //send temp only if within reasonable range from last temperature
+    if(lastHighTemp == 0 || currHighTemp <= (lastHighTemp + 2) || currHighTemp >= (lastHighTemp - 2))
+    {
+        if(lastHighTemp == currHighTemp) {
+            repeatHighsCount++;
+            if(lastHighIndex == currHighIndex && lastHighSubpack == currHighNode) {
+                repeatHighNode++; // if this value is repeated to many times go into fault case?
+            }
+        }
+        else {
+            repeatHighsCount = 0;
+            repeatHighNode = 0;
+        }
+        can_send_temp(bat_pack.subpacks[0]->high_temp,
 				bat_pack.subpacks[1]->high_temp,
                 bat_pack.subpacks[2]->high_temp,
                 bat_pack.subpacks[3]->high_temp,
@@ -162,6 +184,12 @@ void process_event(){
                 bat_pack.subpacks[5]->high_temp,
 				bat_pack.HI_temp_node,
 				bat_pack.HI_temp_c);
+        
+    }
+    
+    lastHighTemp = currHighTemp;
+    lastHighSubpack = currHighNode;
+    lastHighIndex = currHighIndex;
     
     can_send_volt(bat_pack.LO_voltage, bat_pack.HI_voltage, bat_pack.voltage);
     // send current
@@ -539,12 +567,6 @@ int main(void)
 */
 			case BMS_FAULT:
 				OK_SIG_Write(0u);
-				// send
-                process_event(); // CAN broadcasting
-                /*
-                * Sirius: looks like the CAN broadcasting is redundant above. 
-                * But I am just being extra cautious for the FE4 competition
-                */
 				bms_status = BMS_FAULT;
 				system_interval = 500;
 				process_failure();
