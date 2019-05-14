@@ -322,6 +322,8 @@ int8_t LTC6804_rdaux_fe6(uint8_t lt_addr, enum AuxPins pin, uint16_t *aux)
     uint16_t cmd_pec;
     uint8_t rx_data[8];
     int8_t pec_error;
+    uint16_t received_pec;
+    uint16_t data_pec;
     
     cmd[0] = 128;
     cmd[0] = addressify_cmd(lt_addr, cmd[0]);
@@ -339,12 +341,15 @@ int8_t LTC6804_rdaux_fe6(uint8_t lt_addr, enum AuxPins pin, uint16_t *aux)
     cmd_pec = pec15_calc(2, cmd);
     cmd[2] = (cmd_pec >> 8);
     cmd[3] = cmd_pec;
-    spi_write_read(cmd, 4, rx_data, 8);
     
+    do {
+        spi_write_read(cmd, 4, rx_data, 8);
+        received_pec = (*(rx_data + 6) << 8) + *(rx_data + 7);
+        data_pec = pec15_calc(6, rx_data);
+    }while (data_pec != received_pec);
     *aux = rx_data[set] | (rx_data[set + 1] << 8);
     
-    
-    return pec_error;                   // Implement error path
+    return 0;                   // Implement error path
 }
 
 int LTC6804_rdauxa(uint8_t lt_addr, uint8_t aux_data[6])
