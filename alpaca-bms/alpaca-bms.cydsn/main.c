@@ -164,32 +164,15 @@ void process_event(){
     
     // TEST_DAY_1
     //send temp only if within reasonable range from last temperature
-    if(lastHighTemp == 0 || currHighTemp <= (lastHighTemp + 2) || currHighTemp >= (lastHighTemp - 2))
-    {
-        if(lastHighTemp == currHighTemp) {
-            repeatHighsCount++;
-            if(lastHighIndex == currHighIndex && lastHighSubpack == currHighNode) {
-                repeatHighNode++; // if this value is repeated to many times go into fault case?
-            }
-        }
-        else {
-            repeatHighsCount = 0;
-            repeatHighNode = 0;
-        }
-        can_send_temp(bat_pack.subpacks[0]->high_temp,
-				bat_pack.subpacks[1]->high_temp,
-                bat_pack.subpacks[2]->high_temp,
-                bat_pack.subpacks[3]->high_temp,
-                bat_pack.subpacks[4]->high_temp,
-                bat_pack.subpacks[5]->high_temp,
-				bat_pack.HI_temp_node,
-				bat_pack.HI_temp_c);
-        
-    }
-    
-    lastHighTemp = currHighTemp;
-    lastHighSubpack = currHighNode;
-    lastHighIndex = currHighIndex;
+
+    can_send_temp(bat_pack.subpacks[0]->high_temp,
+			bat_pack.subpacks[1]->high_temp,
+            bat_pack.subpacks[2]->high_temp,
+            bat_pack.subpacks[3]->high_temp,
+            bat_pack.subpacks[4]->high_temp,
+            bat_pack.subpacks[5]->high_temp,
+			bat_pack.HI_temp_node,
+			bat_pack.HI_temp_c);
     
     can_send_volt(bat_pack.LO_voltage, bat_pack.HI_voltage, bat_pack.voltage);
     // send current

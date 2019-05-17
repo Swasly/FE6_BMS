@@ -404,8 +404,11 @@ uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
 
     for(uint8_t mux_sel = 0; mux_sel < 8; mux_sel++) {
         get_cell_temp_fe6(lt_addr, mux_sel, orig_cfga_data, &auxa);
-        float32 temp = (float32)auxa/10000;
-        temp = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
+        float32 temp;
+        if ((int) temp != 0xFFFF) {
+            temp = (float32)auxa/10000;
+            temp = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
+        }
         //uint16 temp;
         //temp = Thermistor1_GetResistance(3, auxa);
         //temp = Thermistor1_GetTemperature(temp);
@@ -441,6 +444,8 @@ uint8_t get_cell_temps_fe6()
         get_cfga_on_init(lt, orig_cfga_data);
         get_lt_temps(lt, orig_cfga_data);
     }
+    
+    // Bad thermistor in pack
     bat_pack.subpacks[5]->temps[0]->temp_c = (double) 20;
     check_temp();
     
@@ -480,6 +485,7 @@ uint8_t get_cell_temp_fe6(uint8_t lt_addr, uint8_t mux_sel, uint8_t orig_cfga_da
     LTC6804_adax();
     
     // 5
+    
     LTC6804_rdaux_fe6(lt_addr, GPIO1, auxa);
     LTC6804_rdaux_fe6(lt_addr, GPIO1, auxa);
     
@@ -813,6 +819,28 @@ void check_temp(){
             }           
         }
     }
+    
+    int average;
+    int sum;
+    // take care of spurious errors from inconsistent thermistor connections
+    for (subpack = 0; subpack < N_OF_SUBPACK; subpack++) {
+        sum = 0;
+        // find the average temperature of a subpack
+        for (temp = (subpack * (N_OF_TEMP/N_OF_SUBPACK)); temp < ((subpack + 1) *(N_OF_TEMP/N_OF_SUBPACK)); temp++) {
+            sum += bat_temp[temp].temp_c;
+        }
+        
+        average = sum/(N_OF_TEMP/N_OF_SUBPACK);
+        
+        // if a subpack temperature deviates too much from average, reset it
+        for (temp = (subpack * (N_OF_TEMP/N_OF_SUBPACK)); temp < ((subpack + 1) * (N_OF_TEMP/N_OF_SUBPACK)); temp++) {
+            if ((bat_temp[temp].temp_c - average) >= 2) {
+                bat_temp[temp].temp_c = average;
+            }
+        }
+    }
+    temp = 0;
+    subpack = 0;
     
     // check board temps
     for (cell = 0; cell < N_OF_TEMP_BOARD; cell++){
