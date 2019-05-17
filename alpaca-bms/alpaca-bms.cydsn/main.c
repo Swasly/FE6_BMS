@@ -327,6 +327,8 @@ int main(void)
     FanController_SetDesiredSpeed(3, 0);
     FanController_SetDesiredSpeed(4, 0);
     
+    terminal_init();
+    
 	while(1){
 		switch (bms_status){
 			case BMS_BOOTUP:
