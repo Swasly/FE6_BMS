@@ -328,6 +328,7 @@ int main(void)
     FanController_SetDesiredSpeed(4, 0);
     
     terminal_init();
+    terminal_run();
     
 	while(1){
 		switch (bms_status){
