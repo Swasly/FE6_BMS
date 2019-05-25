@@ -442,6 +442,7 @@
       <Data key="3ddb304e-c5bf-4d0b-aeae-96b9a9aa8b8d" value="vminus" />
       <Data key="5faae614-48a9-4fd2-82f6-a53e29fc7a8e" value="MISO" />
       <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="fan1_tach" />
+      <Data key="8f62218b-e7a0-4147-a614-f55db0eca505" value="Tx_2" />
       <Data key="9a3fb3cd-6349-4420-a3fd-6924b62d0917" value="MISO_1" />
       <Data key="25ca14e5-8c87-46fe-8d03-635db5b547f5" value="current_supply" />
       <Data key="42e1204f-2d04-4f03-b53f-fe7d0a6cd53c" value="CS" />
@@ -464,6 +465,7 @@
       <Data key="dd11253e-2b7e-452f-8a74-1e1a06a44fc5" value="fan2_tach" />
       <Data key="deef5788-edd9-4dee-8850-36739dd10177" value="fan3_pwm" />
       <Data key="e0e42864-d47d-4080-8222-6968601359d8" value="SS" />
+      <Data key="e0efa9ac-b4da-485c-84df-124cd79fad4b" value="Rx_2" />
       <Data key="e7b08b36-5e8d-421c-8d6e-050531991eab" value="SCLK_1" />
       <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="MOSI" />
       <Data key="e06615dd-5960-4237-b283-420c9d61df68" value="DEBUG_TX" />
@@ -3572,6 +3574,11 @@
     <Group key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba">
       <Group key="0">
         <Data key="Port Format" value="12,5" />
+      </Group>
+    </Group>
+    <Group key="8f62218b-e7a0-4147-a614-f55db0eca505">
+      <Group key="0">
+        <Data key="Port Format" value="15,6" />
       </Group>
     </Group>
     <Group key="051c0844-126d-403c-8c6a-07de39941e75">
