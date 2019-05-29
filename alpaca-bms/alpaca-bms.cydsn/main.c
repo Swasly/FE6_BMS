@@ -11,6 +11,7 @@
 //#define WDT_ENABLE
 
 #define DEBUG_MODE //TODO: comment this out when running  on actual car
+#define USBUART
 
 typedef enum 
 {
