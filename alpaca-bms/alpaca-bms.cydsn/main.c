@@ -75,12 +75,15 @@ float32 getMedianTemp()
 */
 void printUsbData(char code, uint subpack, uint index, void *data)
 {
+    char buffer[50];
+    /*
     USBUART_PutChar(code);
     USBUART_PutChar('.');
     USBUART_PutChar(subpack);
     USBUART_PutChar('.');
     USBUART_PutChar(index);
     USBUART_PutChar('.');
+    */
     uint16 cell;
     uint32 temp;
     
@@ -88,25 +91,16 @@ void printUsbData(char code, uint subpack, uint index, void *data)
     {
         case 'c': 
             cell = *((uint16_t*)data);
-            char lsb = cell & 0x0f;
-            char msb = (cell & 0xf0) >> 8;
-            USBUART_PutChar(msb);
-            USBUART_PutChar(lsb);            
+            sprintf(buffer, "%u-%u-%u-%u\n", code, subpack, index, cell);
             break;
         case 'b':
         case 't': //NOTE: ignore the naming here
             temp = *((uint32 *)data);
-            char ms = (temp & 0xf000) >> 24;
-            char ns = (temp & 0x0f00) >> 16;
-            char os = (temp & 0x00f0) >> 8;
-            char ls = temp & 0x000f;
-            USBUART_PutChar(ms);
-            USBUART_PutChar(os);
-            USBUART_PutChar(ns);
-            USBUART_PutChar(ls);
+            sprintf(buffer, "%u-%u-%u-%lu\n", code, subpack, index, temp);
             break;
     }
-    USBUART_PutChar('\n');
+    while (0u == USBUART_CDCIsReady()){}
+    USBUART_PutString(buffer);
 }
 
 uint8 lastHighTemp = 0;
@@ -326,8 +320,21 @@ int main(void)
     FanController_SetDesiredSpeed(2, 0);
     FanController_SetDesiredSpeed(3, 0);
     FanController_SetDesiredSpeed(4, 0);
+
+    # ifdef DEBUG
+    USBUART_Start(0u, USBUART_5V_OPERATION);
+    if (0u != USBUART_IsConfigurationChanged())
+    {
+       /* Initialize IN endpoints when device is configured. */
+       if (0u != USBUART_GetConfiguration())
+       {
+           /* Enumeration is done, enable OUT endpoint to receive data
+            * from host. */
+           USBUART_CDC_Init();
+       }
+    }
+    #endif
     
-    terminal_init();
     
 	while(1){
 		switch (bms_status){
