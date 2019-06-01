@@ -150,7 +150,7 @@ void terminal_run()
     {
         if (currentFunc != NULL) {
             if ((*currentFunc)()) {
-                terminal_printPrompt();
+                //terminal_printPrompt();
                 currentFunc = NULL;
             }
             return;
@@ -265,7 +265,7 @@ void terminal_parse(char serial_in[])
             USBUART_PutChar('\n');
             if ((*terminal_routineTable[i])()) {
                 currentFunc = NULL;
-                terminal_printPrompt();
+                //terminal_printPrompt();
             } else {
                 currentFunc = terminal_routineTable[i];
             }
@@ -281,7 +281,7 @@ void terminal_parse(char serial_in[])
         while(USBUART_CDCIsReady() == 0u);    /* Wait till component is ready to send more data to the PC */
         USBUART_PutString("$ is not a recognized command, please use 'help' to see commands.");       /* Send data to PC */
     }
-    terminal_printPrompt();
+//    terminal_printPrompt();
 }
 
 inline void terminal_printPrompt() {
