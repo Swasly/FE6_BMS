@@ -73,32 +73,10 @@ float32 getMedianTemp()
     //Data sent individually in following format.
     code.subpack_index.index.value
 */
-void printUsbData(char code, uint subpack, uint index, void *data)
+void printUsbData(char code, uint subpack, uint index, int data)
 {
     char buffer[50];
-    /*
-    USBUART_PutChar(code);
-    USBUART_PutChar('.');
-    USBUART_PutChar(subpack);
-    USBUART_PutChar('.');
-    USBUART_PutChar(index);
-    USBUART_PutChar('.');
-    */
-    uint16 cell;
-    uint32 temp;
-    
-    switch(code)
-    {
-        case 'c': 
-            cell = *((uint16_t*)data);
-            sprintf(buffer, "%u-%u-%u-%u\n", code, subpack, index, cell);
-            break;
-        case 'b':
-        case 't': //NOTE: ignore the naming here
-            temp = *((uint32 *)data);
-            sprintf(buffer, "%u-%u-%u-%lu\n", code, subpack, index, temp);
-            break;
-    }
+    sprintf(buffer, "%c-%u-%u-%u\n", code, subpack, index, data);
     while (0u == USBUART_CDCIsReady()){}
     USBUART_PutString(buffer);
 }
@@ -129,24 +107,35 @@ void process_event(){
         // Send board and thermistors temperatures over USB
 
         char buffer[12];
+        if (0u != USBUART_IsConfigurationChanged())
+        {
+           /* Initialize IN endpoints when device is configured. */
+           if (0u != USBUART_GetConfiguration())
+           {
+               /* Enumeration is done, enable OUT endpoint to receive data
+                * from host. */
+               USBUART_CDC_Init();
+           }
+        }
 
-        
         // send cell voltages 
         for(uint subpack = 0; subpack < 6; subpack++) {
             for(uint ind = 0; ind < 28; ind++) {
-                printUsbData('c', subpack, ind, (void *)&bat_pack.subpacks[subpack]->cells[ind]->voltage);
+                printUsbData('c', subpack, ind, bat_pack.subpacks[subpack]->cells[ind]->voltage);
             }
         }
+        
         // send board temps
         for(uint subpack = 0; subpack < 6; subpack++) {
             for(uint ind = 0; ind < 9; ind++) {
-                printUsbData('b', subpack, ind, (void *)&bat_pack.subpacks[subpack]->board_temps[ind]->temp_c);
+                printUsbData('b', subpack, ind, bat_pack.subpacks[subpack]->board_temps[ind]->temp_c);
             }
         }
+        
         // send cell temps
         for(uint subpack = 0; subpack < 6; subpack++) {
             for(uint ind = 0; ind < 15; ind++) {
-                printUsbData('t', subpack, ind, (void *)&bat_pack.subpacks[subpack]->temps[ind]->temp_c);
+                printUsbData('t', subpack, ind, bat_pack.subpacks[subpack]->temps[ind]->temp_c);
             }
         }
     #endif
@@ -323,16 +312,6 @@ int main(void)
 
     # ifdef DEBUG
     USBUART_Start(0u, USBUART_5V_OPERATION);
-    if (0u != USBUART_IsConfigurationChanged())
-    {
-       /* Initialize IN endpoints when device is configured. */
-       if (0u != USBUART_GetConfiguration())
-       {
-           /* Enumeration is done, enable OUT endpoint to receive data
-            * from host. */
-           USBUART_CDC_Init();
-       }
-    }
     #endif
     
     
