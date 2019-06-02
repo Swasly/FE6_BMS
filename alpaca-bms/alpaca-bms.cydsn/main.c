@@ -1,5 +1,6 @@
 #include <project.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "cell_interface.h"
 #include "current_sense.h"
 #include "WDT.h"
@@ -72,40 +73,12 @@ float32 getMedianTemp()
     //Data sent individually in following format.
     code.subpack_index.index.value
 */
-void printUsbData(char code, uint8 subpack, uint8 index, void *data)
+void printUsbData(char code, uint8_t subpack, uint8_t index, int data)
 {
-    UART_1_PutChar(code);
-    UART_1_PutChar('.');
-    UART_1_PutChar(subpack);
-    UART_1_PutChar('.');
-    UART_1_PutChar(index);
-    UART_1_PutChar('.');
-    uint16 cell;
-    uint32 temp;
-    
-    switch(code)
-    {
-        case 'c': 
-            cell = *((uint16_t*)data);
-            char lsb = cell & 0x0f;
-            char msb = (cell & 0xf0) >> 8;
-            UART_1_PutChar(msb);
-            UART_1_PutChar(lsb);            
-            break;
-        case 'b':
-        case 't': //NOTE: ignore the naming here
-            temp = *((uint32 *)data);
-            char ms = (temp & 0xf000) >> 24;
-            char ns = (temp & 0x0f00) >> 16;
-            char os = (temp & 0x00f0) >> 8;
-            char ls = temp & 0x000f;
-            UART_1_PutChar(ms);
-            UART_1_PutChar(os);
-            UART_1_PutChar(ns);
-            UART_1_PutChar(ls);
-            break;
-    }
-    UART_1_PutChar('\n');
+    char buffer[50];
+    sprintf(buffer, "%c-%u-%u-%u\n", code, subpack, index, data);
+    while (0u == USBUART_CDCIsReady()){}
+    USBUART_PutString(buffer);
 }
 
 uint8 lastHighTemp = 0;
@@ -134,24 +107,36 @@ void process_event(){
         // Send board and thermistors temperatures over USB
 
         char buffer[12];
+        if (0u != USBUART_IsConfigurationChanged())
+        {
+           /* Initialize IN endpoints when device is configured. */
+           if (0u != USBUART_GetConfiguration())
+           {
+               /* Enumeration is done, enable OUT endpoint to receive data
+                * from host. */
+               USBUART_CDC_Init();
+           }
+        }
 
-        
         // send cell voltages 
+
         for(uint8 subpack = 0; subpack < 6; subpack++) {
             for(uint8 ind = 0; ind < 28; ind++) {
-                printUsbData('c', subpack, ind, (void *)&bat_pack.subpacks[subpack]->cells[ind]->voltage);
+                printUsbData('c', subpack, ind, bat_pack.subpacks[subpack]->cells[ind]->voltage);
             }
         }
+        
         // send board temps
         for(uint8 subpack = 0; subpack < 6; subpack++) {
             for(uint8 ind = 0; ind < 9; ind++) {
-                printUsbData('b', subpack, ind, (void *)&bat_pack.subpacks[subpack]->board_temps[ind]->temp_c);
+                printUsbData('b', subpack, ind, bat_pack.subpacks[subpack]->board_temps[ind]->temp_c);
             }
         }
+        
         // send cell temps
         for(uint8 subpack = 0; subpack < 6; subpack++) {
             for(uint8 ind = 0; ind < 15; ind++) {
-                printUsbData('t', subpack, ind, (void *)&bat_pack.subpacks[subpack]->temps[ind]->temp_c);
+                printUsbData('t', subpack, ind, bat_pack.subpacks[subpack]->temps[ind]->temp_c);
             }
         }
     #endif
@@ -326,7 +311,9 @@ int main(void)
     FanController_SetDesiredSpeed(3, 0);
     FanController_SetDesiredSpeed(4, 0);
 
-    UART_1_Start();
+    # ifdef DEBUG
+    USBUART_Start(0u, USBUART_5V_OPERATION);
+    #endif
     
 	while(1){
 		switch (bms_status){

@@ -49,3 +49,6 @@
 *.xml
 *.xml
 alpaca-bms/alpaca-bms.cydsn/Export/PSoCCreatorExportIDE.xml
+
+# Generated Files
+*Generated_Source 

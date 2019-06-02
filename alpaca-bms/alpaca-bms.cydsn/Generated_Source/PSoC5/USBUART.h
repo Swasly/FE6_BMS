@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file  USBUART.h
-* \version 3.10
+* \version 3.20
 *
 * \brief
 *  This file provides function prototypes and constants for the USBFS component. 
@@ -51,7 +51,6 @@
 #define USBUART_ENABLE_MSC_CLASS               (0u)
 #define USBUART_BOS_ENABLE                     (0u)
 #define USBUART_ENABLE_DESCRIPTOR_STRINGS      
-#define USBUART_ENABLE_MSOS_STRING             
 #define USBUART_ENABLE_SN_STRING               
 #define USBUART_ENABLE_IDSN_STRING             
 #define USBUART_ENABLE_STRINGS                 
@@ -66,7 +65,7 @@
 #define USBUART_EP_MM                  (0u)
 #define USBUART_EP_MA                  (0u)
 #define USBUART_ENABLE_BATT_CHARG_DET  (0u)
-#define USBUART_GEN_16BITS_EP_ACCESS   (0u)
+#define USBUART_GEN_16BITS_EP_ACCESS   (1u)
 
 /* Enable Class APIs: MIDI, CDC, MSC. */         
 #define USBUART_ENABLE_CDC_CLASS_API   (0u != (1u))
