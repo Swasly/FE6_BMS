@@ -456,7 +456,7 @@ int main(void)
                     }
                 }
 #endif
-                /*
+                
                 //Uncomment all of this to balance
                 if (bat_pack.HI_temp_board_c >= 60) {
                     BALANCE_FLAG = false;
@@ -474,7 +474,7 @@ int main(void)
                     // Let the boards cool down
                     CyDelay(1000);
                 }
-                */
+                
                        
                 bat_health_check();
                 if (bat_pack.health == FAULT){
