@@ -12,7 +12,7 @@
 
 //#define WDT_ENABLE
 
-#define DEBUG_MODE //TODO: comment this out when running  on actual car
+//#define DEBUG_MODE //TODO: comment this out when running  on actual car
 
 typedef enum 
 {
@@ -409,6 +409,16 @@ int main(void)
                         temperatures[i][j] = bat_pack.subpacks[i]->board_temps[j - 15]->temp_c;
                     }
                 }
+                
+                /* Data structure for tracking cell voltages over time - only used for debugging purposes*/
+                uint16_t pack_voltages[6][28];
+                uint8_t pack;
+                uint8_t cell;
+                for (pack = 0; pack < 6; pack++){
+                    for (cell = 0; cell < 28; cell++) {
+                        pack_voltages[pack][cell] = bat_pack.subpacks[pack]->cells[cell]->voltage;
+                    }
+                }
 #endif
 
                 // grab median temperature
@@ -443,19 +453,8 @@ int main(void)
 				// because it is normal mode, just set a median length current reading interval
 			    
                 //SKY_TODO update_soc()
-              
-#ifdef DEBUG_MODE
-
-                /* Data structure for tracking cell voltages over time - only used for debugging purposes*/
-                uint16_t pack_voltages[6][28];
-                uint8_t pack;
-                uint8_t cell;
-                for (pack = 0; pack < 6; pack++){
-                    for (cell = 0; cell < 28; cell++) {
-                        pack_voltages[pack][cell] = bat_pack.subpacks[pack]->cells[cell]->voltage;
-                    }
-                }
-#endif
+ 
+                
                 /*
                 //Uncomment all of this to balance
                 if (bat_pack.HI_temp_board_c >= 60) {
