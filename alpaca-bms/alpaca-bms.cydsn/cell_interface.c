@@ -408,6 +408,8 @@ uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
         if ((int) temp != 0xFFFF) {
             temp = (float32)auxa/10000;
             temp = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
+        } else {
+            temp = bat_pack.HI_temp_c;
         }
         //uint16 temp;
         //temp = Thermistor1_GetResistance(3, auxa);
