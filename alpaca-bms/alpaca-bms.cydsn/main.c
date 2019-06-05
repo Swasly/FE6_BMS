@@ -157,11 +157,6 @@ void process_event(){
         }
     #endif
     
-    
-    uint8 currHighTemp = bat_pack.HI_temp_c;
-    uint8 currHighNode = bat_pack.HI_temp_node;
-    uint8 currHighIndex = bat_pack.HI_temp_node_index;
-    
     // TEST_DAY_1
     //send temp only if within reasonable range from last temperature
 
@@ -299,14 +294,6 @@ void process_failure(){
 bool BALANCE_FLAG = true;
 BMS_MODE previous_state = BMS_BOOTUP;
 
-typedef enum {
-    FAN_MAX,
-    FAN_ZERO,
-    FAN_MIN
-} FAN_MODE;
-
-
-
 int main(void)
 {
     // Stablize the BMS OK signal when system is still setting up
@@ -316,10 +303,8 @@ int main(void)
     
 	// Initialize state machine
 	BMS_MODE bms_status = BMS_BOOTUP;
-    FAN_MODE fan_mode = FAN_ZERO;
     
 	uint32_t system_interval = 0;
-    uint8_t led = 0;
     
     FanController_Start();
     FanController_SetDesiredSpeed(1, 0);
