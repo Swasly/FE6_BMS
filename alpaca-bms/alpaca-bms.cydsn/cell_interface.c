@@ -405,7 +405,7 @@ uint8_t get_lt_temps(uint8_t lt_addr, uint8_t orig_cfga_data[5])
     for(uint8_t mux_sel = 0; mux_sel < 8; mux_sel++) {
         get_cell_temp_fe6(lt_addr, mux_sel, orig_cfga_data, &auxa);
         float32 temp;
-        if ((int) temp != 0xFFFF) {
+        if (auxa != 0xFFFF) {
             temp = (float32)auxa/10000;
             temp = (1/((1/298.15) + ((1/3428.0)*log(temp/(3-temp))))) - 273.15;
         } else {
