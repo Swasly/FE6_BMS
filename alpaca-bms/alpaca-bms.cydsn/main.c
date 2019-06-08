@@ -53,6 +53,7 @@ void DEBUG_send_current();
 int loop_count = 0; // TODO remove when fan controller tests stops
 int increment_mode = 1;
 
+
 CY_ISR(current_update_Handler){
     current_timer_STATUS;
 	update_soc();
@@ -165,7 +166,8 @@ void process_event(){
             bat_pack.subpacks[2]->high_temp,
             bat_pack.subpacks[3]->high_temp,
             bat_pack.subpacks[4]->high_temp,
-            bat_pack.subpacks[5]->high_temp,
+            //bat_pack.subpacks[5]->high_temp,
+            bat_pack.HI_temp_node_index,
 			bat_pack.HI_temp_node,
 			bat_pack.HI_temp_c);
     
