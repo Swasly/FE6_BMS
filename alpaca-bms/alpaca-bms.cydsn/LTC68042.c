@@ -569,7 +569,7 @@ uint8_t LTC6804_rdcv(uint8_t reg,
       for (uint8_t current_ic = 0 ; current_ic < total_ic; current_ic++) // executes for every LTC6804 in the stack
       {																 	  // current_ic is used as an IC counter
         //a.ii
-		for(uint8_t current_cell = 0; current_cell<CELL_IN_REG; current_cell++)	 								  // This loop parses the read back data. Loops 
+		for(uint8_t current_cell = 0; current_cell<CELL_IN_REG; current_cell++)	// This loop parses the read back data. Loops 
         {														   		  // once for each cell voltages in the register 
           parsed_cell = cell_data[data_counter] + (cell_data[data_counter + 1] << 8);
           cell_codes[current_ic][current_cell  + ((cell_reg - 1) * CELL_IN_REG)] = parsed_cell;
@@ -747,6 +747,8 @@ void LTC6804_rdcv_reg(uint8_t reg,
 void LTC6804_rdcv_FE6(uint8_t reg, uint8_t * data, int ic_num){
     uint8_t cmd[4];
     uint16_t temp_pec;
+    uint16_t data_pec;
+    uint16_t received_pec;
 
     if (reg == 1) {
         cmd[1] = 0x04;
@@ -772,8 +774,28 @@ void LTC6804_rdcv_FE6(uint8_t reg, uint8_t * data, int ic_num){
     cmd[3] = (uint8_t)(temp_pec);
 
     wakeup_idle();
-
-    spi_write_read(cmd, 4, &data[ic_num*8], 8);
+    
+    int num_tries = 0;
+    int try_again = 0;
+    
+    
+    do {
+        spi_write_read(cmd, 4, &data[ic_num*8], 8);
+        try_again = 0;
+        
+        // check for missing voltages in reg (6553's)
+        for (int i = 0; i < 3; i+= 2) {
+            if (data[ic_num*8 + i] == 0xFF && data[ic_num*8 + i + 1] == 0xFF)
+                try_again = 1;
+        }
+        // check for pec Errors
+        received_pec = (*(&data[ic_num*8] + 6) << 8) + *(&data[ic_num*8] + 7);
+        data_pec = pec15_calc(6, &data[ic_num*8]);
+        num_tries++;
+        if (num_tries > 2)
+            return;
+        
+    } while ((data_pec != received_pec) || try_again);
 }
 int8_t LTC6804_rdaux(uint8_t reg,
 					 uint8_t total_ic, 

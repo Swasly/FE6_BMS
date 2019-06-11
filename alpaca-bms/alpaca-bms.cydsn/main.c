@@ -53,6 +53,7 @@ void DEBUG_send_current();
 int loop_count = 0; // TODO remove when fan controller tests stops
 int increment_mode = 1;
 
+
 CY_ISR(current_update_Handler){
     current_timer_STATUS;
 	update_soc();
@@ -144,11 +145,6 @@ void process_event(){
         }
     #endif
     
-    
-    uint8 currHighTemp = bat_pack.HI_temp_c;
-    uint8 currHighNode = bat_pack.HI_temp_node;
-    uint8 currHighIndex = bat_pack.HI_temp_node_index;
-    
     // TEST_DAY_1
     //send temp only if within reasonable range from last temperature
 
@@ -157,7 +153,8 @@ void process_event(){
             bat_pack.subpacks[2]->high_temp,
             bat_pack.subpacks[3]->high_temp,
             bat_pack.subpacks[4]->high_temp,
-            bat_pack.subpacks[5]->high_temp,
+            //bat_pack.subpacks[5]->high_temp,
+            bat_pack.HI_temp_node_index,
 			bat_pack.HI_temp_node,
 			bat_pack.HI_temp_c);
     
@@ -286,14 +283,6 @@ void process_failure(){
 bool BALANCE_FLAG = true;
 BMS_MODE previous_state = BMS_BOOTUP;
 
-typedef enum {
-    FAN_MAX,
-    FAN_ZERO,
-    FAN_MIN
-} FAN_MODE;
-
-
-
 int main(void)
 {
     // Stablize the BMS OK signal when system is still setting up
@@ -303,10 +292,8 @@ int main(void)
     
 	// Initialize state machine
 	BMS_MODE bms_status = BMS_BOOTUP;
-    FAN_MODE fan_mode = FAN_ZERO;
     
 	uint32_t system_interval = 0;
-    uint8_t led = 0;
     
     FanController_Start();
     FanController_SetDesiredSpeed(1, 0);
@@ -400,6 +387,16 @@ int main(void)
                         temperatures[i][j] = bat_pack.subpacks[i]->board_temps[j - 15]->temp_c;
                     }
                 }
+                
+                /* Data structure for tracking cell voltages over time - only used for debugging purposes*/
+                uint16_t pack_voltages[6][28];
+                uint8_t pack;
+                uint8_t cell;
+                for (pack = 0; pack < 6; pack++){
+                    for (cell = 0; cell < 28; cell++) {
+                        pack_voltages[pack][cell] = bat_pack.subpacks[pack]->cells[cell]->voltage;
+                    }
+                }
 #endif
 
                 // grab median temperature
@@ -434,19 +431,8 @@ int main(void)
 				// because it is normal mode, just set a median length current reading interval
 			    
                 //SKY_TODO update_soc()
-              
-#ifdef DEBUG_MODE
-
-                /* Data structure for tracking cell voltages over time - only used for debugging purposes*/
-                uint16_t pack_voltages[6][28];
-                uint8_t pack;
-                uint8_t cell;
-                for (pack = 0; pack < 6; pack++){
-                    for (cell = 0; cell < 28; cell++) {
-                        pack_voltages[pack][cell] = bat_pack.subpacks[pack]->cells[cell]->voltage;
-                    }
-                }
-#endif
+ 
+                
                 /*
                 //Uncomment all of this to balance
                 if (bat_pack.HI_temp_board_c >= 60) {
