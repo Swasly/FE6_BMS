@@ -1,6 +1,5 @@
-
- #include "can_manager.h"
-
+#include <math.h>
+#include "can_manager.h"
 #include "cell_interface.h"
 
 // declared as external vars in generated can files

@@ -436,6 +436,7 @@
       <Data key="1b1bae96-8735-4478-b4d1-515dbb13ad2b" value="DEBUG_RX" />
       <Data key="2b269b96-47a4-4e9a-937e-76d4080bb211/8b77a6c4-10a0-4390-971c-672353e2a49c" value="USBUART_Dm" />
       <Data key="2b269b96-47a4-4e9a-937e-76d4080bb211/618a72fc-5ddd-4df5-958f-a3d55102db42" value="USBUART_Dp" />
+      <Data key="2f3b1830-f05f-4015-abf5-06a03552be9c" value="Tx_2" />
       <Data key="2f0177a8-63df-489b-a239-25ea82dc5146" value="OK_SIG" />
       <Data key="2fcee8e4-2b9c-4fc2-b8cf-df9285911390" value="MOSI_1" />
       <Data key="3a2bb845-972d-481f-b4c2-0ad18655b804" value="CS_1" />
@@ -447,6 +448,7 @@
       <Data key="25ca14e5-8c87-46fe-8d03-635db5b547f5" value="current_supply" />
       <Data key="42e1204f-2d04-4f03-b53f-fe7d0a6cd53c" value="CS" />
       <Data key="051c0844-126d-403c-8c6a-07de39941e75" value="SCLK" />
+      <Data key="69a75ae4-ade2-47ac-9bc2-e210cdad1231" value="Rx_2" />
       <Data key="69b59410-6e46-474d-a73c-ebf6a12bad5b" value="TEST_GPIO" />
       <Data key="149df5a4-50df-403e-9554-ea4a9edf5aec" value="red_led_1" />
       <Data key="1425177d-0d0e-4468-8bcc-e638e5509a9b" value="Rx_1" />
@@ -3558,6 +3560,11 @@
     </Group>
   </Group>
   <Group key="Pin2">
+    <Group key="2f3b1830-f05f-4015-abf5-06a03552be9c">
+      <Group key="0">
+        <Data key="Port Format" value="15,6" />
+      </Group>
+    </Group>
     <Group key="2f0177a8-63df-489b-a239-25ea82dc5146">
       <Group key="0">
         <Data key="Port Format" value="12,0" />
@@ -3626,11 +3633,6 @@
     <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/8b77a6c4-10a0-4390-971c-672353e2a49c">
       <Group key="0">
         <Data key="Port Format" value="15,7" />
-      </Group>
-    </Group>
-    <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/618a72fc-5ddd-4df5-958f-a3d55102db42">
-      <Group key="0">
-        <Data key="Port Format" value="15,6" />
       </Group>
     </Group>
     <Group key="c4e5a892-cf04-4d74-ae9d-14ebf11c2aff">
@@ -3718,6 +3720,9 @@
       </Group>
       <Group key="b3fba535-769b-456f-bc9f-5a62d71be007">
         <Data key="0" value="131716321574562706" />
+      </Group>
+      <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/618a72fc-5ddd-4df5-958f-a3d55102db42">
+        <Data key="0" value="132047626734352956" />
       </Group>
       <Group key="e06615dd-5960-4237-b283-420c9d61df68">
         <Data key="0" value="130786712369021662" />

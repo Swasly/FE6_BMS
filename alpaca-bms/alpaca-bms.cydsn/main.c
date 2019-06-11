@@ -78,11 +78,7 @@ void printUsbData(char code, uint8_t subpack, uint8_t index, int data)
 {
     char buffer[50];
     sprintf(buffer, "%c-%u-%u-%u\n", code, subpack, index, data);
-    int count = 0;
-    while (0u == USBUART_CDCIsReady() && count < 10){
-        count++; 
-    }
-    USBUART_PutString(buffer);
+    UART_1_PutString(buffer);
 }
 
 uint8 lastHighTemp = 0;
@@ -106,24 +102,8 @@ void process_event(){
 				bat_pack.voltage);
     CyDelay(10);
 
-    // send temperature
-    #ifdef DEBUG_MODE
-        // Send board and thermistors temperatures over USB
-
-        char buffer[12];
-        if (0u != USBUART_IsConfigurationChanged())
-        {
-           /* Initialize IN endpoints when device is configured. */
-           if (0u != USBUART_GetConfiguration())
-           {
-               /* Enumeration is done, enable OUT endpoint to receive data
-                * from host. */
-               USBUART_CDC_Init();
-           }
-        }
-
+    #ifdef DEBUG_MODE // Send board and thermistors temperatures over USB
         // send cell voltages 
-
         for(uint8 subpack = 0; subpack < 6; subpack++) {
             for(uint8 ind = 0; ind < 28; ind++) {
                 printUsbData('c', subpack, ind, bat_pack.subpacks[subpack]->cells[ind]->voltage);
@@ -302,7 +282,7 @@ int main(void)
     FanController_SetDesiredSpeed(4, 0);
 
     # ifdef DEBUG
-    USBUART_Start(0u, USBUART_5V_OPERATION);
+    UART_1_Start();
     #endif
     
 	while(1){
@@ -407,7 +387,7 @@ int main(void)
                 if (desiredRPM > 12500)
                     desiredRPM = 12500;
                 
-                if (bat_pack.HI_temp_c < 30) {
+                if (bat_pack.HI_temp_c < 30) { //TODO: check wether to use HI_temp or median temp here
                     FanController_SetDesiredSpeed(1, 0);
                     FanController_SetDesiredSpeed(2, 0);
                     FanController_SetDesiredSpeed(3, 0);
