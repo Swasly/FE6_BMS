@@ -77,7 +77,10 @@ void printUsbData(char code, uint8_t subpack, uint8_t index, int data)
 {
     char buffer[50];
     sprintf(buffer, "%c-%u-%u-%u\n", code, subpack, index, data);
-    while (0u == USBUART_CDCIsReady()){}
+    int count = 0;
+    while (0u == USBUART_CDCIsReady() && count < 10){
+        count++; 
+    }
     USBUART_PutString(buffer);
 }
 

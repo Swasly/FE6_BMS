@@ -456,6 +456,8 @@
       <Data key="86992504-b2ea-485d-863e-96a572053ccb" value="Tx_2" />
       <Data key="a301d08f-3603-41dd-9ff4-4e6e8fd30a47" value="SS_1" />
       <Data key="b3fba535-769b-456f-bc9f-5a62d71be007" value="Tx_2" />
+      <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/8b77a6c4-10a0-4390-971c-672353e2a49c" value="USBUART_Dm" />
+      <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/618a72fc-5ddd-4df5-958f-a3d55102db42" value="USBUART_Dp" />
       <Data key="c4e5a892-cf04-4d74-ae9d-14ebf11c2aff" value="JAM_pin" />
       <Data key="c786d859-7a00-4d8b-8f36-734aaaca7c40/ed092b9b-d398-4703-be89-cebf998501f6" value="LCD_LCDPort" />
       <Data key="c3261af0-eda8-4cb5-bd0b-22e8a048500f" value="fan1_pwm" />
@@ -3619,6 +3621,16 @@
     <Group key="a301d08f-3603-41dd-9ff4-4e6e8fd30a47">
       <Group key="0">
         <Data key="Port Format" value="4,0" />
+      </Group>
+    </Group>
+    <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/8b77a6c4-10a0-4390-971c-672353e2a49c">
+      <Group key="0">
+        <Data key="Port Format" value="15,7" />
+      </Group>
+    </Group>
+    <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/618a72fc-5ddd-4df5-958f-a3d55102db42">
+      <Group key="0">
+        <Data key="Port Format" value="15,6" />
       </Group>
     </Group>
     <Group key="c4e5a892-cf04-4d74-ae9d-14ebf11c2aff">
