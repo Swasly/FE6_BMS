@@ -566,6 +566,15 @@ uint8_t LTC6804_rdcv(uint8_t reg,
          LTC6804_rdcv_FE6(cell_reg, cell_data, ic_num);
       }
     
+      if (cell_reg == 1) {
+          for (int ic_num = 0; ic_num < total_ic; ic_num += 3) {
+             LTC6804_rdcv_FE6(cell_reg, cell_data, ic_num);
+             CyDelay(1);
+             LTC6804_rdcv_FE6(cell_reg, cell_data, ic_num);
+             CyDelay(1);
+          }
+      }
+    
       for (uint8_t current_ic = 0 ; current_ic < total_ic; current_ic++) // executes for every LTC6804 in the stack
       {																 	  // current_ic is used as an IC counter
         //a.ii
