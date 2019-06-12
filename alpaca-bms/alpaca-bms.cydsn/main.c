@@ -113,14 +113,14 @@ void process_event(){
         // send board temps
         for(uint8 subpack = 0; subpack < 6; subpack++) {
             for(uint8 ind = 0; ind < 9; ind++) {
-                printUsbData('b', subpack, ind, bat_pack.subpacks[subpack]->board_temps[ind]->temp_c);
+                printUsbData('b', subpack, ind, (bat_pack.subpacks[subpack]->board_temps[ind]->temp_c * 1000));
             }
         }
         
         // send cell temps
         for(uint8 subpack = 0; subpack < 6; subpack++) {
             for(uint8 ind = 0; ind < 15; ind++) {
-                printUsbData('t', subpack, ind, bat_pack.subpacks[subpack]->temps[ind]->temp_c);
+                printUsbData('t', subpack, ind, (bat_pack.subpacks[subpack]->temps[ind]->temp_c * 1000));
             }
         }
     #endif
@@ -234,32 +234,7 @@ void process_failure(){
 	}
 }
 
-/*void debugMain() {
-    //while(1) { wakeup_sleep(); };
-    uint8_t txData[2] = {0x1E, 0xEE};
-    uint8_t rxData[23];
-    int t = 0;
-    while(1) {
 
-        // For debugging stay in here.
-        
-        //get_cell_volt();
-        //wakeup_sleep();
-        CyDelay(500);
-        //Select6820_Write(0);
-        //my_spi_write_read(txData, 2, rxData, 23);
-        //open_wire_adow(0x1);
-        //open_wire_adow(0x0);
-        
-        get_cell_volt();
-        get_cell_temp();
-        t++;
-    }
-    while(1) {
-        // DO nothing
-    }
-        
-}*/
 bool BALANCE_FLAG = true;
 BMS_MODE previous_state = BMS_BOOTUP;
 
