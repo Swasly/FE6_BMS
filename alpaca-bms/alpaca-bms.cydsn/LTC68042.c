@@ -344,9 +344,9 @@ int8_t LTC6804_rdaux_fe6(uint8_t lt_addr, enum AuxPins pin, uint16_t *aux)
     
     int num_tries = 0;
     
-    do {
+    //do {
         spi_write_read(cmd, 4, rx_data, 8);
-        received_pec = (*(rx_data + 6) << 8) + *(rx_data + 7);
+    /*    received_pec = (*(rx_data + 6) << 8) + *(rx_data + 7);
         data_pec = pec15_calc(6, rx_data);
         num_tries++;
         if (num_tries > 2) {
@@ -354,7 +354,7 @@ int8_t LTC6804_rdaux_fe6(uint8_t lt_addr, enum AuxPins pin, uint16_t *aux)
             *aux = 0xFFFF;
             return -1;
         }
-    }while (data_pec != received_pec);
+    }while (data_pec != received_pec);*/
     *aux = rx_data[set] | (rx_data[set + 1] << 8);
     
     return 0;                   // Implement error path
