@@ -278,7 +278,6 @@ int main(void)
 				bms_init(MD_FILTERED);
 				mypack_init();
                 //current_init();              
-			    //monitor_init();
 			    
 			    //enable global interrupt
 			    CyGlobalIntEnable;
@@ -313,7 +312,6 @@ int main(void)
                 
 				//TESTDAY_2_TODO. check_stack_fuse(); // TODO: check if stacks are disconnected
                 
-				//get_cell_temp(); Old temperature getting function (not needed for FE6)
                                 
                 /*
                     New cell temperature getter
@@ -427,7 +425,6 @@ int main(void)
 			case BMS_CHARGEMODE:
 				OK_SIG_Write(1);
 
-				//check_cfg();  //CANNOT be finished, because 
 				//check_cells();// TODO This function will be finished in get_cell_volt/check stack fuse
 		        get_cell_volt();// TODO Get voltage
 				check_stack_fuse(); // TODO: check if stacks are disconnected
@@ -450,7 +447,6 @@ int main(void)
 			case BMS_RACINGMODE:
 				OK_SIG_Write(1);
 
-				//check_cfg();  //CANNOT be finished, because 
 				//check_cells();// TODO This function will be finished in get_cell_volt/check stack fuse
 		        get_cell_volt();// TODO Get voltage
 				check_stack_fuse(); // TODO: check if stacks are disconnected

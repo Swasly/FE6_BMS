@@ -175,13 +175,7 @@ typedef struct
 void  bms_init(uint8_t adc_mode);
 
 
-/**
- * @check config register
- *
- * @param no input parameters.
- * @return 1 if everything is OK. 0 for hard failure.
- */
-void check_cfg(uint8_t rx_cfg[][8]);
+
 
 
 /**
@@ -217,13 +211,6 @@ uint8_t check_cells();
  */
 uint8_t get_cell_volt();
 
-/**
- * @check every cells if temperature are in safe range
- *
- * @param no input parameters.
- * @return 1 if everything is OK. 0 for hard failure.
- */
-uint8_t get_cell_temp();
 
 /**
  * @balance each cell
