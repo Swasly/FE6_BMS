@@ -525,7 +525,6 @@ uint8_t check_cells(){
 void update_volt(volatile uint16_t cell_codes[IC_PER_BUS * N_OF_BUSSES][12]){
     uint8_t cell = 0;
     uint8_t raw_cell = 0;
-    uint8_t node = 0;
     uint8_t ic = 0;
     uint8_t subpack = 0;
     uint32_t temp_volt;
@@ -642,7 +641,6 @@ void update_temp(volatile uint8_t rawTemp[(N_OF_TEMP + N_OF_TEMP_BOARD) * 2]) {
     uint16_t rawIndex = 0;
     uint16_t batIndex = 0;
     uint16_t boardIndex = 0;
-    uint32_t temp = 0;
     
     for (uint16_t board = 0; board < 6; board++) {
         for (uint8_t cellTemp = 0; cellTemp < 14; cellTemp++) {

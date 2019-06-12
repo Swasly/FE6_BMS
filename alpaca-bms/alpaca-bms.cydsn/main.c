@@ -244,7 +244,6 @@ int main(void)
     OK_SIG_Write(1);
     SOC_Store_Enable();
     
-    
 	// Initialize state machine
 	BMS_MODE bms_status = BMS_BOOTUP;
     
@@ -286,10 +285,6 @@ int main(void)
 			    OK_SIG_Write(1);
                 bms_status = BMS_NORMAL;
                 previous_state = BMS_BOOTUP;
-		        //terminal_run();
-                #ifdef DEBUG_MODE
-                    //debugMain();
-                #endif
 				break;
 
 			case BMS_NORMAL:
