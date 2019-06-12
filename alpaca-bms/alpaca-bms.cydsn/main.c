@@ -1,18 +1,18 @@
 #include <project.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "cell_interface.h"
 #include "current_sense.h"
 #include "WDT.h"
 #include "data.h"
 #include "can_manager.h"
-#include "uart-terminal.h"
-#include "BMS_monitor.h"
 #include "LTC68042.h"
 #include "math.h"
 
 //#define WDT_ENABLE
 
 #define DEBUG_MODE //TODO: comment this out when running  on actual car
+#define USBUART
 
 typedef enum 
 {
@@ -53,6 +53,7 @@ void DEBUG_send_current();
 int loop_count = 0; // TODO remove when fan controller tests stops
 int increment_mode = 1;
 
+
 CY_ISR(current_update_Handler){
     current_timer_STATUS;
 	update_soc();
@@ -73,40 +74,11 @@ float32 getMedianTemp()
     //Data sent individually in following format.
     code.subpack_index.index.value
 */
-void printUsbData(char code, uint subpack, uint index, void *data)
+void printUsbData(char code, uint8_t subpack, uint8_t index, int data)
 {
-    USBUART_PutChar(code);
-    USBUART_PutChar('.');
-    USBUART_PutChar(subpack);
-    USBUART_PutChar('.');
-    USBUART_PutChar(index);
-    USBUART_PutChar('.');
-    uint16 cell;
-    uint32 temp;
-    
-    switch(code)
-    {
-        case 'c': 
-            cell = *((uint16_t*)data);
-            char lsb = cell & 0x0f;
-            char msb = (cell & 0xf0) >> 8;
-            USBUART_PutChar(msb);
-            USBUART_PutChar(lsb);            
-            break;
-        case 'b':
-        case 't': //NOTE: ignore the naming here
-            temp = *((uint32 *)data);
-            char ms = (temp & 0xf000) >> 24;
-            char ns = (temp & 0x0f00) >> 16;
-            char os = (temp & 0x00f0) >> 8;
-            char ls = temp & 0x000f;
-            USBUART_PutChar(ms);
-            USBUART_PutChar(os);
-            USBUART_PutChar(ns);
-            USBUART_PutChar(ls);
-            break;
-    }
-    USBUART_PutChar('\n');
+    char buffer[50];
+    sprintf(buffer, "%c-%u-%u-%u\n", code, subpack, index, data);
+    UART_1_PutString(buffer);
 }
 
 uint8 lastHighTemp = 0;
@@ -130,37 +102,28 @@ void process_event(){
 				bat_pack.voltage);
     CyDelay(10);
 
-    // send temperature
-    #ifdef DEBUG_MODE
-        // Send board and thermistors temperatures over USB
-
-        char buffer[12];
-
-        
+    #ifdef DEBUG_MODE // Send board and thermistors temperatures over USB
         // send cell voltages 
-        for(uint subpack = 0; subpack < 6; subpack++) {
-            for(uint ind = 0; ind < 28; ind++) {
-                printUsbData('c', subpack, ind, (void *)&bat_pack.subpacks[subpack]->cells[ind]->voltage);
+        for(uint8 subpack = 0; subpack < 6; subpack++) {
+            for(uint8 ind = 0; ind < 28; ind++) {
+                printUsbData('c', subpack, ind, bat_pack.subpacks[subpack]->cells[ind]->voltage);
             }
         }
+        
         // send board temps
-        for(uint subpack = 0; subpack < 6; subpack++) {
-            for(uint ind = 0; ind < 9; ind++) {
-                printUsbData('b', subpack, ind, (void *)&bat_pack.subpacks[subpack]->board_temps[ind]->temp_c);
+        for(uint8 subpack = 0; subpack < 6; subpack++) {
+            for(uint8 ind = 0; ind < 9; ind++) {
+                printUsbData('b', subpack, ind, bat_pack.subpacks[subpack]->board_temps[ind]->temp_c);
             }
         }
+        
         // send cell temps
-        for(uint subpack = 0; subpack < 6; subpack++) {
-            for(uint ind = 0; ind < 15; ind++) {
-                printUsbData('t', subpack, ind, (void *)&bat_pack.subpacks[subpack]->temps[ind]->temp_c);
+        for(uint8 subpack = 0; subpack < 6; subpack++) {
+            for(uint8 ind = 0; ind < 15; ind++) {
+                printUsbData('t', subpack, ind, bat_pack.subpacks[subpack]->temps[ind]->temp_c);
             }
         }
     #endif
-    
-    
-    uint8 currHighTemp = bat_pack.HI_temp_c;
-    uint8 currHighNode = bat_pack.HI_temp_node;
-    uint8 currHighIndex = bat_pack.HI_temp_node_index;
     
     // TEST_DAY_1
     //send temp only if within reasonable range from last temperature
@@ -170,7 +133,8 @@ void process_event(){
             bat_pack.subpacks[2]->high_temp,
             bat_pack.subpacks[3]->high_temp,
             bat_pack.subpacks[4]->high_temp,
-            bat_pack.subpacks[5]->high_temp,
+            //bat_pack.subpacks[5]->high_temp,
+            bat_pack.HI_temp_node_index,
 			bat_pack.HI_temp_node,
 			bat_pack.HI_temp_c);
     
@@ -299,14 +263,6 @@ void process_failure(){
 bool BALANCE_FLAG = true;
 BMS_MODE previous_state = BMS_BOOTUP;
 
-typedef enum {
-    FAN_MAX,
-    FAN_ZERO,
-    FAN_MIN
-} FAN_MODE;
-
-
-
 int main(void)
 {
     // Stablize the BMS OK signal when system is still setting up
@@ -316,16 +272,18 @@ int main(void)
     
 	// Initialize state machine
 	BMS_MODE bms_status = BMS_BOOTUP;
-    FAN_MODE fan_mode = FAN_ZERO;
     
 	uint32_t system_interval = 0;
-    uint8_t led = 0;
     
     FanController_Start();
     FanController_SetDesiredSpeed(1, 0);
     FanController_SetDesiredSpeed(2, 0);
     FanController_SetDesiredSpeed(3, 0);
     FanController_SetDesiredSpeed(4, 0);
+
+    # ifdef DEBUG
+    UART_1_Start();
+    #endif
     
 	while(1){
 		switch (bms_status){
@@ -409,6 +367,16 @@ int main(void)
                         temperatures[i][j] = bat_pack.subpacks[i]->board_temps[j - 15]->temp_c;
                     }
                 }
+                
+                /* Data structure for tracking cell voltages over time - only used for debugging purposes*/
+                uint16_t pack_voltages[6][28];
+                uint8_t pack;
+                uint8_t cell;
+                for (pack = 0; pack < 6; pack++){
+                    for (cell = 0; cell < 28; cell++) {
+                        pack_voltages[pack][cell] = bat_pack.subpacks[pack]->cells[cell]->voltage;
+                    }
+                }
 #endif
 
                 // grab median temperature
@@ -419,7 +387,7 @@ int main(void)
                 if (desiredRPM > 12500)
                     desiredRPM = 12500;
                 
-                if (bat_pack.HI_temp_c < 30) {
+                if (bat_pack.HI_temp_c < 30) { //TODO: check wether to use HI_temp or median temp here
                     FanController_SetDesiredSpeed(1, 0);
                     FanController_SetDesiredSpeed(2, 0);
                     FanController_SetDesiredSpeed(3, 0);
@@ -443,20 +411,7 @@ int main(void)
 				// because it is normal mode, just set a median length current reading interval
 			    
                 //SKY_TODO update_soc()
-              
-#ifdef DEBUG_MODE
 
-                /* Data structure for tracking cell voltages over time - only used for debugging purposes*/
-                uint16_t pack_voltages[6][28];
-                uint8_t pack;
-                uint8_t cell;
-                for (pack = 0; pack < 6; pack++){
-                    for (cell = 0; cell < 28; cell++) {
-                        pack_voltages[pack][cell] = bat_pack.subpacks[pack]->cells[cell]->voltage;
-                    }
-                }
-#endif
-                
                 //Uncomment all of this to balance
                 if (bat_pack.HI_temp_board_c >= 60) {
                     BALANCE_FLAG = false;
