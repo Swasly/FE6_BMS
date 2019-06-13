@@ -28,8 +28,8 @@
     #define OVER_VOLTAGE (4200u) // Updated for FE5 (4.2V)
     #define UNDER_VOLTAGE (2500u) // Updated for FE5 (2.5V)
     #define STACK_VOLT_DIFF_LIMIT (9000u)   //9 volt
-    #define CRITICAL_TEMP_L (30u)          // 0 C
-    #define CRITICAL_TEMP_H (10u)             //60 C
+    #define CRITICAL_TEMP_L (0u)          // 0 C
+    #define CRITICAL_TEMP_H (60u)             //60 C
     #define CRITICAL_TEMP_BOARD_L (0u)          // 0 C
     #define CRITICAL_TEMP_BOARD_H (60u)  
     #define BAD_THERM_LIMIT (15u)

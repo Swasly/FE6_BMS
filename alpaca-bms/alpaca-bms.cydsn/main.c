@@ -412,10 +412,11 @@ int main(void)
 			    
                 //SKY_TODO update_soc()
 
+                
                 //Uncomment all of this to balance
-                if (bat_pack.HI_temp_board_c >= 60) {
+                if (bat_pack.HI_temp_board_c >= 45) {
                     BALANCE_FLAG = false;
-                } else if (bat_pack.HI_temp_board_c < 55) {
+                } else if (bat_pack.HI_temp_board_c < 45) {
                     BALANCE_FLAG = true;
                 }
                 
@@ -427,7 +428,7 @@ int main(void)
                     CyDelay(10000);
                     bat_clear_balance();
                     // Let the boards cool down
-                    CyDelay(1000);
+                    CyDelay(5000);
                 }
                 
                        
