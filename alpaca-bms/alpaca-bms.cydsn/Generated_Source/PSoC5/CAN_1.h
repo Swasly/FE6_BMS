@@ -306,7 +306,7 @@ void  CAN_1_ReceiveMsg(uint8 rxMailbox) ;
     uint8 CAN_1_SendMsg7(void) ;
 #endif /* CAN_1_TX7_FUNC_ENABLE */
 #if (CAN_1_RX0_FUNC_ENABLE)
-    void CAN_1_ReceiveMsgSOC(void) ;
+    void CAN_1_ReceiveMsgDash_Status(void) ;
 #endif /* CAN_1_RX0_FUNC_ENABLE */
 #if (CAN_1_RX1_FUNC_ENABLE)
     void CAN_1_ReceiveMsg1(void) ;
@@ -421,7 +421,7 @@ void  CAN_1_ReceiveMsg(uint8 rxMailbox) ;
 #define CAN_1_TX_MAILBOX_7             (7u)
 
 /* RX Defines to link mailbox names with mailbox numbers */
-#define CAN_1_RX_MAILBOX_SOC           (0u)
+#define CAN_1_RX_MAILBOX_Dash_Status   (0u)
 #define CAN_1_RX_MAILBOX_1             (1u)
 #define CAN_1_RX_MAILBOX_2             (2u)
 #define CAN_1_RX_MAILBOX_3             (3u)

@@ -674,7 +674,7 @@ void CAN_1_ReceiveMsg(uint8 rxMailbox)
 
 #if (CAN_1_RX0_FUNC_ENABLE)
     /*******************************************************************************
-    * FUNCTION NAME:   CAN_1_ReceiveMsgSOC
+    * FUNCTION NAME:   CAN_1_ReceiveMsgDash_Status
     ********************************************************************************
     *
     * Summary:
@@ -692,19 +692,15 @@ void CAN_1_ReceiveMsg(uint8 rxMailbox)
     *  Depends on the Customer code.
     *
     *******************************************************************************/
-    void CAN_1_ReceiveMsgSOC(void) 
+    void CAN_1_ReceiveMsgDash_Status(void) 
     {
-        /* `#START MESSAGE_SOC_RECEIVED` */
-        charge = CAN_1_RX_DATA_BYTE1(0);
-        int i;
-        for(i = 0; i < 8; i++) {
-            can_rx_buffer[i] = CAN_1_RX_DATA_BYTE(0, 1);
-        }
+        /* `#START MESSAGE_Dash_Status_RECEIVED` */
+
         /* `#END` */
 
-        #ifdef CAN_1_RECEIVE_MSG_SOC_CALLBACK
-            CAN_1_ReceiveMsg_SOC_Callback();
-        #endif /* CAN_1_RECEIVE_MSG_SOC_CALLBACK */
+        #ifdef CAN_1_RECEIVE_MSG_Dash_Status_CALLBACK
+            CAN_1_ReceiveMsg_Dash_Status_Callback();
+        #endif /* CAN_1_RECEIVE_MSG_Dash_Status_CALLBACK */
 
         CAN_1_RX[0u].rxcmd.byte[0u] |= CAN_1_RX_ACK_MSG;
     }
@@ -1237,3 +1233,13 @@ void CAN_1_ReceiveMsg(uint8 rxMailbox)
 
 
 /* [] END OF FILE */
+#if 0 /* begin disabled code */
+`#start MESSAGE_SOC_RECEIVED` -- section removed from template
+        charge = CAN_1_RX_DATA_BYTE1(0);
+        int i;
+        for(i = 0; i < 8; i++) {
+            can_rx_buffer[i] = CAN_1_RX_DATA_BYTE(0, 1);
+        }
+`#end`
+
+#endif /* end disabled code */

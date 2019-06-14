@@ -42,7 +42,7 @@ extern volatile uint8_t bat_err_index_loop;
 volatile uint8_t CAN_DEBUG=0;
 volatile uint8_t RACING_FLAG=0;    // this flag should be set in CAN handler
 BAT_SOC_t bat_soc;
-uint8_t rx_soc;
+Dash_State dash_state = 0;
 uint8_t rx_cfg[IC_PER_BUS][8];
 void DEBUG_send_cell_voltage();
 void DEBUG_send_temp();
@@ -353,7 +353,8 @@ int main(void)
                     }
                 }
 #endif
-
+                dash_state = can_rx_dash_stat();
+              
                 // grab median temperature
                 uint8_t medianTemp = (uint8_t)getMedianTemp();
                 //uint16 desiredRPM = (bat_pack.HI_temp_c * 650) - (17000);
@@ -368,7 +369,7 @@ int main(void)
                     FanController_SetDesiredSpeed(3, 0);
                     FanController_SetDesiredSpeed(4, 0);     
                 }
-                else {
+                else if(dash_state == HV_Enabled){
                     FanController_SetSaturation(1, saturation, 0);
                     FanController_SetSaturation(2, saturation, 0);
                     FanController_SetSaturation(3, saturation, 0);
@@ -378,6 +379,13 @@ int main(void)
                     FanController_SetDesiredSpeed(3, desiredRPM);
                     FanController_SetDesiredSpeed(4, desiredRPM);                     
                 }
+                else {
+                    FanController_SetDesiredSpeed(1, 0);
+                    FanController_SetDesiredSpeed(2, 0);
+                    FanController_SetDesiredSpeed(3, 0);
+                    FanController_SetDesiredSpeed(4, 0);  
+                }
+                
                 CyDelay(10);
                 
                 // TODO: Calculate SOC
@@ -416,10 +424,6 @@ int main(void)
                 set_current_interval(100);
 				system_interval = 10;
                 
-                rx_soc = can_rx_soc();
-                //if(rx_soc != 255) {
-                //    write_soc(rx_soc);
-                //}
                 
 				break;
 

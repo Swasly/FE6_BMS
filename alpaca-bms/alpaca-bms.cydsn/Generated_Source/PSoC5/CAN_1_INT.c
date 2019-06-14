@@ -428,7 +428,7 @@
                         /* RX Full mailboxes handler */
                         switch(mailboxNumber)
                         {
-                            case 0u : CAN_1_ReceiveMsgSOC();
+                            case 0u : CAN_1_ReceiveMsgDash_Status();
                             break;
                             default:
                             break;

@@ -4,6 +4,16 @@
 #include <project.h>
 #include "data.h"
 #include "LTC68042.h"
+    
+typedef enum 
+{
+	Startup,
+	LV,
+	Precharging,
+	HV_Enabled,
+	Drive,
+	Fault
+}Dash_State;
 
 typedef enum{
     NO_ERROR=0x0000,
@@ -52,7 +62,7 @@ void can_send_status(uint8_t name,
 
 void can_send_soc(uint8_t charge);
 
-uint8_t can_rx_soc();
+uint8_t can_rx_dash_stat();
 
 uint8_t can_test_send();
 void can_init();
