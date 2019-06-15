@@ -699,6 +699,11 @@ void addToSorted(float32 newtemp, int index) {
     sortedTemps[j+1] = newtemp;
 }
 
+float32 getMedianTemp()
+{
+    return (sortedTemps[45] + sortedTemps[44]) / 2;
+}
+
 void check_temp(){
         
     // TEST_DAY_1
@@ -706,11 +711,15 @@ void check_temp(){
     uint8_t subpack=0;
     uint8_t cell=0;
     uint16_t temp_c=0;
+    float median = getMedianTemp();
+    float threshold = 2; // acceptable temperature degree threshold
     
     // check temp
     for (cell = 0; cell < N_OF_TEMP; cell++){
         temp_c = bat_temp[cell].temp_c;
-        if (temp_c > (uint8_t)CRITICAL_TEMP_H){
+        // add threshold to see if in fact overheating
+        if (temp_c > (uint8_t)CRITICAL_TEMP_H) //&& fabs(temp_c - median) < threshold)
+        {
             //if over temperature
             bat_temp[cell].bad_counter++;
             bat_temp[cell].bad_type = 1;

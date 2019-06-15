@@ -251,7 +251,7 @@ void update_temp(volatile uint8_t rawTemp[(N_OF_TEMP + N_OF_TEMP_BOARD) * 2]);
  * @return NULL.
  */
 void check_temp();
-
+float32 getMedianTemp();
 
 /**
  * @initial mypack
