@@ -60,10 +60,6 @@ CY_ISR(current_update_Handler){
 	return;
 }
 
-float32 getMedianTemp()
-{
-    return (sortedTemps[45] + sortedTemps[44]) / 2;
-}
 
 /*
     Code:
@@ -355,7 +351,7 @@ int main(void)
                 if (desiredRPM > 12500)
                     desiredRPM = 12500;
                 
-                if (bat_pack.HI_temp_c < 30) { //TODO: check wether to use HI_temp or median temp here
+                if (bat_pack.HI_temp_c < 30) { //TODO: check whether to use HI_temp or median temp here
                     FanController_SetDesiredSpeed(1, 0);
                     FanController_SetDesiredSpeed(2, 0);
                     FanController_SetDesiredSpeed(3, 0);
