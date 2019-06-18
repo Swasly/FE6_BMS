@@ -60,10 +60,6 @@ CY_ISR(current_update_Handler){
 	return;
 }
 
-float32 getMedianTemp()
-{
-    return (sortedTemps[45] + sortedTemps[44]) / 2;
-}
 
 /*
     Code:
@@ -244,7 +240,6 @@ int main(void)
     OK_SIG_Write(1);
     SOC_Store_Enable();
     
-    
 	// Initialize state machine
 	BMS_MODE bms_status = BMS_BOOTUP;
     
@@ -278,7 +273,6 @@ int main(void)
 				bms_init(MD_FILTERED);
 				mypack_init();
                 //current_init();              
-			    //monitor_init();
 			    
 			    //enable global interrupt
 			    CyGlobalIntEnable;
@@ -287,10 +281,6 @@ int main(void)
 			    OK_SIG_Write(1);
                 bms_status = BMS_NORMAL;
                 previous_state = BMS_BOOTUP;
-		        //terminal_run();
-                #ifdef DEBUG_MODE
-                    //debugMain();
-                #endif
 				break;
 
 			case BMS_NORMAL:
@@ -313,7 +303,6 @@ int main(void)
                 
 				//TESTDAY_2_TODO. check_stack_fuse(); // TODO: check if stacks are disconnected
                 
-				//get_cell_temp(); Old temperature getting function (not needed for FE6)
                                 
                 /*
                     New cell temperature getter
@@ -363,7 +352,7 @@ int main(void)
                 if (desiredRPM > 12500)
                     desiredRPM = 12500;
                 
-                if (bat_pack.HI_temp_c < 30) { //TODO: check wether to use HI_temp or median temp here
+                if (bat_pack.HI_temp_c < 30) { //TODO: check whether to use HI_temp or median temp here
                     FanController_SetDesiredSpeed(1, 0);
                     FanController_SetDesiredSpeed(2, 0);
                     FanController_SetDesiredSpeed(3, 0);
@@ -431,7 +420,6 @@ int main(void)
 			case BMS_CHARGEMODE:
 				OK_SIG_Write(1);
 
-				//check_cfg();  //CANNOT be finished, because 
 				//check_cells();// TODO This function will be finished in get_cell_volt/check stack fuse
 		        get_cell_volt();// TODO Get voltage
 				check_stack_fuse(); // TODO: check if stacks are disconnected
@@ -454,7 +442,6 @@ int main(void)
 			case BMS_RACINGMODE:
 				OK_SIG_Write(1);
 
-				//check_cfg();  //CANNOT be finished, because 
 				//check_cells();// TODO This function will be finished in get_cell_volt/check stack fuse
 		        get_cell_volt();// TODO Get voltage
 				check_stack_fuse(); // TODO: check if stacks are disconnected

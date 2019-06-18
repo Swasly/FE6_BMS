@@ -62,7 +62,6 @@ void mypack_init(){
     
     uint8_t cell = 0;
     uint8_t subpack = 0;
-    uint8_t bus = 0;
     uint8_t temp = 0;
     bat_err_index = 0;
     bat_err_index_loop = 0;
@@ -152,31 +151,7 @@ void  wake_up(){
     wakeup_sleep(0);
 }
 
-void check_cfg(uint8_t rx_cfg[][8]){
-    LTC68_ClearFIFO();
-    int error1 = 0;
-    int error2 = 0;
-    
-    Select6820_Write(0);
-    wakeup_sleep(0);
-    CyDelay(1);
-    //for (int i = 0; i < 100; i++) {
-        LTC6804_rdcfg(IC_PER_BUS, rx_cfg);
-        LTC6804_rdcfg(IC_PER_BUS, rx_cfg);
-    /*
-    //DEBUG_UART_PutString("Enter Check_CFG\n");
-    int i=0;
-    wakeup_sleep();
-    LTC6804_rdcfg(TOTAL_IC,rx_cfg);
-    //LCD_Position(1u,0u);
-    for (i=0;i<8;i++){
-        if (rx_cfg[i] != tx_cfg[i]){
-            fatal_err = COM_FAILURE;
-            return;
-        }
-    }
-    */
-}
+
 
 
 
@@ -371,7 +346,7 @@ float32 get_median_temp(float32 temps[6][24])
         memcpy(local_temps + 24*i, temps[i], 24 * sizeof(float32));
     }
     
-    float32 temp, start;
+    float32 start;
     int j;
     
     //insertion sort
@@ -494,70 +469,6 @@ uint8_t get_cell_temp_fe6(uint8_t lt_addr, uint8_t mux_sel, uint8_t orig_cfga_da
     return 0;
 }
 
-uint8_t get_cell_temp(){
-    uint8_t command[3];
-    uint8_t rawTemp[(N_OF_TEMP + N_OF_TEMP_BOARD) * 2];
-    
-    // PSOCs have addresses 9 through 11
-    for (uint8_t bus = 0; bus < N_OF_BUSSES; bus++) {
-        Select6820_Write(bus);
-        int address = 9;
-        for (int i = 0; i < 3; i++, address++) {
-            for (uint8_t j = 0; j < 3; j++)
-                command[j] = (0x80 | (address << 3)) + j;
-            my_spi_write_read(command, 3, rawTemp + (46 * i) + 
-                              (bus * (N_OF_TEMP + N_OF_TEMP_BOARD)), 46); // There are 69 thermistors on each bus, 2 bytes per reading
-        }
-    }
-    
-    update_temp(rawTemp);
-    check_temp();
-    /*
-    int error;
-    wakeup_sleep();
-    LTC6804_adax();
-    CyDelay(3);  
-    wakeup_sleep();
-    uint8_t redundant=10;
-    while (redundant>0){   
-        //read 10 time at most
-        error = LTC6804_rdaux(0,IC_PER_BUS,aux_codes); // Set to read back all aux registers
-        //DEBUG
-        error=0;
-        if (error == 0)
-        {
-            break;
-        }
-        redundant-=1;
-    }
-    
-    if (redundant <= 0){
-        #ifdef DEBUG_LCD
-        LCD_Position(0u,10u);
-        LCD_PrintString("ERROR");
-        #endif
-        bat_pack.health = FAULT;
-        return 1;
-    }
-
-    //get information
-    update_temp(aux_codes);
-
-    //check error
-    check_temp();
-   
-   
-    #ifdef DEBUG_LCD
-        LCD_Position(1u,10u);
-        print_cells(aux_codes[0][0]);
-        LCD_Position(0u,10u);
-        LCD_PrintString("OK");
-    #endif
-    */
-    return 0;
-}// get_cell_temp()
-
-
 
 uint8_t check_cells(){ 
     // not in use!!
@@ -614,7 +525,6 @@ uint8_t check_cells(){
 void update_volt(volatile uint16_t cell_codes[IC_PER_BUS * N_OF_BUSSES][12]){
     uint8_t cell = 0;
     uint8_t raw_cell = 0;
-    uint8_t node = 0;
     uint8_t ic = 0;
     uint8_t subpack = 0;
     uint32_t temp_volt;
@@ -731,7 +641,6 @@ void update_temp(volatile uint8_t rawTemp[(N_OF_TEMP + N_OF_TEMP_BOARD) * 2]) {
     uint16_t rawIndex = 0;
     uint16_t batIndex = 0;
     uint16_t boardIndex = 0;
-    uint32_t temp = 0;
     
     for (uint16_t board = 0; board < 6; board++) {
         for (uint8_t cellTemp = 0; cellTemp < 14; cellTemp++) {
@@ -777,22 +686,22 @@ void update_temp(volatile uint8_t rawTemp[(N_OF_TEMP + N_OF_TEMP_BOARD) * 2]) {
     
 }
 
-// Index -> sent so that we know how many values to compare with max.
-// newtemp 
-//might create linked list later
+/* will add the newest temperature to its appropriate location in a sorted list
+ * newtemp - the newest temp
+ * index - the max number of values to check against before placing the temperature in the list
+*/
 void addToSorted(float32 newtemp, int index) {
-    float32 temp_temp;
-    if(index == 0) {
-        sortedTemps[0] = newtemp;
+    int8 j = index-1;
+    while(j >= 0 && sortedTemps[j] > newtemp) {
+        sortedTemps[j+1] = sortedTemps[j];
+        j--;
     }
-    else {
-        int8 j = index-1;
-        while(j >= 0 && sortedTemps[j] > newtemp) {
-            sortedTemps[j+1] = sortedTemps[j];
-            j--;
-        }
-        sortedTemps[j+1] = newtemp;
-    }
+    sortedTemps[j+1] = newtemp;
+}
+
+float32 getMedianTemp()
+{
+    return (sortedTemps[45] + sortedTemps[44]) / 2;
 }
 
 void check_temp(){
@@ -802,11 +711,15 @@ void check_temp(){
     uint8_t subpack=0;
     uint8_t cell=0;
     uint16_t temp_c=0;
+    float median = getMedianTemp();
+    float threshold = 2; // acceptable temperature degree threshold
     
     // check temp
     for (cell = 0; cell < N_OF_TEMP; cell++){
         temp_c = bat_temp[cell].temp_c;
-        if (temp_c > (uint8_t)CRITICAL_TEMP_H){
+        // add threshold to see if in fact overheating
+        if (temp_c > (uint8_t)CRITICAL_TEMP_H) //&& fabs(temp_c - median) < threshold)
+        {
             //if over temperature
             bat_temp[cell].bad_counter++;
             bat_temp[cell].bad_type = 1;
