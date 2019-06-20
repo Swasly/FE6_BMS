@@ -12,7 +12,18 @@
 //#define WDT_ENABLE
 
 #define DEBUG_MODE //TODO: comment this out when running  on actual car
+#define RAIN       //Comment out if weather is dry. If rain, fans will suck water in.
 #define USBUART
+
+typedef enum
+{
+    Startup,
+    LV, 
+    Precharging,
+    HV_Enabled,
+    Drive,
+    Fault,
+} Dash_State;
 
 typedef enum 
 {
@@ -247,14 +258,16 @@ int main(void)
     
 	// Initialize state machine
 	BMS_MODE bms_status = BMS_BOOTUP;
+    Dash_State dash_state = 0;
     
 	uint32_t system_interval = 0;
-    
+    #ifndef RAIN
     FanController_Start();
     FanController_SetDesiredSpeed(1, 0);
     FanController_SetDesiredSpeed(2, 0);
     FanController_SetDesiredSpeed(3, 0);
     FanController_SetDesiredSpeed(4, 0);
+    #endif
 
     # ifdef DEBUG
     UART_1_Start();
@@ -355,7 +368,9 @@ int main(void)
 #endif
 
                 // grab median temperature
+//#ifndef RAIN
                 uint8_t medianTemp = (uint8_t)getMedianTemp();
+                dash_state = can_rx_dash();
                 //uint16 desiredRPM = (bat_pack.HI_temp_c * 650) - (17000);
                 uint16 desiredRPM = (medianTemp * 650) - (17000);
                 uint16 saturation = 4 * desiredRPM;
@@ -368,7 +383,7 @@ int main(void)
                     FanController_SetDesiredSpeed(3, 0);
                     FanController_SetDesiredSpeed(4, 0);     
                 }
-                else {
+                else if(dash_state == HV_Enabled){
                     FanController_SetSaturation(1, saturation, 0);
                     FanController_SetSaturation(2, saturation, 0);
                     FanController_SetSaturation(3, saturation, 0);
@@ -378,7 +393,10 @@ int main(void)
                     FanController_SetDesiredSpeed(3, desiredRPM);
                     FanController_SetDesiredSpeed(4, desiredRPM);                     
                 }
+                else {
+                }
                 CyDelay(10);
+//#endif
                 
                 // TODO: Calculate SOC
                 //get_current(); // TODO get current reading from sensor
@@ -416,7 +434,7 @@ int main(void)
                 set_current_interval(100);
 				system_interval = 10;
                 
-                rx_soc = can_rx_soc();
+                
                 //if(rx_soc != 255) {
                 //    write_soc(rx_soc);
                 //}

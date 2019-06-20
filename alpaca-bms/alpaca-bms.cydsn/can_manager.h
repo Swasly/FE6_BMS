@@ -52,7 +52,7 @@ void can_send_status(uint8_t name,
 
 void can_send_soc(uint8_t charge);
 
-uint8_t can_rx_soc();
+uint8_t can_rx_dash();
 
 uint8_t can_test_send();
 void can_init();

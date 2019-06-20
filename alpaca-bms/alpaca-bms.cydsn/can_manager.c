@@ -121,12 +121,8 @@ void can_send_soc(uint8_t charge) {
 
 // return 256 if there is no need to save SOC
 // return SOC to save if dash thinks car is turning off
-uint8 can_rx_soc() {
-    CAN_1_ReceiveMsgSOC();
-    if(can_rx_buffer[1] == 0) {
-        return 255;    
-    }
-    return charge;
+uint8 can_rx_dash() {
+    return can_rx_buffer[0];
 }
 
                     
