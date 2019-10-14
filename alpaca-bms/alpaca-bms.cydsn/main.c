@@ -121,9 +121,10 @@ void process_event(){
         }
     #endif
     
-    // TEST_DAY_1
-    //send temp only if within reasonable range from last temperature
-
+    // in the past there were errors due to temperatures jumping around
+    // which would cause the car to shut down since it thought temp >  60
+    // could have just been bad connection
+    // we no longer cache previous temps to find an average, but this is where that would go
     can_send_temp(bat_pack.subpacks[0]->high_temp,
 			bat_pack.subpacks[1]->high_temp,
             bat_pack.subpacks[2]->high_temp,
@@ -135,62 +136,11 @@ void process_event(){
 			bat_pack.HI_temp_c);
     
     can_send_volt(bat_pack.LO_voltage, bat_pack.HI_voltage, bat_pack.voltage);
-    // send current
-    //can_send_current(bat_pack.current);
+
     CyDelay(10);
 
     CyGlobalIntEnable;
 }
-
-void DEBUG_send_cell_voltage(){
-    /*
-    uint8_t node, cell;
-    for (node = 0; node< N_OF_NODE; node++){
-        cell = 0;
-        for (cell = 0;cell<14;cell++){
-            can_send_volt((node<<8 | cell),
-				bat_pack.nodes[node]->cells[cell]->voltage,
-				bat_pack.voltage);
-            CyDelay(1);
-        }
-    }
-    */
-}
-
-void DEBUG_send_temp(){
-    /*
-    uint8_t node, temp;
-    for (node = 0; node< N_OF_NODE; node++){
-        temp = 0;
-        for (temp = 0;temp<10;temp++){
- //           can_send_temp(temp,
-//				node,
-//				bat_pack.nodes[node]->temps[temp]->temp_c,
-//				bat_pack.nodes[node]->temps[temp]->temp_raw,
-  //              bat_pack.HI_temp_c);
-            CyDelay(1);
-        }
-    }
-    */
-}
-
-void DEBUG_send_current(){
-    /*
-    uint8_t node, temp;
-    for (node = 0; node< N_OF_NODE; node++){
-        temp = 0;
-        for (temp = 0;temp<10;temp++){
-//            can_send_temp(temp,
-//				node,
-//				bat_pack.nodes[node]->temps[temp]->temp_c,
-//				bat_pack.nodes[node]->temps[temp]->temp_raw,
-  //              bat_pack.HI_temp_c);
-            CyDelay(1);
-        }
-    }
-    */
-}
-
 
 void process_failure_helper(BAT_ERR_t err){
 	switch(err.err){

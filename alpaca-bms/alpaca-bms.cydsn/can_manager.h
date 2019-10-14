@@ -51,8 +51,6 @@ void can_send_volt(
     uint16_t max_voltage,
     uint32_t pack_voltage);
 
-void can_send_current(int16_t battery_current);
-
 void can_send_status(uint8_t name,
                     uint8_t SOC_P,
                     BMS_STATUS status,

@@ -78,8 +78,8 @@ extern uint8 CAN_1_initVar;
 #define CAN_1_TX0_FUNC_ENABLE          (1u)
 #define CAN_1_TX1_FUNC_ENABLE          (1u)
 #define CAN_1_TX2_FUNC_ENABLE          (1u)
-#define CAN_1_TX3_FUNC_ENABLE          (1u)
-#define CAN_1_TX4_FUNC_ENABLE          (1u)
+#define CAN_1_TX3_FUNC_ENABLE          (0u)
+#define CAN_1_TX4_FUNC_ENABLE          (0u)
 #define CAN_1_TX5_FUNC_ENABLE          (0u)
 #define CAN_1_TX6_FUNC_ENABLE          (0u)
 #define CAN_1_TX7_FUNC_ENABLE          (0u)
@@ -100,7 +100,7 @@ extern uint8 CAN_1_initVar;
 #define CAN_1_RX14_FUNC_ENABLE         (0u)
 #define CAN_1_RX15_FUNC_ENABLE         (0u)
 #define CAN_1_RX_MAILBOX_TYPE          (0x1u)
-#define CAN_1_TX_MAILBOX_TYPE          (0x1Fu)
+#define CAN_1_TX_MAILBOX_TYPE          (0x7u)
 
 
 /***************************************
@@ -288,13 +288,13 @@ void  CAN_1_ReceiveMsg(uint8 rxMailbox) ;
     uint8 CAN_1_SendMsgvolt(void) ;
 #endif /* CAN_1_TX1_FUNC_ENABLE */
 #if (CAN_1_TX2_FUNC_ENABLE)
-    uint8 CAN_1_SendMsgcurrent(void) ;
+    uint8 CAN_1_SendMsgstatus(void) ;
 #endif /* CAN_1_TX2_FUNC_ENABLE */
 #if (CAN_1_TX3_FUNC_ENABLE)
-    uint8 CAN_1_SendMsgstatus(void) ;
+    uint8 CAN_1_SendMsg3(void) ;
 #endif /* CAN_1_TX3_FUNC_ENABLE */
 #if (CAN_1_TX4_FUNC_ENABLE)
-    uint8 CAN_1_SendMsgsoc(void) ;
+    uint8 CAN_1_SendMsg4(void) ;
 #endif /* CAN_1_TX4_FUNC_ENABLE */
 #if (CAN_1_TX5_FUNC_ENABLE)
     uint8 CAN_1_SendMsg5(void) ;
@@ -413,9 +413,9 @@ void  CAN_1_ReceiveMsg(uint8 rxMailbox) ;
 /* TX Defines to link mailbox names with mailbox numbers */
 #define CAN_1_TX_MAILBOX_temp          (0u)
 #define CAN_1_TX_MAILBOX_volt          (1u)
-#define CAN_1_TX_MAILBOX_current       (2u)
-#define CAN_1_TX_MAILBOX_status        (3u)
-#define CAN_1_TX_MAILBOX_soc           (4u)
+#define CAN_1_TX_MAILBOX_status        (2u)
+#define CAN_1_TX_MAILBOX_3             (3u)
+#define CAN_1_TX_MAILBOX_4             (4u)
 #define CAN_1_TX_MAILBOX_5             (5u)
 #define CAN_1_TX_MAILBOX_6             (6u)
 #define CAN_1_TX_MAILBOX_7             (7u)

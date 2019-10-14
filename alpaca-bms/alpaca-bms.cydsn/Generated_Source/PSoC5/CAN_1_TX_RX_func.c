@@ -306,7 +306,7 @@ void CAN_1_TxCancel(uint8 bufferId)
 
 #if (CAN_1_TX2_FUNC_ENABLE)
     /*******************************************************************************
-    * FUNCTION NAME:   CAN_1_SendMsgcurrent
+    * FUNCTION NAME:   CAN_1_SendMsgstatus
     ********************************************************************************
     *
     * Summary:
@@ -325,7 +325,7 @@ void CAN_1_TxCancel(uint8 bufferId)
     *    CAN_1_FAIL              The function failed
     *
     *******************************************************************************/
-    uint8 CAN_1_SendMsgcurrent(void) 
+    uint8 CAN_1_SendMsgstatus(void) 
     {
         uint8 result = CYRET_SUCCESS;
 
@@ -333,62 +333,6 @@ void CAN_1_TxCancel(uint8 bufferId)
             if ((CAN_1_TX[2u].txcmd.byte[0u] & CAN_1_TX_REQUEST_PENDING) != 0u)
         #else  /* CY_PSOC4 */
             if ((CAN_1_TX_CMD_REG(2u) & CAN_1_TX_REQUEST_PENDING) != 0u)
-        #endif /* CY_PSOC3 || CY_PSOC5 */
-            {
-                result = CAN_1_FAIL;
-            }
-            else
-            {
-                /* `#START MESSAGE_current_TRASMITTED` */
-						uint8_t i;
-
-						for(i=0; i<CAN_CURRENT_LEN; i++)
-							CAN_1_TX_DATA_BYTE(2,i) = can_buffer[i];
-
-                /* `#END` */
-
-                #ifdef CAN_1_SEND_MSG_current_CALLBACK
-                    CAN_1_SendMsg_current_Callback();
-                #endif /* CAN_1_SEND_MSG_current_CALLBACK */
-
-                CY_SET_REG32(CAN_1_TX_CMD_PTR(2u),
-                CY_GET_REG32(CAN_1_TX_CMD_PTR(2u)) | CAN_1_SEND_MESSAGE);
-            }
-
-        return (result);
-    }
-#endif /* CAN_1_TX2_FUNC_ENABLE */
-
-
-#if (CAN_1_TX3_FUNC_ENABLE)
-    /*******************************************************************************
-    * FUNCTION NAME:   CAN_1_SendMsgstatus
-    ********************************************************************************
-    *
-    * Summary:
-    *  This function is the entry point to Transmit Message 3. The function checks
-    *  if mailbox 3 doesn't already have un-transmitted messages waiting for
-    *  arbitration. If not initiate transmission of the message.
-    *  Generated only for the Transmit mailbox designed as Full.
-    *
-    * Parameters:
-    *  None.
-    *
-    * Return:
-    *  Indication if Message has been sent.
-    *   Define                             Description
-    *    CYRET_SUCCESS                      The function passed successfully
-    *    CAN_1_FAIL              The function failed
-    *
-    *******************************************************************************/
-    uint8 CAN_1_SendMsgstatus(void) 
-    {
-        uint8 result = CYRET_SUCCESS;
-
-        #if (CY_PSOC3 || CY_PSOC5)
-            if ((CAN_1_TX[3u].txcmd.byte[0u] & CAN_1_TX_REQUEST_PENDING) != 0u)
-        #else  /* CY_PSOC4 */
-            if ((CAN_1_TX_CMD_REG(3u) & CAN_1_TX_REQUEST_PENDING) != 0u)
         #endif /* CY_PSOC3 || CY_PSOC5 */
             {
                 result = CAN_1_FAIL;
@@ -407,6 +351,58 @@ void CAN_1_TxCancel(uint8 bufferId)
                     CAN_1_SendMsg_status_Callback();
                 #endif /* CAN_1_SEND_MSG_status_CALLBACK */
 
+                CY_SET_REG32(CAN_1_TX_CMD_PTR(2u),
+                CY_GET_REG32(CAN_1_TX_CMD_PTR(2u)) | CAN_1_SEND_MESSAGE);
+            }
+
+        return (result);
+    }
+#endif /* CAN_1_TX2_FUNC_ENABLE */
+
+
+#if (CAN_1_TX3_FUNC_ENABLE)
+    /*******************************************************************************
+    * FUNCTION NAME:   CAN_1_SendMsg3
+    ********************************************************************************
+    *
+    * Summary:
+    *  This function is the entry point to Transmit Message 3. The function checks
+    *  if mailbox 3 doesn't already have un-transmitted messages waiting for
+    *  arbitration. If not initiate transmission of the message.
+    *  Generated only for the Transmit mailbox designed as Full.
+    *
+    * Parameters:
+    *  None.
+    *
+    * Return:
+    *  Indication if Message has been sent.
+    *   Define                             Description
+    *    CYRET_SUCCESS                      The function passed successfully
+    *    CAN_1_FAIL              The function failed
+    *
+    *******************************************************************************/
+    uint8 CAN_1_SendMsg3(void) 
+    {
+        uint8 result = CYRET_SUCCESS;
+
+        #if (CY_PSOC3 || CY_PSOC5)
+            if ((CAN_1_TX[3u].txcmd.byte[0u] & CAN_1_TX_REQUEST_PENDING) != 0u)
+        #else  /* CY_PSOC4 */
+            if ((CAN_1_TX_CMD_REG(3u) & CAN_1_TX_REQUEST_PENDING) != 0u)
+        #endif /* CY_PSOC3 || CY_PSOC5 */
+            {
+                result = CAN_1_FAIL;
+            }
+            else
+            {
+                /* `#START MESSAGE_3_TRASMITTED` */
+
+                /* `#END` */
+
+                #ifdef CAN_1_SEND_MSG_3_CALLBACK
+                    CAN_1_SendMsg_3_Callback();
+                #endif /* CAN_1_SEND_MSG_3_CALLBACK */
+
                 CY_SET_REG32(CAN_1_TX_CMD_PTR(3u),
                 CY_GET_REG32(CAN_1_TX_CMD_PTR(3u)) | CAN_1_SEND_MESSAGE);
             }
@@ -418,7 +414,7 @@ void CAN_1_TxCancel(uint8 bufferId)
 
 #if (CAN_1_TX4_FUNC_ENABLE)
     /*******************************************************************************
-    * FUNCTION NAME:   CAN_1_SendMsgsoc
+    * FUNCTION NAME:   CAN_1_SendMsg4
     ********************************************************************************
     *
     * Summary:
@@ -437,7 +433,7 @@ void CAN_1_TxCancel(uint8 bufferId)
     *    CAN_1_FAIL              The function failed
     *
     *******************************************************************************/
-    uint8 CAN_1_SendMsgsoc(void) 
+    uint8 CAN_1_SendMsg4(void) 
     {
         uint8 result = CYRET_SUCCESS;
 
@@ -451,16 +447,13 @@ void CAN_1_TxCancel(uint8 bufferId)
             }
             else
             {
-                /* `#START MESSAGE_soc_TRASMITTED` */
-						uint8_t i;
+                /* `#START MESSAGE_4_TRASMITTED` */
 
-						for(i=0; i<CAN_STATUS_LEN; i++)
-							CAN_1_TX_DATA_BYTE(4,i) = can_buffer[i];
                 /* `#END` */
 
-                #ifdef CAN_1_SEND_MSG_soc_CALLBACK
-                    CAN_1_SendMsg_soc_Callback();
-                #endif /* CAN_1_SEND_MSG_soc_CALLBACK */
+                #ifdef CAN_1_SEND_MSG_4_CALLBACK
+                    CAN_1_SendMsg_4_Callback();
+                #endif /* CAN_1_SEND_MSG_4_CALLBACK */
 
                 CY_SET_REG32(CAN_1_TX_CMD_PTR(4u),
                 CY_GET_REG32(CAN_1_TX_CMD_PTR(4u)) | CAN_1_SEND_MESSAGE);
@@ -1233,6 +1226,25 @@ void CAN_1_ReceiveMsg(uint8 rxMailbox)
 
 
 /* [] END OF FILE */
+#if 0 /* begin disabled code */
+`#start MESSAGE_current_TRASMITTED` -- section removed from template
+						uint8_t i;
+
+						for(i=0; i<CAN_CURRENT_LEN; i++)
+							CAN_1_TX_DATA_BYTE(2,i) = can_buffer[i];
+
+`#end`
+
+#endif /* end disabled code */
+#if 0 /* begin disabled code */
+`#start MESSAGE_soc_TRASMITTED` -- section removed from template
+						uint8_t i;
+
+						for(i=0; i<CAN_STATUS_LEN; i++)
+							CAN_1_TX_DATA_BYTE(4,i) = can_buffer[i];
+`#end`
+
+#endif /* end disabled code */
 #if 0 /* begin disabled code */
 `#start MESSAGE_SOC_RECEIVED` -- section removed from template
         charge = CAN_1_RX_DATA_BYTE1(0);
